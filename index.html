@@ -20,6 +20,7 @@
     .card-bg { background: linear-gradient(145deg, #131824, #0f131d); }
     @keyframes pulse-slow { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
     .animate-pulse-slow { animation: pulse-slow 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    .ticker-fade { transition: opacity 0.4s ease-in-out; }
   </style>
 </head>
 <body class="min-h-screen flex flex-col antialiased">
@@ -27,6 +28,13 @@
   <!-- Instagram / In-App Browser Warning Banner -->
   <div id="inAppBanner" class="hidden bg-amber-500 text-slate-950 px-3 py-2 text-center text-xs font-bold">
     ⚠️ Instagram Browser Detected! Tap <span class="underline">⋮ (3 dots)</span> at top right & select <span class="underline">"Open in Chrome / Browser"</span> to Login.
+  </div>
+
+  <!-- Live 20-Second Rotating Activity Ticker -->
+  <div class="bg-gradient-to-r from-cyan-950/90 via-slate-900 to-cyan-950/90 border-b border-cyan-500/25 px-3 py-1.5 text-center">
+    <div id="liveTickerText" class="ticker-fade text-[11px] font-semibold text-cyan-300 tracking-wide">
+      ⚡ Latest: Loading live community activity...
+    </div>
   </div>
 
   <!-- Navbar -->
@@ -69,7 +77,7 @@
         <ul id="rulesList" class="text-[11px] text-slate-300 space-y-1 list-disc list-inside leading-snug">
           <li><strong>Chat Screenshot:</strong> Upload a clear chat screenshot where your opponent agrees to the 1v1 result & points.</li>
           <li><strong>Rank Swap:</strong> If you defeat a player ranked higher than you, you will take their rank on the leaderboard!</li>
-          <li><strong>Optional Recording:</strong> If you have any doubts or need dispute help, you can personally send your match recording to the admin on Instagram.</li>
+          <li><strong>Optional Recording:</strong> If you have any doubts or need dispute help, you can personally send your match recording to BoomCraze on Instagram.</li>
         </ul>
       </div>
     </div>
@@ -95,13 +103,16 @@
       </div>
     </div>
 
-    <!-- Main Section Tabs: Ranked vs Contenders -->
-    <div class="grid grid-cols-2 gap-2 mb-4 bg-slate-900/60 p-1.5 rounded-2xl border border-slate-800/80">
-      <button onclick="switchMainTab('ranked')" id="tabRanked" class="py-2 px-3 rounded-xl text-xs font-bold transition bg-cyan-500 text-slate-950 text-center">
-        🏆 Ranked Leaderboard
+    <!-- 3 Main Section Tabs: Ranked, Contenders, 1v1 Lobby -->
+    <div class="grid grid-cols-3 gap-1.5 mb-4 bg-slate-900/60 p-1.5 rounded-2xl border border-slate-800/80">
+      <button onclick="switchMainTab('ranked')" id="tabRanked" class="py-2 px-2 rounded-xl text-xs font-bold transition bg-cyan-500 text-slate-950 text-center">
+        🏆 Ranked
       </button>
-      <button onclick="switchMainTab('contenders')" id="tabContenders" class="py-2 px-3 rounded-xl text-xs font-bold transition text-slate-400 hover:text-white text-center">
-        ⚔️ Contenders Queue
+      <button onclick="switchMainTab('contenders')" id="tabContenders" class="py-2 px-2 rounded-xl text-xs font-bold transition text-slate-400 hover:text-white text-center">
+        ⚔️ Contenders
+      </button>
+      <button onclick="switchMainTab('lobby')" id="tabLobby" class="py-2 px-2 rounded-xl text-xs font-bold transition text-slate-400 hover:text-white text-center">
+        🎯 1v1 Lobby
       </button>
     </div>
 
@@ -112,8 +123,8 @@
       <button onclick="setSort('short')" id="sort-short" class="sort-btn px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 whitespace-nowrap">Short Range Top</button>
     </div>
 
-    <!-- Leaderboard Card Container -->
-    <div class="card-bg rounded-2xl neon-border overflow-hidden">
+    <!-- Leaderboard Card Container (Ranked & Contenders) -->
+    <div id="leaderboardCard" class="card-bg rounded-2xl neon-border overflow-hidden">
       <div class="grid grid-cols-12 px-3 py-2.5 border-b border-slate-800/80 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
         <div id="colRank" class="col-span-2">Rank</div>
         <div id="colPlayer" class="col-span-6">Player</div>
@@ -125,10 +136,43 @@
       </div>
     </div>
 
+    <!-- 1v1 Matchmaking Lobby Section -->
+    <div id="lobbySection" class="hidden space-y-3">
+      <!-- Post Looking For Match Form (Visible when Logged In) -->
+      <div id="lobbyPostBox" class="hidden card-bg rounded-2xl neon-border p-3.5">
+        <div id="lobbyHeading" class="text-xs font-bold text-cyan-400 mb-2">🎯 Looking for a 1v1 Opponent? Post in Lobby!</div>
+        <form id="lobbyForm" class="flex flex-col sm:flex-row gap-2">
+          <select id="lobbyMode" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
+            <option value="Long Range">Long Range 1v1</option>
+            <option value="Short Range">Short Range 1v1</option>
+            <option value="Any Range">Any Range 1v1</option>
+          </select>
+          <input type="text" id="lobbyNote" maxlength="60" placeholder="Note (e.g. Online now, DM on Insta @...)" class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" />
+          <button type="submit" id="lobbyPostBtn" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs transition whitespace-nowrap">
+            + Post LFG
+          </button>
+        </form>
+      </div>
+
+      <div id="lobbyLoginPrompt" class="card-bg rounded-2xl neon-border p-3 text-center text-xs text-slate-400">
+        Login with Google to post your 1v1 challenge status in the lobby!
+      </div>
+
+      <div class="card-bg rounded-2xl neon-border overflow-hidden">
+        <div class="px-3.5 py-2.5 border-b border-slate-800/80 text-[11px] font-semibold text-slate-400 uppercase tracking-wider flex justify-between">
+          <span id="lobbyListTitle">Active Challengers Looking to Play</span>
+          <span class="text-emerald-400">● Live</span>
+        </div>
+        <div id="lobbyList" class="divide-y divide-slate-800/50">
+          <div class="p-6 text-center text-slate-400 text-xs">Loading active players...</div>
+        </div>
+      </div>
+    </div>
+
   </main>
 
   <!-- Footer with Contact Info & Instagram Link -->
-  <footer class="border-t border-slate-800/60 py-5 text-center text-[11px] text-slate-400 px-4 space-y-2">
+  <footer class="border-t border-slate-800/60 py-5 text-center text-[11px] text-slate-400 px-4 space-y-2 mt-6">
     <p id="footerContactText">If you have any issues or want to send 1v1 recordings, contact us:</p>
     <a href="https://ig.me/m/boomcrraze" target="_blank" class="inline-flex items-center gap-1.5 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-semibold px-3.5 py-1.5 rounded-xl text-xs transition shadow-lg">
       📸 Instagram: <span class="underline">@boomcrraze</span>
@@ -150,14 +194,17 @@
     </div>
   </div>
 
-  <!-- Player Profile Modal -->
+  <!-- Player Profile Modal (With Streak & Head-to-Head Rivalry Stats) -->
   <div id="playerModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
     <div class="card-bg neon-border rounded-2xl max-w-md w-full p-5 relative max-h-[85vh] overflow-y-auto">
       <button onclick="closeModal('playerModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg">&times;</button>
       <div class="flex items-center gap-3 mb-3">
         <img id="modalAvatar" src="" class="w-11 h-11 rounded-full border border-cyan-500/40 object-cover" />
         <div>
-          <h2 id="modalName" class="text-base font-bold text-white">Player Name</h2>
+          <div class="flex items-center gap-1.5">
+            <h2 id="modalName" class="text-base font-bold text-white">Player Name</h2>
+            <span id="modalStreakBadge"></span>
+          </div>
           <p id="modalSub" class="text-[11px] text-slate-400">Total 1v1s: 0 • Total Pts: 0</p>
         </div>
       </div>
@@ -173,6 +220,12 @@
 
       <div id="modalStats" class="grid grid-cols-2 gap-2.5 mb-3"></div>
 
+      <!-- Head-to-Head Rivalry Section -->
+      <div id="rivalrySection" class="mb-3 hidden">
+        <h3 id="rivalryTitle" class="text-[11px] font-semibold uppercase text-amber-400 mb-1.5 tracking-wider">⚔️ Head-to-Head Victories</h3>
+        <div id="rivalryList" class="flex flex-wrap gap-1.5"></div>
+      </div>
+
       <h3 id="proofsTitle" class="text-[11px] font-semibold uppercase text-slate-400 mb-2 tracking-wider">Verified Match Screenshots</h3>
       <div id="modalProofs" class="space-y-2.5"></div>
     </div>
@@ -183,7 +236,7 @@
     <div class="card-bg neon-border rounded-2xl max-w-sm w-full p-5 relative">
       <button onclick="closeModal('adminEditPlayerModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg">&times;</button>
       <h2 class="text-base font-bold text-amber-400 mb-1">⚡ Admin Edit Player</h2>
-      <p class="text-xs text-slate-400 mb-3">Update player IGN or adjust range points directly.</p>
+      <p class="text-xs text-slate-400 mb-3">Update player IGN, points, or streak directly.</p>
       
       <form id="adminEditPlayerForm" class="space-y-2.5">
         <input type="hidden" id="editPlayerId" />
@@ -191,14 +244,18 @@
           <label class="text-[11px] text-slate-300 block mb-1">Player IGN (Name)</label>
           <input type="text" id="editPlayerIgn" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" />
         </div>
-        <div class="grid grid-cols-2 gap-2">
+        <div class="grid grid-cols-3 gap-2">
           <div>
-            <label class="text-[11px] text-slate-300 block mb-1">Long Range Pts</label>
-            <input type="number" id="editLongPts" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white text-center" />
+            <label class="text-[11px] text-slate-300 block mb-1">Long Pts</label>
+            <input type="number" id="editLongPts" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2 py-2 text-xs text-white text-center" />
           </div>
           <div>
-            <label class="text-[11px] text-slate-300 block mb-1">Short Range Pts</label>
-            <input type="number" id="editShortPts" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white text-center" />
+            <label class="text-[11px] text-slate-300 block mb-1">Short Pts</label>
+            <input type="number" id="editShortPts" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2 py-2 text-xs text-white text-center" />
+          </div>
+          <div>
+            <label class="text-[11px] text-slate-300 block mb-1">Streak</label>
+            <input type="number" id="editStreak" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2 py-2 text-xs text-white text-center" />
           </div>
         </div>
         <button type="submit" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs transition mt-2">
@@ -223,13 +280,12 @@
     </div>
   </div>
 
-  <!-- Submit Screenshot Proof Modal with Chat Rule Reminder -->
+  <!-- Submit Screenshot Proof Modal -->
   <div id="submitModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
     <div class="card-bg neon-border rounded-2xl max-w-md w-full p-5 relative max-h-[90vh] overflow-y-auto">
       <button onclick="closeModal('submitModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg">&times;</button>
       <h2 id="submitProofTitle" class="text-base font-bold text-white mb-1">Submit Match Screenshot</h2>
       
-      <!-- Reminder inside Submit Modal -->
       <div id="modalRuleNote" class="bg-cyan-500/10 border border-cyan-500/30 rounded-xl p-2.5 mb-3 text-[11px] text-cyan-300 leading-snug">
         💡 <strong>Rule:</strong> Upload the chat screenshot where your opponent agrees to the match result. Defeating a higher-ranked player swaps your rank with theirs!
       </div>
@@ -265,8 +321,8 @@
   <div id="adminModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
     <div class="card-bg neon-border rounded-2xl max-w-xl w-full p-5 relative max-h-[85vh] overflow-y-auto">
       <button onclick="closeModal('adminModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg">&times;</button>
-      <h2 id="adminModalTitle" class="text-base font-bold text-amber-400 mb-1">🛡️ Admin Verification Queue</h2>
-      <p id="adminModalSub" class="text-xs text-slate-400 mb-3">Approving verifies the chat proof and updates leaderboard. Rejecting permanently deletes the screenshot.</p>
+      <h2 class="text-base font-bold text-amber-400 mb-1">🛡️ Admin Verification Queue</h2>
+      <p class="text-xs text-slate-400 mb-3">Approving verifies chat proof, updates points & streak, and posts to live ticker. Rejecting permanently deletes screenshot.</p>
       <div id="pendingList" class="space-y-2.5"></div>
     </div>
   </div>
@@ -277,7 +333,6 @@
     import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
     import { getFirestore, collection, doc, setDoc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
-    // Detect Instagram / Facebook In-App Browser
     const ua = navigator.userAgent || navigator.vendor || window.opera;
     if (ua.indexOf("Instagram") > -1 || ua.indexOf("FBAN") > -1 || ua.indexOf("FBAV") > -1) {
       document.getElementById('inAppBanner').classList.remove('hidden');
@@ -309,6 +364,10 @@
     let currentLang = 'en';
     let isAdmin = false;
 
+    // Ticker state (rotates between latest 2 events every 20 seconds)
+    let tickerMessages = [];
+    let tickerIndex = 0;
+
     const translations = {
       en: {
         navSub: "Official 1v1 Community Tiers",
@@ -323,8 +382,9 @@
           <li><strong>Optional Recording:</strong> If you have any doubts or need dispute help, you can personally send your match recording to BoomCraze on Instagram.</li>
         `,
         modalRuleNote: "💡 <strong>Rule:</strong> Upload the chat screenshot where your opponent agrees to the match result. Defeating a higher-ranked player swaps your rank with theirs!",
-        tabRanked: "🏆 Ranked Leaderboard",
-        tabContenders: "⚔️ Contenders Queue",
+        tabRanked: "🏆 Ranked",
+        tabContenders: "⚔️ Contenders",
+        tabLobby: "🎯 1v1 Lobby",
         sortTotal: "Overall",
         sortLong: "Long Range Top",
         sortShort: "Short Range Top",
@@ -333,6 +393,10 @@
         colRange: "Range Pts",
         colTotal: "Total",
         loadingText: "Loading fresh leaderboard data...",
+        lobbyHeading: "🎯 Looking for a 1v1 Opponent? Post in Lobby!",
+        lobbyPostBtn: "+ Post LFG",
+        lobbyLoginPrompt: "Login with Google to post your 1v1 challenge status in the lobby!",
+        lobbyListTitle: "Active Challengers Looking to Play",
         footerContactText: "If you have any issues or want to send 1v1 recordings, contact us:",
         footerText1: "Flex City India Community Leaderboard • Unofficial fan-made platform.",
         openSubmitBtn: "+ Submit Proof",
@@ -362,8 +426,9 @@
           <li><strong>पर्सनल रिकॉर्डिंग:</strong> अगर मैच में कोई डाउट हो, तो आप इंस्टाग्राम पर BoomCraze को अपनी रिकॉर्डिंग भेज सकते हैं।</li>
         `,
         modalRuleNote: "💡 <strong>नियम:</strong> चैट का ऐसा स्क्रीनशॉट डालें जिसमें Opponent रिजल्ट पर राज़ी हो। ऊपर वाले खिलाड़ी को हराने पर रैंक स्वैप हो जाएगी!",
-        tabRanked: "🏆 रैंकड लीडरबोर्ड",
-        tabContenders: "⚔️ कंटेंडर्स कतार (Unranked)",
+        tabRanked: "🏆 रैंकड",
+        tabContenders: "⚔️ कंटेंडर्स",
+        tabLobby: "🎯 1v1 लॉबी",
         sortTotal: "कुल पॉइंट्स (Overall)",
         sortLong: "लॉन्ग रेंज टॉप",
         sortShort: "शॉर्ट रेंज टॉप",
@@ -372,6 +437,10 @@
         colRange: "रेंज पॉइंट्स",
         colTotal: "कुल",
         loadingText: "लीडरबोर्ड डाटा लोड हो रहा है...",
+        lobbyHeading: "🎯 1v1 खेलने के लिए खिलाड़ी ढूंढ रहे हैं? लॉबी में पोस्ट करें!",
+        lobbyPostBtn: "+ पोस्ट करें",
+        lobbyLoginPrompt: "लॉबी में अपना 1v1 स्टेटस पोस्ट करने के लिए गूगल से लॉगिन करें!",
+        lobbyListTitle: "खेलने के लिए तैयार खिलाड़ी (Active Challengers)",
         footerContactText: "यदि आपको कोई समस्या है या 1v1 रिकॉर्डिंग भेजनी है, तो संपर्क करें:",
         footerText1: "Flex City इंडिया कम्युनिटी लीडरबोर्ड • अनौपचारिक फैन-मेड प्लेटफॉर्म।",
         openSubmitBtn: "+ प्रूफ सबमिट करें",
@@ -414,6 +483,7 @@
 
       setSafeText('tabRanked', t.tabRanked);
       setSafeText('tabContenders', t.tabContenders);
+      setSafeText('tabLobby', t.tabLobby);
       setSafeText('sort-total', t.sortTotal);
       setSafeText('sort-long', t.sortLong);
       setSafeText('sort-short', t.sortShort);
@@ -422,6 +492,10 @@
       setSafeText('colRange', t.colRange);
       setSafeText('colTotal', t.colTotal);
       setSafeText('loadingText', t.loadingText);
+      setSafeText('lobbyHeading', t.lobbyHeading);
+      setSafeText('lobbyPostBtn', t.lobbyPostBtn);
+      setSafeText('lobbyLoginPrompt', t.lobbyLoginPrompt);
+      setSafeText('lobbyListTitle', t.lobbyListTitle);
       setSafeText('footerContactText', t.footerContactText);
       setSafeText('footerText1', t.footerText1);
       setSafeText('openSubmitBtn', t.openSubmitBtn);
@@ -438,16 +512,84 @@
       setSafeText('labelScreenshotFile', t.labelScreenshotFile);
       setSafeText('submitProofBtn', t.submitProofBtn);
 
+      buildLiveTicker();
       renderLeaderboard();
+      renderLobby();
     };
 
     loadLeaderboard();
+
+    // Rotate the 2 latest events every 20 seconds
+    setInterval(() => {
+      if (tickerMessages.length > 1) {
+        const el = document.getElementById('liveTickerText');
+        el.style.opacity = 0;
+        setTimeout(() => {
+          tickerIndex = (tickerIndex + 1) % tickerMessages.length;
+          el.innerText = tickerMessages[tickerIndex];
+          el.style.opacity = 1;
+        }, 400);
+      }
+    }, 20000);
+
+    function buildLiveTicker() {
+      let events = [];
+
+      allPlayers.forEach(p => {
+        const ign = p.ign || p.name || "Player";
+        const pts = (p.longPoints || 0) + (p.shortPoints || 0);
+        const tabName = pts > 0 ? "Ranked Leaderboard" : "Contenders Queue";
+        
+        // Event 1: Player Joined
+        if (p.joinedAt) {
+          events.push({
+            time: p.joinedAt,
+            textEn: `⚔️ Latest: ${ign} has joined the ${tabName}!`,
+            textHi: `⚔️ नया अपडेट: ${ign} ने ${pts > 0 ? 'रैंकड लीडरबोर्ड' : 'कंटेंडर्स कतार'} ज्वाइन किया है!`
+          });
+        }
+
+        // Event 2: Verified Matches Won
+        if (p.proofs && p.proofs.length > 0) {
+          p.proofs.forEach(pr => {
+            if (pr.timestamp) {
+              const catName = pr.category === 'long' ? 'Long Range' : 'Short Range';
+              events.push({
+                time: pr.timestamp,
+                textEn: `🔥 Latest: ${ign} defeated ${pr.opponent} in ${catName}!`,
+                textHi: `🔥 नया मैच: ${ign} ने ${pr.opponent} को ${catName} में हराया!`
+              });
+            }
+          });
+        }
+      });
+
+      // Sort newest first & pick ONLY top 2 most recent events
+      events.sort((a, b) => b.time - a.time);
+      const topTwo = events.slice(0, 2);
+
+      if (topTwo.length === 0) {
+        tickerMessages = [
+          currentLang === 'hi' 
+            ? "⚡ नया अपडेट: Flex City 1v1 लीडरबोर्ड लाइव है! लॉगिन करें और चैलेंज शुरू करें!" 
+            : "⚡ Latest: Flex City 1v1 Leaderboard is LIVE! Login and join the Contenders Queue!"
+        ];
+      } else {
+        tickerMessages = topTwo.map(ev => currentLang === 'hi' ? ev.textHi : ev.textEn);
+      }
+
+      tickerIndex = 0;
+      const el = document.getElementById('liveTickerText');
+      if (el) el.innerText = tickerMessages[0];
+    }
 
     onAuthStateChanged(auth, async (user) => {
       currentUser = user;
       const authArea = document.getElementById('authArea');
       const submitBtn = document.getElementById('openSubmitBtn');
       const adminBtn = document.getElementById('openAdminBtn');
+      const lobbyPostBox = document.getElementById('lobbyPostBox');
+      const lobbyLoginPrompt = document.getElementById('lobbyLoginPrompt');
 
       if (user) {
         isAdmin = (user.email === ADMIN_EMAIL);
@@ -470,6 +612,8 @@
         `;
         document.getElementById('logoutBtn').onclick = () => signOut(auth);
         submitBtn.classList.remove('hidden');
+        lobbyPostBox.classList.remove('hidden');
+        lobbyLoginPrompt.classList.add('hidden');
         document.getElementById('ignInput').value = userIgn;
 
         if (isAdmin) {
@@ -482,6 +626,8 @@
         document.getElementById('loginBtn').onclick = () => signInWithPopup(auth, provider);
         submitBtn.classList.add('hidden');
         adminBtn.classList.add('hidden');
+        lobbyPostBox.classList.add('hidden');
+        lobbyLoginPrompt.classList.remove('hidden');
       }
       loadLeaderboard();
     });
@@ -502,6 +648,8 @@
         shortPoints: 0,
         longMatches: 0,
         shortMatches: 0,
+        streak: 0,
+        joinedAt: Date.now(),
         proofs: []
       }, { merge: true });
 
@@ -514,7 +662,9 @@
         const snap = await getDocs(collection(db, "players"));
         allPlayers = [];
         snap.forEach(d => allPlayers.push({ id: d.id, ...d.data() }));
+        buildLiveTicker();
         renderLeaderboard();
+        renderLobby();
       } catch (err) {
         console.error("Error loading leaderboard:", err);
       }
@@ -524,18 +674,30 @@
       currentMainTab = tab;
       const rankedBtn = document.getElementById('tabRanked');
       const contendersBtn = document.getElementById('tabContenders');
+      const lobbyBtn = document.getElementById('tabLobby');
       const filters = document.getElementById('categoryFilters');
+      const lbCard = document.getElementById('leaderboardCard');
+      const lobbySec = document.getElementById('lobbySection');
 
-      if (tab === 'ranked') {
-        rankedBtn.className = "py-2 px-3 rounded-xl text-xs font-bold transition bg-cyan-500 text-slate-950 text-center";
-        contendersBtn.className = "py-2 px-3 rounded-xl text-xs font-bold transition text-slate-400 hover:text-white text-center";
-        filters.classList.remove('hidden');
-      } else {
-        contendersBtn.className = "py-2 px-3 rounded-xl text-xs font-bold transition bg-cyan-500 text-slate-950 text-center";
-        rankedBtn.className = "py-2 px-3 rounded-xl text-xs font-bold transition text-slate-400 hover:text-white text-center";
+      const activeClass = "py-2 px-2 rounded-xl text-xs font-bold transition bg-cyan-500 text-slate-950 text-center";
+      const inactiveClass = "py-2 px-2 rounded-xl text-xs font-bold transition text-slate-400 hover:text-white text-center";
+
+      rankedBtn.className = tab === 'ranked' ? activeClass : inactiveClass;
+      contendersBtn.className = tab === 'contenders' ? activeClass : inactiveClass;
+      lobbyBtn.className = tab === 'lobby' ? activeClass : inactiveClass;
+
+      if (tab === 'lobby') {
         filters.classList.add('hidden');
+        lbCard.classList.add('hidden');
+        lobbySec.classList.remove('hidden');
+        renderLobby();
+      } else {
+        lbCard.classList.remove('hidden');
+        lobbySec.classList.add('hidden');
+        if (tab === 'ranked') filters.classList.remove('hidden');
+        else filters.classList.add('hidden');
+        renderLeaderboard();
       }
-      renderLeaderboard();
     };
 
     window.setSort = (type) => {
@@ -549,6 +711,14 @@
       renderLeaderboard();
     };
 
+    function getStreakBadgeHtml(streak) {
+      if (!streak || streak < 2) return '';
+      if (streak >= 5) {
+        return `<span class="bg-amber-500/20 text-amber-300 border border-amber-500/40 px-1.5 py-0.5 rounded text-[9px] font-bold">👑 ${streak} Streak</span>`;
+      }
+      return `<span class="bg-orange-500/20 text-orange-400 border border-orange-500/40 px-1.5 py-0.5 rounded text-[9px] font-bold">🔥 ${streak} Streak</span>`;
+    }
+
     function renderLeaderboard() {
       const list = document.getElementById('leaderboardList');
       
@@ -558,7 +728,7 @@
       });
 
       const sorted = filtered.sort((a, b) => {
-        if (currentMainTab === 'contenders') return 0;
+        if (currentMainTab === 'contenders') return (b.joinedAt || 0) - (a.joinedAt || 0);
         if (currentSort === 'long') return (b.longPoints || 0) - (a.longPoints || 0);
         if (currentSort === 'short') return (b.shortPoints || 0) - (a.shortPoints || 0);
         return ((b.longPoints || 0) + (b.shortPoints || 0)) - ((a.longPoints || 0) + (a.shortPoints || 0));
@@ -573,12 +743,13 @@
         const totalPts = (p.longPoints || 0) + (p.shortPoints || 0);
         const rankBadge = currentMainTab === 'contenders' ? '⏳' : (i === 0 ? '🥇 #1' : i === 1 ? '🥈 #2' : i === 2 ? '🥉 #3' : `#${i + 1}`);
         const matchText = currentLang === 'hi' ? 'मैच' : 'matches';
+        const streakBadge = getStreakBadgeHtml(p.streak);
 
         let adminActionHtml = '';
         if (isAdmin) {
           adminActionHtml = `
             <div class="col-span-1 text-right">
-              <button onclick="event.stopPropagation(); openAdminEditPlayer('${p.id}')" class="bg-amber-500/20 hover:bg-amber-500/40 text-amber-300 border border-amber-500/40 px-2 py-1 rounded-lg text-xs font-bold" title="Edit Player Name & Rank">⋮</button>
+              <button onclick="event.stopPropagation(); openAdminEditPlayer('${p.id}')" class="bg-amber-500/20 hover:bg-amber-500/40 text-amber-300 border border-amber-500/40 px-2 py-1 rounded-lg text-xs font-bold" title="Edit Player">⋮</button>
             </div>
           `;
         }
@@ -587,15 +758,77 @@
           <div onclick="openPlayer('${p.id}')" class="grid grid-cols-12 items-center px-3 py-3 hover:bg-slate-800/40 cursor-pointer transition">
             <div class="col-span-2 font-bold text-xs ${i < 3 && currentMainTab === 'ranked' ? 'text-cyan-400' : 'text-slate-400'}">${rankBadge}</div>
             <div class="${isAdmin ? 'col-span-5' : 'col-span-6'} flex items-center gap-2">
-              <img src="${p.photo}" class="w-7 h-7 rounded-full border border-slate-700 object-cover" />
+              <img src="${p.photo}" class="w-7 h-7 rounded-full border border-slate-700 object-cover flex-shrink-0" />
               <div class="truncate">
-                <div class="font-semibold text-xs text-white truncate">${p.ign || p.name}</div>
+                <div class="flex items-center gap-1.5 flex-wrap">
+                  <span class="font-semibold text-xs text-white truncate">${p.ign || p.name}</span>
+                  ${streakBadge}
+                </div>
                 <div class="text-[10px] text-slate-400">${(p.longMatches || 0) + (p.shortMatches || 0)} ${matchText}</div>
               </div>
             </div>
             <div class="col-span-2 text-center text-xs font-medium text-sky-300">${currentMainTab === 'ranked' ? (currentSort === 'long' ? p.longPoints || 0 : (currentSort === 'short' ? p.shortPoints || 0 : (p.longPoints || 0) + (p.shortPoints || 0))) : '-'}</div>
-            <div class="${isAdmin ? 'col-span-2' : 'col-span-2'} text-right font-bold text-xs text-emerald-400">${totalPts}</div>
+            <div class="col-span-2 text-right font-bold text-xs text-emerald-400">${totalPts}</div>
             ${adminActionHtml}
+          </div>
+        `;
+      }).join('');
+    }
+
+    // 1v1 Matchmaking Lobby Logic
+    document.getElementById('lobbyForm').onsubmit = async (e) => {
+      e.preventDefault();
+      if (!currentUser) return;
+      const mode = document.getElementById('lobbyMode').value;
+      const note = document.getElementById('lobbyNote').value.trim() || "Ready for 1v1 challenge!";
+
+      await updateDoc(doc(db, "players", currentUser.uid), {
+        lfgActive: true,
+        lfgMode: mode,
+        lfgNote: note,
+        lfgTime: Date.now()
+      });
+
+      document.getElementById('lobbyNote').value = "";
+      loadLeaderboard();
+    };
+
+    window.removeMyLobbyPost = async () => {
+      if (!currentUser) return;
+      await updateDoc(doc(db, "players", currentUser.uid), { lfgActive: false });
+      loadLeaderboard();
+    };
+
+    function renderLobby() {
+      const lobbyList = document.getElementById('lobbyList');
+      if (!lobbyList) return;
+
+      // Show LFG posts from last 12 hours
+      const twelveHoursAgo = Date.now() - (12 * 60 * 60 * 1000);
+      const activePlayers = allPlayers
+        .filter(p => p.lfgActive && (p.lfgTime || 0) > twelveHoursAgo)
+        .sort((a, b) => (b.lfgTime || 0) - (a.lfgTime || 0));
+
+      if (activePlayers.length === 0) {
+        lobbyList.innerHTML = `<div class="p-6 text-center text-slate-400 text-xs">${currentLang === 'hi' ? 'अभी कोई खिलाड़ी लॉबी में नहीं है। सबसे पहले पोस्ट करें!' : 'No active challengers in lobby right now. Be the first to post!'}</div>`;
+        return;
+      }
+
+      lobbyList.innerHTML = activePlayers.map(p => {
+        const isMe = currentUser && p.id === currentUser.uid;
+        return `
+          <div class="p-3 flex items-center justify-between gap-2 hover:bg-slate-800/30 transition">
+            <div class="flex items-center gap-2.5 truncate">
+              <img src="${p.photo}" class="w-8 h-8 rounded-full border border-emerald-500/40 object-cover flex-shrink-0" />
+              <div class="truncate">
+                <div class="flex items-center gap-1.5">
+                  <span class="font-bold text-xs text-white">${p.ign || p.name}</span>
+                  <span class="bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 px-1.5 py-0.5 rounded text-[9px] font-semibold">${p.lfgMode || '1v1'}</span>
+                </div>
+                <p class="text-[11px] text-slate-300 truncate mt-0.5">${p.lfgNote || ''}</p>
+              </div>
+            </div>
+            ${isMe ? `<button onclick="removeMyLobbyPost()" class="bg-rose-500/20 text-rose-400 px-2.5 py-1 rounded-lg text-[10px] font-semibold flex-shrink-0">Remove</button>` : `<button onclick="openPlayer('${p.id}')" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 px-2.5 py-1 rounded-lg text-[10px] font-semibold flex-shrink-0">Stats</button>`}
           </div>
         `;
       }).join('');
@@ -608,6 +841,7 @@
       document.getElementById('editPlayerIgn').value = p.ign || p.name || '';
       document.getElementById('editLongPts').value = p.longPoints || 0;
       document.getElementById('editShortPts').value = p.shortPoints || 0;
+      document.getElementById('editStreak').value = p.streak || 0;
       document.getElementById('adminEditPlayerModal').classList.remove('hidden');
       document.getElementById('adminEditPlayerModal').classList.add('flex');
     };
@@ -619,13 +853,15 @@
       const newIgn = document.getElementById('editPlayerIgn').value.trim();
       const newLongPts = parseInt(document.getElementById('editLongPts').value) || 0;
       const newShortPts = parseInt(document.getElementById('editShortPts').value) || 0;
+      const newStreak = parseInt(document.getElementById('editStreak').value) || 0;
 
       if (!newIgn) return alert("IGN cannot be empty!");
 
       await updateDoc(doc(db, "players", pid), {
         ign: newIgn,
         longPoints: newLongPts,
-        shortPoints: newShortPts
+        shortPoints: newShortPts,
+        streak: newStreak
       });
 
       alert("Player details updated successfully!");
@@ -657,9 +893,36 @@
       if (!selectedPlayer) return;
       document.getElementById('modalAvatar').src = selectedPlayer.photo;
       document.getElementById('modalName').innerText = selectedPlayer.ign || selectedPlayer.name;
+      document.getElementById('modalStreakBadge').innerHTML = getStreakBadgeHtml(selectedPlayer.streak);
+      
       const total1v1 = (selectedPlayer.longMatches || 0) + (selectedPlayer.shortMatches || 0);
       const totalPts = (selectedPlayer.longPoints || 0) + (selectedPlayer.shortPoints || 0);
       document.getElementById('modalSub').innerText = `${currentLang === 'hi' ? 'कुल 1v1s' : 'Total 1v1s'}: ${total1v1} • ${currentLang === 'hi' ? 'कुल पॉइंट्स' : 'Total Pts'}: ${totalPts}`;
+      
+      // Build Head-to-Head Rivalry Stats
+      const rivalryMap = {};
+      (selectedPlayer.proofs || []).forEach(pr => {
+        if (pr.opponent) {
+          const oppName = pr.opponent.trim();
+          rivalryMap[oppName] = (rivalryMap[oppName] || 0) + 1;
+        }
+      });
+
+      const rivalryEntries = Object.entries(rivalryMap);
+      const rivalrySec = document.getElementById('rivalrySection');
+      const rivalryList = document.getElementById('rivalryList');
+
+      if (rivalryEntries.length > 0) {
+        rivalrySec.classList.remove('hidden');
+        rivalryList.innerHTML = rivalryEntries.map(([opp, wins]) => `
+          <span class="bg-slate-900 border border-slate-700 text-slate-200 px-2.5 py-1 rounded-lg text-[10px] font-semibold">
+            vs <span class="text-cyan-400">${opp}</span>: <span class="text-emerald-400">${wins} ${wins > 1 ? 'Wins' : 'Win'}</span>
+          </span>
+        `).join('');
+      } else {
+        rivalrySec.classList.add('hidden');
+      }
+
       switchPlayerTab('long');
       document.getElementById('playerModal').classList.remove('hidden');
       document.getElementById('playerModal').classList.add('flex');
@@ -854,7 +1117,10 @@
         });
         if (proofs.length > 8) proofs = proofs.slice(0, 8);
 
-        const updateData = { proofs };
+        const updateData = { 
+          proofs,
+          streak: (data.streak || 0) + 1
+        };
         if (s.category === 'long') {
           updateData.longPoints = (data.longPoints || 0) + pts;
           updateData.longMatches = (data.longMatches || 0) + 1;
@@ -863,6 +1129,12 @@
           updateData.shortMatches = (data.shortMatches || 0) + 1;
         }
         await updateDoc(playerRef, updateData);
+
+        // Reset opponent's streak if they are registered on the leaderboard
+        const oppPlayer = allPlayers.find(p => (p.ign || "").toLowerCase() === s.opponent.toLowerCase());
+        if (oppPlayer && oppPlayer.streak > 0) {
+          await updateDoc(doc(db, "players", oppPlayer.id), { streak: 0 });
+        }
       }
       await deleteDoc(doc(db, "submissions", sid));
       loadPendingSubmissions();
