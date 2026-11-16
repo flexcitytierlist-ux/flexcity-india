@@ -51,17 +51,27 @@
   <!-- Main Content -->
   <main class="max-w-4xl w-full mx-auto px-3 py-4 flex-1">
 
-    <!-- What is this? / Description Box with Instant Hindi Toggle -->
-    <div class="card-bg rounded-2xl neon-border p-3.5 mb-4 relative">
-      <div class="flex items-center justify-between gap-2 mb-1.5">
+    <!-- What is this? + Rules Box with Instant Hindi Toggle -->
+    <div class="card-bg rounded-2xl neon-border p-3.5 mb-4 relative space-y-2.5">
+      <div class="flex items-center justify-between gap-2">
         <h2 id="descTitle" class="text-xs font-bold text-cyan-400 uppercase tracking-wider">What is this?</h2>
         <button type="button" onclick="toggleLanguage()" class="bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 border border-slate-700 px-2.5 py-1 rounded-lg text-[11px] font-semibold transition flex items-center gap-1.5 cursor-pointer">
           <span id="langFlag">🇮🇳</span> <span id="langBtnText">See in Hindi (हिंदी में पढ़ें)</span>
         </button>
       </div>
       <p id="descText" class="text-xs text-slate-300 leading-relaxed">
-        Flex City India's official community 1v1 PvP leaderboard. Track rankings, submit match screenshot proofs, and view long and short range tier stats. Play matches, climb ranks, and prove your skills!
+        Flex City India's official community 1v1 PvP leaderboard. Challenge higher-ranked players, win matches, swap ranks, and prove your skills!
       </p>
+
+      <!-- Rules Box -->
+      <div class="bg-slate-950/70 border border-amber-500/25 rounded-xl p-2.5">
+        <div id="rulesHeading" class="text-[11px] font-bold text-amber-400 mb-1">📜 How to Submit Proof & Challenge Rules:</div>
+        <ul id="rulesList" class="text-[11px] text-slate-300 space-y-1 list-disc list-inside leading-snug">
+          <li><strong>Chat Screenshot:</strong> Upload a clear chat screenshot where your opponent agrees to the 1v1 result & points.</li>
+          <li><strong>Rank Swap:</strong> If you defeat a player ranked higher than you, you will take their rank on the leaderboard!</li>
+          <li><strong>Optional Recording:</strong> If you have any doubts or need dispute help, you can personally send your match recording to the admin on Instagram.</li>
+        </ul>
+      </div>
     </div>
 
     <!-- Region & Action Bar -->
@@ -117,10 +127,13 @@
 
   </main>
 
-  <!-- Footer -->
-  <footer class="border-t border-slate-800/60 py-4 text-center text-[11px] text-slate-500 px-4 space-y-1">
-    <p id="footerText1">Flex City India Community Leaderboard • Track 1v1 PvP Tiers & Screenshot Proofs</p>
-    <p id="footerText2">Unofficial fan-made platform. Not affiliated with Flex City or Jarvi Games.</p>
+  <!-- Footer with Contact Info & Instagram Link -->
+  <footer class="border-t border-slate-800/60 py-5 text-center text-[11px] text-slate-400 px-4 space-y-2">
+    <p id="footerContactText">If you have any issues or want to send 1v1 recordings, contact us:</p>
+    <a href="https://ig.me/m/boomcrraze" target="_blank" class="inline-flex items-center gap-1.5 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-semibold px-3.5 py-1.5 rounded-xl text-xs transition shadow-lg">
+      📸 Instagram: <span class="underline">@boomcrraze</span>
+    </a>
+    <p id="footerText1" class="text-[10px] text-slate-500 pt-1">Flex City India Community Leaderboard • Unofficial fan-made platform.</p>
   </footer>
 
   <!-- Forced IGN Setup Modal -->
@@ -210,12 +223,16 @@
     </div>
   </div>
 
-  <!-- Submit Screenshot Proof Modal -->
+  <!-- Submit Screenshot Proof Modal with Chat Rule Reminder -->
   <div id="submitModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
-    <div class="card-bg neon-border rounded-2xl max-w-md w-full p-5 relative">
+    <div class="card-bg neon-border rounded-2xl max-w-md w-full p-5 relative max-h-[90vh] overflow-y-auto">
       <button onclick="closeModal('submitModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg">&times;</button>
       <h2 id="submitProofTitle" class="text-base font-bold text-white mb-1">Submit Match Screenshot</h2>
-      <p id="submitProofSub" class="text-xs text-slate-400 mb-3">Select your match screenshot from your phone/PC gallery.</p>
+      
+      <!-- Reminder inside Submit Modal -->
+      <div id="modalRuleNote" class="bg-cyan-500/10 border border-cyan-500/30 rounded-xl p-2.5 mb-3 text-[11px] text-cyan-300 leading-snug">
+        💡 <strong>Rule:</strong> Upload the chat screenshot where your opponent agrees to the match result. Defeating a higher-ranked player swaps your rank with theirs!
+      </div>
 
       <form id="proofForm" class="space-y-2.5">
         <div>
@@ -234,7 +251,7 @@
           </select>
         </div>
         <div>
-          <label id="labelScreenshotFile" class="text-[11px] text-slate-300 block mb-1">Upload Screenshot Image</label>
+          <label id="labelScreenshotFile" class="text-[11px] text-slate-300 block mb-1">Upload Chat Screenshot</label>
           <input type="file" id="screenshotFileInput" accept="image/*" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-300 file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-cyan-500 file:text-slate-950 hover:file:bg-cyan-400 cursor-pointer" />
         </div>
         <button type="submit" id="submitProofBtn" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs transition mt-2">
@@ -248,8 +265,8 @@
   <div id="adminModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
     <div class="card-bg neon-border rounded-2xl max-w-xl w-full p-5 relative max-h-[85vh] overflow-y-auto">
       <button onclick="closeModal('adminModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg">&times;</button>
-      <h2 class="text-base font-bold text-amber-400 mb-1">🛡️ Admin Verification Queue</h2>
-      <p class="text-xs text-slate-400 mb-3">Verify match screenshots, assign points, and approve submissions.</p>
+      <h2 id="adminModalTitle" class="text-base font-bold text-amber-400 mb-1">🛡️ Admin Verification Queue</h2>
+      <p id="adminModalSub" class="text-xs text-slate-400 mb-3">Approving verifies the chat proof and updates leaderboard. Rejecting permanently deletes the screenshot.</p>
       <div id="pendingList" class="space-y-2.5"></div>
     </div>
   </div>
@@ -258,7 +275,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, collection, doc, setDoc, getDoc, getDocs, addDoc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getFirestore, collection, doc, setDoc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     // Detect Instagram / Facebook In-App Browser
     const ua = navigator.userAgent || navigator.vendor || window.opera;
@@ -298,7 +315,14 @@
         loginBtn: "Login with Google",
         descTitle: "What is this?",
         langBtnText: "See in Hindi (हिंदी में पढ़ें)",
-        descText: "Flex City India's official community 1v1 PvP leaderboard. Track rankings, submit match screenshot proofs, and view long and short range tier stats. Play matches, climb ranks, and prove your skills!",
+        descText: "Flex City India's official community 1v1 PvP leaderboard. Challenge higher-ranked players, win matches, swap ranks, and prove your skills!",
+        rulesHeading: "📜 How to Submit Proof & Challenge Rules:",
+        rulesHtml: `
+          <li><strong>Chat Screenshot:</strong> Upload a clear chat screenshot where your opponent agrees to the 1v1 result & points.</li>
+          <li><strong>Rank Swap:</strong> If you defeat a player ranked higher than you, you will take their rank on the leaderboard!</li>
+          <li><strong>Optional Recording:</strong> If you have any doubts or need dispute help, you can personally send your match recording to BoomCraze on Instagram.</li>
+        `,
+        modalRuleNote: "💡 <strong>Rule:</strong> Upload the chat screenshot where your opponent agrees to the match result. Defeating a higher-ranked player swaps your rank with theirs!",
         tabRanked: "🏆 Ranked Leaderboard",
         tabContenders: "⚔️ Contenders Queue",
         sortTotal: "Overall",
@@ -309,8 +333,8 @@
         colRange: "Range Pts",
         colTotal: "Total",
         loadingText: "Loading fresh leaderboard data...",
-        footerText1: "Flex City India Community Leaderboard • Track 1v1 PvP Tiers & Screenshot Proofs",
-        footerText2: "Unofficial fan-made platform. Not affiliated with Flex City or Jarvi Games.",
+        footerContactText: "If you have any issues or want to send 1v1 recordings, contact us:",
+        footerText1: "Flex City India Community Leaderboard • Unofficial fan-made platform.",
         openSubmitBtn: "+ Submit Proof",
         modalTitle: "Welcome to Flex City Leaderboard!",
         modalSubText: "Please enter your official In-Game Name (IGN) to continue.",
@@ -319,11 +343,10 @@
         editIgnSub: "Update your official Flex City In-Game Name.",
         saveIgnBtn: "Save IGN",
         submitProofTitle: "Submit Match Screenshot",
-        submitProofSub: "Select your match screenshot from your phone/PC gallery.",
         labelIgn: "Your IGN (Flex City)",
         labelOpponent: "Opponent Name",
         labelCategory: "Category",
-        labelScreenshotFile: "Upload Screenshot Image",
+        labelScreenshotFile: "Upload Chat Screenshot",
         submitProofBtn: "Send Screenshot for Verification"
       },
       hi: {
@@ -331,7 +354,14 @@
         loginBtn: "गूगल से लॉगिन करें",
         descTitle: "यह क्या है? (What is this?)",
         langBtnText: "See in English (अंग्रेजी में देखें)",
-        descText: "यह Flex City India का ऑफिशियल कम्युनिटी 1v1 PvP लीडरबोर्ड है। यहाँ आप अपनी रैंकिंग ट्रैक कर सकते हैं, मैच के स्क्रीनशॉट प्रूफ सबमिट कर सकते हैं, और लॉन्ग व शॉर्ट रेंज के टियर स्टेट्स देख सकते हैं। मैच खेलो, रैंक बढ़ाओ और अपना हुनर साबित करो!",
+        descText: "यह Flex City India का ऑफिशियल कम्युनिटी 1v1 PvP लीडरबोर्ड है। ऊपर के रैंक वाले प्लेयर्स को चैलेंज करें, मैच जीतें, रैंक आपस में बदलें (Rank Swap करें) और अपना हुनर साबित करें!",
+        rulesHeading: "📜 प्रूफ सबमिट करने के नियम:",
+        rulesHtml: `
+          <li><strong>चैट स्क्रीनशॉट:</strong> गेम की चैट का एक साफ़ स्क्रीनशॉट अपलोड करें जिसमें आपका Opponent 1v1 के रिजल्ट और पॉइंट्स पर राज़ी हो।</li>
+          <li><strong>रैंक स्वैप (Rank Swap):</strong> अगर आप अपने से ऊपर की रैंक वाले खिलाड़ी को हराते हैं, तो आपको उसकी रैंक मिल जाएगी!</li>
+          <li><strong>पर्सनल रिकॉर्डिंग:</strong> अगर मैच में कोई डाउट हो, तो आप इंस्टाग्राम पर BoomCraze को अपनी रिकॉर्डिंग भेज सकते हैं।</li>
+        `,
+        modalRuleNote: "💡 <strong>नियम:</strong> चैट का ऐसा स्क्रीनशॉट डालें जिसमें Opponent रिजल्ट पर राज़ी हो। ऊपर वाले खिलाड़ी को हराने पर रैंक स्वैप हो जाएगी!",
         tabRanked: "🏆 रैंकड लीडरबोर्ड",
         tabContenders: "⚔️ कंटेंडर्स कतार (Unranked)",
         sortTotal: "कुल पॉइंट्स (Overall)",
@@ -342,8 +372,8 @@
         colRange: "रेंज पॉइंट्स",
         colTotal: "कुल",
         loadingText: "लीडरबोर्ड डाटा लोड हो रहा है...",
-        footerText1: "Flex City इंडिया कम्युनिटी लीडरबोर्ड • 1v1 PvP टियर्स और स्क्रीनशॉट प्रूफ्स ट्रैक करें",
-        footerText2: "अनौपचारिक फैन-मेड प्लेटफॉर्म। Flex City या Jarvi Games से संबंधित नहीं है।",
+        footerContactText: "यदि आपको कोई समस्या है या 1v1 रिकॉर्डिंग भेजनी है, तो संपर्क करें:",
+        footerText1: "Flex City इंडिया कम्युनिटी लीडरबोर्ड • अनौपचारिक फैन-मेड प्लेटफॉर्म।",
         openSubmitBtn: "+ प्रूफ सबमिट करें",
         modalTitle: "Flex City लीडरबोर्ड में आपका स्वागत है!",
         modalSubText: "कृपया आगे बढ़ने के लिए अपना ऑफिशियल इन-गेम नाम (IGN) दर्ज करें।",
@@ -352,12 +382,11 @@
         editIgnSub: "अपना ऑफिशियल Flex City इन-गेम नाम अपडेट करें।",
         saveIgnBtn: "IGN सेव करें",
         submitProofTitle: "मैच स्क्रीनशॉट सबमिट करें",
-        submitProofSub: "अपने फोन या पीसी गैलरी से मैच का स्क्रीनशॉट चुनें।",
         labelIgn: "आपका इन-गेम नाम (IGN)",
         labelOpponent: "सामने वाले खिलाड़ी का नाम (Opponent)",
         labelCategory: "श्रेणी (Category)",
-        labelScreenshotFile: "स्क्रीनशॉट इमेज अपलोड करें",
-        submitProofBtn: "वेरिफिकेशन के लिए स्क्रीनशॉट भेजें"
+        labelScreenshotFile: "चैट स्क्रीनशॉट अपलोड करें",
+        submitProofBtn: "वेरिफिकेशन के लिए भेजें"
       }
     };
 
@@ -375,6 +404,14 @@
       setSafeText('descTitle', t.descTitle);
       setSafeText('langBtnText', t.langBtnText);
       setSafeText('descText', t.descText);
+      setSafeText('rulesHeading', t.rulesHeading);
+      
+      const rulesListEl = document.getElementById('rulesList');
+      if (rulesListEl) rulesListEl.innerHTML = t.rulesHtml;
+
+      const modalRuleEl = document.getElementById('modalRuleNote');
+      if (modalRuleEl) modalRuleEl.innerHTML = t.modalRuleNote;
+
       setSafeText('tabRanked', t.tabRanked);
       setSafeText('tabContenders', t.tabContenders);
       setSafeText('sort-total', t.sortTotal);
@@ -385,8 +422,8 @@
       setSafeText('colRange', t.colRange);
       setSafeText('colTotal', t.colTotal);
       setSafeText('loadingText', t.loadingText);
+      setSafeText('footerContactText', t.footerContactText);
       setSafeText('footerText1', t.footerText1);
-      setSafeText('footerText2', t.footerText2);
       setSafeText('openSubmitBtn', t.openSubmitBtn);
       setSafeText('modalTitle', t.modalTitle);
       setSafeText('modalSubText', t.modalSubText);
@@ -395,7 +432,6 @@
       setSafeText('editIgnSub', t.editIgnSub);
       setSafeText('saveIgnBtn', t.saveIgnBtn);
       setSafeText('submitProofTitle', t.submitProofTitle);
-      setSafeText('submitProofSub', t.submitProofSub);
       setSafeText('labelIgn', t.labelIgn);
       setSafeText('labelOpponent', t.labelOpponent);
       setSafeText('labelCategory', t.labelCategory);
@@ -529,7 +565,7 @@
       });
 
       if (sorted.length === 0) {
-        list.innerHTML = `<div class="p-8 text-center text-slate-400 text-xs">${currentMainTab === 'ranked' ? (currentLang === 'hi' ? 'कोई रैंकड खिलाड़ी नहीं है। लीडरबोर्ड पर आने के लिए 1v1 स्क्रीनशॉट प्रूफ सबमिट करें!' : 'No ranked players yet. Submit a 1v1 screenshot proof to get on the leaderboard!') : (currentLang === 'hi' ? 'कतार में कोई कंटेंडर नहीं है।' : 'No contenders in queue.')}</div>`;
+        list.innerHTML = `<div class="p-8 text-center text-slate-400 text-xs">${currentMainTab === 'ranked' ? (currentLang === 'hi' ? 'कोई रैंकड खिलाड़ी नहीं है। लीडरबोर्ड पर आने के लिए चैट स्क्रीनशॉट प्रूफ सबमिट करें!' : 'No ranked players yet. Submit a chat screenshot proof to get on the leaderboard!') : (currentLang === 'hi' ? 'कतार में कोई कंटेंडर नहीं है।' : 'No contenders in queue.')}</div>`;
         return;
       }
 
@@ -677,7 +713,6 @@
       document.getElementById('submitModal').classList.add('flex');
     };
 
-    // Compress image automatically so mobile screenshots fit cleanly in Firestore (< 300KB)
     function compressImage(file, callback) {
       const reader = new FileReader();
       reader.onload = (e) => {
@@ -704,6 +739,10 @@
       const opponent = document.getElementById('opponentInput').value.trim();
       const category = document.getElementById('categoryInput').value;
       const fileInput = document.getElementById('screenshotFileInput');
+
+      if (ign.toLowerCase() === opponent.toLowerCase()) {
+        return alert(currentLang === 'hi' ? "आप खुद के खिलाफ मैच सबमिट नहीं कर सकते!" : "You cannot submit a match against yourself!");
+      }
 
       if (fileInput.files.length === 0) return alert("Please select a screenshot image!");
       const btn = document.getElementById('submitProofBtn');
@@ -778,7 +817,7 @@
             </div>
             <div class="flex gap-1.5">
               <button onclick="approveSub('${sid}')" class="bg-emerald-500 text-slate-950 font-bold px-2.5 py-1 rounded-lg text-[10px]">Approve</button>
-              <button onclick="rejectSub('${sid}')" class="bg-rose-500/20 text-rose-400 px-2.5 py-1 rounded-lg text-[10px]">Reject</button>
+              <button onclick="rejectSub('${sid}')" class="bg-rose-500/20 text-rose-400 px-2.5 py-1 rounded-lg text-[10px]">Reject & Delete</button>
             </div>
           </div>
         `;
@@ -805,8 +844,15 @@
       
       if (pSnap.exists()) {
         const data = pSnap.data();
-        const proofs = data.proofs || [];
-        proofs.unshift({ category: s.category, opponent: s.opponent, url: s.screenshotUrl || "", pointsAdded: pts });
+        let proofs = data.proofs || [];
+        proofs.unshift({ 
+          category: s.category, 
+          opponent: s.opponent, 
+          url: s.screenshotUrl || "", 
+          pointsAdded: pts,
+          timestamp: Date.now()
+        });
+        if (proofs.length > 8) proofs = proofs.slice(0, 8);
 
         const updateData = { proofs };
         if (s.category === 'long') {
@@ -818,13 +864,13 @@
         }
         await updateDoc(playerRef, updateData);
       }
-      await updateDoc(doc(db, "submissions", sid), { status: "approved" });
+      await deleteDoc(doc(db, "submissions", sid));
       loadPendingSubmissions();
       loadLeaderboard();
     };
 
     window.rejectSub = async (sid) => {
-      await updateDoc(doc(db, "submissions", sid), { status: "rejected" });
+      await deleteDoc(doc(db, "submissions", sid));
       loadPendingSubmissions();
     };
 
