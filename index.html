@@ -7,25 +7,25 @@
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     body { background-color: #0b0e14; color: #e2e8f0; font-family: 'Inter', system-ui, sans-serif; }
-    .neon-border { border: 1px solid rgba(56, 189, 248, 0.3); box-shadow: 0 0 15px rgba(56, 189, 248, 0.1); }
+    .neon-border { border: 1px solid rgba(56, 189, 248, 0.2); box-shadow: 0 0 12px rgba(56, 189, 248, 0.08); }
     .card-bg { background: linear-gradient(145deg, #131824, #0f131d); }
   </style>
 </head>
-<body class="min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col antialiased">
 
   <!-- Navbar -->
-  <nav class="border-b border-slate-800 bg-[#0d111a]/90 backdrop-blur sticky top-0 z-40">
-    <div class="max-w-5xl mx-auto px-4 py-3 flex items-center justify-between">
-      <div class="flex items-center gap-3">
-        <div class="w-9 h-9 rounded-lg bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center font-black text-white text-lg">FC</div>
+  <nav class="border-b border-slate-800/80 bg-[#0d111a]/90 backdrop-blur sticky top-0 z-40">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center font-black text-white text-sm">FC</div>
         <div>
-          <h1 class="font-bold text-lg tracking-wide text-white">FLEX CITY <span class="text-cyan-400">TIERS</span></h1>
-          <p class="text-[11px] text-slate-400 -mt-1">1v1 Competitive Ranking</p>
+          <h1 class="font-bold text-base tracking-wide text-white">FLEX CITY <span class="text-cyan-400">TIERS</span></h1>
+          <p class="text-[10px] text-slate-400 -mt-1">Competitive 1v1 Ranking</p>
         </div>
       </div>
 
-      <div id="authArea" class="flex items-center gap-3">
-        <button id="loginBtn" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold px-4 py-1.5 rounded-lg text-sm transition">
+      <div id="authArea" class="flex items-center gap-2">
+        <button id="loginBtn" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold px-3 py-1.5 rounded-lg text-xs transition">
           Login with Google
         </button>
       </div>
@@ -33,95 +33,117 @@
   </nav>
 
   <!-- Main Content -->
-  <main class="max-w-5xl w-full mx-auto px-4 py-6 flex-1">
+  <main class="max-w-4xl w-full mx-auto px-3 py-4 flex-1">
 
-    <!-- Region Tabs + Action Buttons -->
-    <div class="flex flex-wrap items-center justify-between gap-3 mb-6">
-      <div class="flex items-center gap-2 bg-slate-900 p-1 rounded-xl border border-slate-800">
-        <button class="px-4 py-1.5 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 font-semibold text-sm flex items-center gap-2">
+    <!-- Region & Action Bar -->
+    <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-4">
+      <div class="flex items-center gap-2 bg-slate-900/80 p-1 rounded-xl border border-slate-800 self-start">
+        <button class="px-3 py-1 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-semibold text-xs flex items-center gap-1.5">
           🇮🇳 India
         </button>
-        <button disabled class="px-4 py-1.5 rounded-lg text-slate-500 text-sm cursor-not-allowed">
+        <button disabled class="px-3 py-1 rounded-lg text-slate-500 text-xs cursor-not-allowed">
           🌍 Global (Soon)
         </button>
       </div>
 
       <div class="flex items-center gap-2">
-        <button id="openSubmitBtn" class="hidden bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold px-4 py-2 rounded-lg text-sm transition">
-          + Submit 1v1 Proof
+        <button id="openSubmitBtn" class="hidden flex-1 sm:flex-none bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold px-3.5 py-2 rounded-xl text-xs transition text-center">
+          + Submit Proof
         </button>
-        <button id="openAdminBtn" class="hidden bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold px-4 py-2 rounded-lg text-sm transition">
-          🛡️ Admin Panel (<span id="pendingCount">0</span>)
+        <button id="openAdminBtn" class="hidden flex-1 sm:flex-none bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold px-3.5 py-2 rounded-xl text-xs transition text-center">
+          🛡️ Admin (<span id="pendingCount">0</span>)
         </button>
       </div>
     </div>
 
-    <!-- Category Filter -->
-    <div class="flex gap-2 mb-4">
-      <button onclick="setSort('total')" id="sort-total" class="sort-btn px-3 py-1 rounded-md text-xs font-semibold bg-cyan-500 text-slate-950">Overall Rank</button>
-      <button onclick="setSort('long')" id="sort-long" class="sort-btn px-3 py-1 rounded-md text-xs font-semibold bg-slate-800 text-slate-300">Long Range Top</button>
-      <button onclick="setSort('short')" id="sort-short" class="sort-btn px-3 py-1 rounded-md text-xs font-semibold bg-slate-800 text-slate-300">Short Range Top</button>
+    <!-- Main Section Tabs: Ranked vs Contenders -->
+    <div class="grid grid-cols-2 gap-2 mb-4 bg-slate-900/60 p-1.5 rounded-2xl border border-slate-800/80">
+      <button onclick="switchMainTab('ranked')" id="tabRanked" class="py-2 px-3 rounded-xl text-xs font-bold transition bg-cyan-500 text-slate-950 text-center">
+        🏆 Ranked Tiers
+      </button>
+      <button onclick="switchMainTab('contenders')" id="tabContenders" class="py-2 px-3 rounded-xl text-xs font-bold transition text-slate-400 hover:text-white text-center">
+        ⚔️ Contenders (Unranked)
+      </button>
     </div>
 
-    <!-- Leaderboard Table -->
+    <!-- Category Filter (Only for Ranked) -->
+    <div id="categoryFilters" class="flex items-center gap-1.5 mb-3 overflow-x-auto pb-1">
+      <button onclick="setSort('total')" id="sort-total" class="sort-btn px-2.5 py-1 rounded-lg text-xs font-semibold bg-cyan-500 text-slate-950 whitespace-nowrap">Overall</button>
+      <button onclick="setSort('long')" id="sort-long" class="sort-btn px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 whitespace-nowrap">Long Range Top</button>
+      <button onclick="setSort('short')" id="sort-short" class="sort-btn px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 whitespace-nowrap">Short Range Top</button>
+    </div>
+
+    <!-- Leaderboard Card Container -->
     <div class="card-bg rounded-2xl neon-border overflow-hidden">
-      <div class="grid grid-cols-12 px-4 py-3 border-b border-slate-800 text-xs font-semibold text-slate-400 uppercase">
+      <div class="grid grid-cols-12 px-3 py-2.5 border-b border-slate-800/80 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
         <div class="col-span-2">Rank</div>
-        <div class="col-span-5">Player (Click for Details)</div>
-        <div class="col-span-2 text-center">Long</div>
-        <div class="col-span-2 text-center">Short</div>
-        <div class="col-span-1 text-right">Pts</div>
+        <div class="col-span-6">Player</div>
+        <div class="col-span-2 text-center">Range Pts</div>
+        <div class="col-span-2 text-right">Total</div>
       </div>
-      <div id="leaderboardList" class="divide-y divide-slate-800/70">
-        <div class="p-8 text-center text-slate-400 text-sm">Loading India Leaderboard...</div>
+      <div id="leaderboardList" class="divide-y divide-slate-800/50">
+        <div class="p-6 text-center text-slate-400 text-xs">Loading India Leaderboard...</div>
       </div>
     </div>
 
   </main>
 
   <!-- Footer -->
-  <footer class="border-t border-slate-800/80 py-4 text-center text-xs text-slate-500 px-4">
-    This is an unofficial fan-made community leaderboard and is not affiliated with Flex City or Jarvi Games.
+  <footer class="border-t border-slate-800/60 py-3 text-center text-[11px] text-slate-500 px-4">
+    Unofficial community fan leaderboard. Not affiliated with Flex City or Jarvi Games.
   </footer>
+
+  <!-- Forced IGN Setup Modal (For New Users) -->
+  <div id="forcedIgnModal" class="fixed inset-0 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+    <div class="card-bg neon-border rounded-2xl max-w-sm w-full p-6 relative">
+      <h2 class="text-base font-bold text-white mb-1">Welcome to Flex City Tiers!</h2>
+      <p class="text-xs text-slate-400 mb-4">Please enter your official In-Game Name (IGN) to continue.</p>
+      <form id="forcedIgnForm" class="space-y-3">
+        <input type="text" id="forcedIgnInput" required placeholder="e.g. BoomCraze" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500" />
+        <button type="submit" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs transition">
+          Continue to Tiers
+        </button>
+      </form>
+    </div>
+  </div>
 
   <!-- Player Profile Modal -->
   <div id="playerModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
-    <div class="card-bg neon-border rounded-2xl max-w-xl w-full p-6 relative max-h-[90vh] overflow-y-auto">
-      <button onclick="closeModal('playerModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">&times;</button>
-      <div class="flex items-center gap-3 mb-4">
-        <img id="modalAvatar" src="" class="w-12 h-12 rounded-full border border-cyan-500/40" />
+    <div class="card-bg neon-border rounded-2xl max-w-md w-full p-5 relative max-h-[85vh] overflow-y-auto">
+      <button onclick="closeModal('playerModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg">&times;</button>
+      <div class="flex items-center gap-3 mb-3">
+        <img id="modalAvatar" src="" class="w-11 h-11 rounded-full border border-cyan-500/40 object-cover" />
         <div>
-          <h2 id="modalName" class="text-xl font-bold text-white">Player Name</h2>
-          <p id="modalSub" class="text-xs text-slate-400">Total 1v1s: 0 • Total Points: 0</p>
+          <h2 id="modalName" class="text-base font-bold text-white">Player Name</h2>
+          <p id="modalSub" class="text-[11px] text-slate-400">Total 1v1s: 0 • Total Pts: 0</p>
         </div>
       </div>
 
-      <!-- Long / Short Range Tabs -->
-      <div class="grid grid-cols-2 gap-2 bg-slate-900 p-1 rounded-xl mb-4">
-        <button id="tabLongBtn" onclick="switchPlayerTab('long')" class="py-2 rounded-lg text-sm font-semibold bg-cyan-500 text-slate-950">
+      <div class="grid grid-cols-2 gap-2 bg-slate-900/90 p-1 rounded-xl mb-3 border border-slate-800">
+        <button id="tabLongBtn" onclick="switchPlayerTab('long')" class="py-1.5 rounded-lg text-xs font-semibold bg-cyan-500 text-slate-950">
           🎯 Long Range
         </button>
-        <button id="tabShortBtn" onclick="switchPlayerTab('short')" class="py-2 rounded-lg text-sm font-semibold text-slate-400">
+        <button id="tabShortBtn" onclick="switchPlayerTab('short')" class="py-1.5 rounded-lg text-xs font-semibold text-slate-400">
           ⚔️ Short Range
         </button>
       </div>
 
-      <div id="modalStats" class="grid grid-cols-2 gap-3 mb-4"></div>
+      <div id="modalStats" class="grid grid-cols-2 gap-2.5 mb-3"></div>
 
-      <h3 class="text-xs font-semibold uppercase text-slate-400 mb-2">Verified 1v1 Video Proofs</h3>
-      <div id="modalVideos" class="space-y-3"></div>
+      <h3 class="text-[11px] font-semibold uppercase text-slate-400 mb-2 tracking-wider">Verified 1v1 Video Proofs</h3>
+      <div id="modalVideos" class="space-y-2.5"></div>
     </div>
   </div>
 
-  <!-- Set IGN Modal -->
+  <!-- Set IGN Modal (For Profile Editing) -->
   <div id="ignModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
-    <div class="card-bg neon-border rounded-2xl max-w-sm w-full p-6 relative">
-      <button onclick="closeModal('ignModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">&times;</button>
-      <h2 class="text-lg font-bold text-white mb-1">Set Your Gaming IGN</h2>
-      <p class="text-xs text-slate-400 mb-4">Enter your official Flex City In-Game Name.</p>
+    <div class="card-bg neon-border rounded-2xl max-w-sm w-full p-5 relative">
+      <button onclick="closeModal('ignModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg">&times;</button>
+      <h2 class="text-base font-bold text-white mb-1">Edit Your IGN</h2>
+      <p class="text-xs text-slate-400 mb-3">Update your official Flex City In-Game Name.</p>
       <form id="ignForm" class="space-y-3">
-        <input type="text" id="newIgnInput" required placeholder="e.g. BoomCraze" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white" />
-        <button type="submit" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-2 rounded-lg text-sm transition">
+        <input type="text" id="newIgnInput" required placeholder="e.g. BoomCraze" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500" />
+        <button type="submit" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-2 rounded-xl text-xs transition">
           Save IGN
         </button>
       </form>
@@ -130,33 +152,33 @@
 
   <!-- Submit Proof Modal -->
   <div id="submitModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
-    <div class="card-bg neon-border rounded-2xl max-w-md w-full p-6 relative">
-      <button onclick="closeModal('submitModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">&times;</button>
-      <h2 class="text-lg font-bold text-white mb-1">Submit 1v1 Video Proof</h2>
-      <p class="text-xs text-slate-400 mb-4">Upload your 1v1 on YouTube (Unlisted) and paste the link below.</p>
+    <div class="card-bg neon-border rounded-2xl max-w-md w-full p-5 relative">
+      <button onclick="closeModal('submitModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg">&times;</button>
+      <h2 class="text-base font-bold text-white mb-1">Submit 1v1 Proof</h2>
+      <p class="text-xs text-slate-400 mb-3">Upload your video proof on YouTube (Unlisted) and share details.</p>
 
-      <form id="proofForm" class="space-y-3">
+      <form id="proofForm" class="space-y-2.5">
         <div>
-          <label class="text-xs text-slate-300 block mb-1">Your In-Game Name (Flex City)</label>
-          <input type="text" id="ignInput" required placeholder="e.g. BoomCraze" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white" />
+          <label class="text-[11px] text-slate-300 block mb-1">Your IGN (Flex City)</label>
+          <input type="text" id="ignInput" required placeholder="e.g. BoomCraze" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" />
         </div>
         <div>
-          <label class="text-xs text-slate-300 block mb-1">Opponent Name (Whom you defeated)</label>
-          <input type="text" id="opponentInput" required placeholder="Opponent IGN" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white" />
+          <label class="text-[11px] text-slate-300 block mb-1">Opponent Name</label>
+          <input type="text" id="opponentInput" required placeholder="Opponent IGN" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" />
         </div>
         <div>
-          <label class="text-xs text-slate-300 block mb-1">1v1 Category</label>
-          <select id="categoryInput" class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white">
+          <label class="text-[11px] text-slate-300 block mb-1">Category</label>
+          <select id="categoryInput" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
             <option value="long">Long Range</option>
             <option value="short">Short Range</option>
           </select>
         </div>
         <div>
-          <label class="text-xs text-slate-300 block mb-1">YouTube Video Link (Proof)</label>
-          <input type="url" id="videoUrlInput" required placeholder="https://youtu.be/..." class="w-full bg-slate-900 border border-slate-700 rounded-lg px-3 py-2 text-sm text-white" />
+          <label class="text-[11px] text-slate-300 block mb-1">YouTube Video Link</label>
+          <input type="url" id="videoUrlInput" required placeholder="https://youtu.be/..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" />
         </div>
-        <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-2.5 rounded-lg text-sm transition">
-          Send for Admin Verification
+        <button type="submit" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs transition mt-2">
+          Send for Verification
         </button>
       </form>
     </div>
@@ -164,11 +186,11 @@
 
   <!-- Admin Panel Modal -->
   <div id="adminModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
-    <div class="card-bg neon-border rounded-2xl max-w-2xl w-full p-6 relative max-h-[90vh] overflow-y-auto">
-      <button onclick="closeModal('adminModal')" class="absolute top-4 right-4 text-slate-400 hover:text-white text-xl">&times;</button>
-      <h2 class="text-lg font-bold text-amber-400 mb-1">🛡️ Admin Verification Queue</h2>
-      <p class="text-xs text-slate-400 mb-4">Watch video proofs, fix/edit player IGNs, assign points, and approve submissions.</p>
-      <div id="pendingList" class="space-y-3"></div>
+    <div class="card-bg neon-border rounded-2xl max-w-xl w-full p-5 relative max-h-[85vh] overflow-y-auto">
+      <button onclick="closeModal('adminModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg">&times;</button>
+      <h2 class="text-base font-bold text-amber-400 mb-1">🛡️ Admin Verification Queue</h2>
+      <p class="text-xs text-slate-400 mb-3">Verify video proofs, assign points, and approve submissions.</p>
+      <div id="pendingList" class="space-y-2.5"></div>
     </div>
   </div>
 
@@ -176,7 +198,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, collection, doc, setDoc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, query, where, orderBy } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getFirestore, collection, doc, setDoc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDZylrN12JJn11p4yQ9lCqd2MGOrr9jk7U",
@@ -197,11 +219,11 @@
     let currentUser = null;
     let allPlayers = [];
     let currentSort = 'total';
+    let currentMainTab = 'ranked'; // 'ranked' or 'contenders'
     let selectedPlayer = null;
     let selectedModalTab = 'long';
     let userIgn = "";
 
-    // Auth Listener
     onAuthStateChanged(auth, async (user) => {
       currentUser = user;
       const authArea = document.getElementById('authArea');
@@ -213,27 +235,18 @@
         const snap = await getDoc(playerRef);
         
         if (!snap.exists()) {
-          userIgn = user.displayName || "Player";
-          await setDoc(playerRef, {
-            uid: user.uid,
-            name: user.displayName || "Player",
-            ign: userIgn,
-            photo: user.photoURL || "https://api.dicebear.com/7.x/avataaars/svg?seed=" + user.uid,
-            longPoints: 0,
-            shortPoints: 0,
-            longMatches: 0,
-            shortMatches: 0,
-            videos: []
-          });
+          // New User -> Open Forced IGN Modal
+          document.getElementById('forcedIgnModal').classList.remove('hidden');
+          document.getElementById('forcedIgnModal').classList.add('flex');
         } else {
           userIgn = snap.data().ign || user.displayName || "Player";
         }
 
         authArea.innerHTML = `
-          <div class="flex items-center gap-2">
-            <span class="text-xs text-cyan-300 font-semibold hidden sm:inline">${userIgn}</span>
-            <button onclick="openIgnModal()" class="bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 border border-cyan-500/40 px-2.5 py-1 rounded-lg text-xs font-semibold">✏️ Set IGN</button>
-            <button id="logoutBtn" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-3 py-1.5 rounded-lg text-xs">Logout</button>
+          <div class="flex items-center gap-1.5">
+            <span class="text-xs text-cyan-300 font-semibold hidden sm:inline max-w-[100px] truncate">${userIgn}</span>
+            <button onclick="openIgnModal()" class="bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 border border-cyan-500/30 px-2 py-1 rounded-lg text-[11px] font-semibold">✏️ IGN</button>
+            <button id="logoutBtn" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-2.5 py-1 rounded-lg text-[11px]">Logout</button>
           </div>
         `;
         document.getElementById('logoutBtn').onclick = () => signOut(auth);
@@ -245,7 +258,7 @@
           loadPendingSubmissions();
         }
       } else {
-        authArea.innerHTML = `<button id="loginBtn" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold px-4 py-1.5 rounded-lg text-sm transition">Login with Google</button>`;
+        authArea.innerHTML = `<button id="loginBtn" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold px-3 py-1.5 rounded-lg text-xs transition">Login with Google</button>`;
         document.getElementById('loginBtn').onclick = () => signInWithPopup(auth, provider);
         submitBtn.classList.add('hidden');
         adminBtn.classList.add('hidden');
@@ -253,13 +266,54 @@
       loadLeaderboard();
     });
 
-    // Load Players
+    // Forced IGN Submit
+    document.getElementById('forcedIgnForm').onsubmit = async (e) => {
+      e.preventDefault();
+      if (!currentUser) return;
+      const ign = document.getElementById('forcedIgnInput').value.trim();
+      if (!ign) return;
+
+      userIgn = ign;
+      await setDoc(doc(db, "players", currentUser.uid), {
+        uid: currentUser.uid,
+        name: currentUser.displayName || "Player",
+        ign: userIgn,
+        photo: currentUser.photoURL || "https://api.dicebear.com/7.x/avataaars/svg?seed=" + currentUser.uid,
+        longPoints: 0,
+        shortPoints: 0,
+        longMatches: 0,
+        shortMatches: 0,
+        videos: []
+      }, { merge: true });
+
+      closeModal('forcedIgnModal');
+      location.reload();
+    };
+
     async function loadLeaderboard() {
       const snap = await getDocs(collection(db, "players"));
       allPlayers = [];
       snap.forEach(d => allPlayers.push({ id: d.id, ...d.data() }));
       renderLeaderboard();
     }
+
+    window.switchMainTab = (tab) => {
+      currentMainTab = tab;
+      const rankedBtn = document.getElementById('tabRanked');
+      const contendersBtn = document.getElementById('tabContenders');
+      const filters = document.getElementById('categoryFilters');
+
+      if (tab === 'ranked') {
+        rankedBtn.className = "py-2 px-3 rounded-xl text-xs font-bold transition bg-cyan-500 text-slate-950 text-center";
+        contendersBtn.className = "py-2 px-3 rounded-xl text-xs font-bold transition text-slate-400 hover:text-white text-center";
+        filters.classList.remove('hidden');
+      } else {
+        contendersBtn.className = "py-2 px-3 rounded-xl text-xs font-bold transition bg-cyan-500 text-slate-950 text-center";
+        rankedBtn.className = "py-2 px-3 rounded-xl text-xs font-bold transition text-slate-400 hover:text-white text-center";
+        filters.classList.add('hidden');
+      }
+      renderLeaderboard();
+    };
 
     window.setSort = (type) => {
       currentSort = type;
@@ -274,46 +328,52 @@
 
     function renderLeaderboard() {
       const list = document.getElementById('leaderboardList');
-      const sorted = [...allPlayers].sort((a, b) => {
+      
+      // Filter players based on tab: Ranked (points > 0) vs Contenders (points === 0)
+      const filtered = allPlayers.filter(p => {
+        const pts = (p.longPoints || 0) + (p.shortPoints || 0);
+        return currentMainTab === 'ranked' ? pts > 0 : pts === 0;
+      });
+
+      const sorted = filtered.sort((a, b) => {
+        if (currentMainTab === 'contenders') return 0;
         if (currentSort === 'long') return (b.longPoints || 0) - (a.longPoints || 0);
         if (currentSort === 'short') return (b.shortPoints || 0) - (a.shortPoints || 0);
         return ((b.longPoints || 0) + (b.shortPoints || 0)) - ((a.longPoints || 0) + (a.shortPoints || 0));
       });
 
       if (sorted.length === 0) {
-        list.innerHTML = `<div class="p-8 text-center text-slate-400 text-sm">No players registered yet. Login with Google to join the India Tier List!</div>`;
+        list.innerHTML = `<div class="p-8 text-center text-slate-400 text-xs">${currentMainTab === 'ranked' ? 'No ranked players yet. Submit a 1v1 proof to get on the Tiers!' : 'No contenders in queue.'}</div>`;
         return;
       }
 
       list.innerHTML = sorted.map((p, i) => {
         const totalPts = (p.longPoints || 0) + (p.shortPoints || 0);
-        const rankBadge = i === 0 ? '🥇 #1' : i === 1 ? '🥈 #2' : i === 2 ? '🥉 #3' : `#${i + 1}`;
+        const rankBadge = currentMainTab === 'contenders' ? '⏳' : (i === 0 ? '🥇 #1' : i === 1 ? '🥈 #2' : i === 2 ? '🥉 #3' : `#${i + 1}`);
         return `
-          <div onclick="openPlayer('${p.id}')" class="grid grid-cols-12 items-center px-4 py-3.5 hover:bg-slate-800/50 cursor-pointer transition">
-            <div class="col-span-2 font-bold text-sm ${i < 3 ? 'text-cyan-400' : 'text-slate-400'}">${rankBadge}</div>
-            <div class="col-span-5 flex items-center gap-2.5">
-              <img src="${p.photo}" class="w-8 h-8 rounded-full border border-slate-700" />
-              <div>
-                <div class="font-semibold text-sm text-white">${p.ign || p.name}</div>
-                <div class="text-[11px] text-slate-400">${(p.longMatches || 0) + (p.shortMatches || 0)} 1v1s played</div>
+          <div onclick="openPlayer('${p.id}')" class="grid grid-cols-12 items-center px-3 py-3 hover:bg-slate-800/40 cursor-pointer transition">
+            <div class="col-span-2 font-bold text-xs ${i < 3 && currentMainTab === 'ranked' ? 'text-cyan-400' : 'text-slate-400'}">${rankBadge}</div>
+            <div class="col-span-6 flex items-center gap-2">
+              <img src="${p.photo}" class="w-7 h-7 rounded-full border border-slate-700 object-cover" />
+              <div class="truncate">
+                <div class="font-semibold text-xs text-white truncate">${p.ign || p.name}</div>
+                <div class="text-[10px] text-slate-400">${(p.longMatches || 0) + (p.shortMatches || 0)} matches</div>
               </div>
             </div>
-            <div class="col-span-2 text-center text-sm font-medium text-sky-300">${p.longPoints || 0}</div>
-            <div class="col-span-2 text-center text-sm font-medium text-purple-300">${p.shortPoints || 0}</div>
-            <div class="col-span-1 text-right font-bold text-sm text-emerald-400">${totalPts}</div>
+            <div class="col-span-2 text-center text-xs font-medium text-sky-300">${currentMainTab === 'ranked' ? (currentSort === 'long' ? p.longPoints || 0 : (currentSort === 'short' ? p.shortPoints || 0 : (p.longPoints || 0) + (p.shortPoints || 0))) : '-'}</div>
+            <div class="col-span-2 text-right font-bold text-xs text-emerald-400">${totalPts}</div>
           </div>
         `;
       }).join('');
     }
 
-    // Open IGN Modal (User)
+    // IGN Update Modal
     window.openIgnModal = () => {
       document.getElementById('newIgnInput').value = userIgn;
       document.getElementById('ignModal').classList.remove('hidden');
       document.getElementById('ignModal').classList.add('flex');
     };
 
-    // Save IGN Form (User)
     document.getElementById('ignForm').onsubmit = async (e) => {
       e.preventDefault();
       if (!currentUser) return;
@@ -322,11 +382,6 @@
 
       await updateDoc(doc(db, "players", currentUser.uid), { ign: newIgn });
       userIgn = newIgn;
-      document.getElementById('ignInput').value = newIgn;
-      
-      const authArea = document.getElementById('authArea');
-      authArea.querySelector('span').innerText = newIgn;
-
       closeModal('ignModal');
       loadLeaderboard();
       alert("IGN updated successfully!");
@@ -340,7 +395,7 @@
       document.getElementById('modalName').innerText = selectedPlayer.ign || selectedPlayer.name;
       const total1v1 = (selectedPlayer.longMatches || 0) + (selectedPlayer.shortMatches || 0);
       const totalPts = (selectedPlayer.longPoints || 0) + (selectedPlayer.shortPoints || 0);
-      document.getElementById('modalSub').innerText = `Total 1v1s: ${total1v1} • Total Points: ${totalPts}`;
+      document.getElementById('modalSub').innerText = `Total 1v1s: ${total1v1} • Total Pts: ${totalPts}`;
       switchPlayerTab('long');
       document.getElementById('playerModal').classList.remove('hidden');
       document.getElementById('playerModal').classList.add('flex');
@@ -351,40 +406,40 @@
       const longBtn = document.getElementById('tabLongBtn');
       const shortBtn = document.getElementById('tabShortBtn');
       if (tab === 'long') {
-        longBtn.className = "py-2 rounded-lg text-sm font-semibold bg-cyan-500 text-slate-950";
-        shortBtn.className = "py-2 rounded-lg text-sm font-semibold text-slate-400";
+        longBtn.className = "py-1.5 rounded-lg text-xs font-semibold bg-cyan-500 text-slate-950";
+        shortBtn.className = "py-1.5 rounded-lg text-xs font-semibold text-slate-400";
       } else {
-        shortBtn.className = "py-2 rounded-lg text-sm font-semibold bg-cyan-500 text-slate-950";
-        longBtn.className = "py-2 rounded-lg text-sm font-semibold text-slate-400";
+        shortBtn.className = "py-1.5 rounded-lg text-xs font-semibold bg-cyan-500 text-slate-950";
+        longBtn.className = "py-1.5 rounded-lg text-xs font-semibold text-slate-400";
       }
 
       const pts = tab === 'long' ? (selectedPlayer.longPoints || 0) : (selectedPlayer.shortPoints || 0);
       const matches = tab === 'long' ? (selectedPlayer.longMatches || 0) : (selectedPlayer.shortMatches || 0);
       document.getElementById('modalStats').innerHTML = `
-        <div class="bg-slate-900/90 border border-slate-800 p-3 rounded-xl">
-          <div class="text-xs text-slate-400">${tab === 'long' ? 'Long Range' : 'Short Range'} Points</div>
-          <div class="text-xl font-bold text-cyan-400">${pts}</div>
+        <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-xl">
+          <div class="text-[10px] text-slate-400">${tab === 'long' ? 'Long Range' : 'Short Range'} Pts</div>
+          <div class="text-base font-bold text-cyan-400">${pts}</div>
         </div>
-        <div class="bg-slate-900/90 border border-slate-800 p-3 rounded-xl">
-          <div class="text-xs text-slate-400">1v1 Matches Played</div>
-          <div class="text-xl font-bold text-emerald-400">${matches}</div>
+        <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-xl">
+          <div class="text-[10px] text-slate-400">Matches Played</div>
+          <div class="text-base font-bold text-emerald-400">${matches}</div>
         </div>
       `;
 
       const vids = (selectedPlayer.videos || []).filter(v => v.category === tab);
       const vidContainer = document.getElementById('modalVideos');
       if (vids.length === 0) {
-        vidContainer.innerHTML = `<p class="text-xs text-slate-500 bg-slate-900/50 p-4 rounded-xl text-center">No verified ${tab} range videos yet.</p>`;
+        vidContainer.innerHTML = `<p class="text-[11px] text-slate-500 bg-slate-900/40 p-3 rounded-xl text-center">No verified ${tab} range videos yet.</p>`;
       } else {
         vidContainer.innerHTML = vids.map(v => {
           const embedUrl = toYouTubeEmbed(v.url);
           return `
-            <div class="bg-slate-900 border border-slate-800 rounded-xl p-3">
-              <div class="flex justify-between text-xs mb-2">
+            <div class="bg-slate-900 border border-slate-800 rounded-xl p-2.5">
+              <div class="flex justify-between text-[11px] mb-1.5">
                 <span class="text-white font-semibold">vs ${v.opponent}</span>
                 <span class="text-emerald-400">+${v.pointsAdded} pts</span>
               </div>
-              ${embedUrl ? `<iframe class="w-full h-48 rounded-lg" src="${embedUrl}" frameborder="0" allowfullscreen></iframe>` : `<a href="${v.url}" target="_blank" class="text-cyan-400 text-xs underline">Watch Video Proof</a>`}
+              ${embedUrl ? `<iframe class="w-full h-36 rounded-lg" src="${embedUrl}" frameborder="0" allowfullscreen></iframe>` : `<a href="${v.url}" target="_blank" class="text-cyan-400 text-xs underline">Watch Proof</a>`}
             </div>
           `;
         }).join('');
@@ -424,13 +479,13 @@
         createdAt: Date.now()
       });
 
-      alert("Proof submitted! Admin will verify your video and update your rank.");
+      alert("Proof submitted successfully! Admin will verify soon.");
       closeModal('submitModal');
       e.target.reset();
       loadLeaderboard();
     };
 
-    // Admin Panel Functions
+    // Admin Panel
     document.getElementById('openAdminBtn').onclick = () => {
       loadPendingSubmissions();
       document.getElementById('adminModal').classList.remove('hidden');
@@ -444,7 +499,7 @@
       const list = document.getElementById('pendingList');
 
       if (snap.empty) {
-        list.innerHTML = `<p class="text-sm text-slate-400 text-center py-6">No pending 1v1 proofs right now.</p>`;
+        list.innerHTML = `<p class="text-xs text-slate-400 text-center py-6">No pending 1v1 proofs.</p>`;
         return;
       }
 
@@ -453,26 +508,28 @@
         const s = docSnap.data();
         const sid = docSnap.id;
         const div = document.createElement('div');
-        div.className = "bg-slate-900 border border-slate-800 rounded-xl p-4 space-y-3";
+        div.className = "bg-slate-900 border border-slate-800 rounded-xl p-3 space-y-2.5";
         div.innerHTML = `
           <div class="flex justify-between items-start">
             <div>
-              <div class="text-xs text-slate-400 mb-0.5">Submitted Player IGN:</div>
+              <div class="text-[10px] text-slate-400 mb-0.5">Player IGN:</div>
               <div class="flex items-center gap-2">
-                <input type="text" id="admin-ign-${sid}" value="${s.ign}" class="bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1 text-sm font-bold text-white" />
-                <button onclick="updatePlayerIgnByAdmin('${s.uid}', '${sid}')" class="bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 text-xs px-2.5 py-1.5 rounded-lg border border-cyan-500/30">Update IGN</button>
+                <input type="text" id="admin-ign-${sid}" value="${s.ign}" class="bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-xs font-bold text-white" />
+                <button onclick="updatePlayerIgnByAdmin('${s.uid}', '${sid}')" class="bg-cyan-500/20 text-cyan-400 text-[10px] px-2 py-1 rounded-lg border border-cyan-500/30">Update IGN</button>
               </div>
-              <div class="text-xs text-slate-400 mt-2">vs Opponent: <span class="font-semibold text-cyan-300">${s.opponent}</span> • <span class="text-amber-400 uppercase font-semibold">${s.category} Range</span></div>
+              <div class="text-[10px] text-slate-400 mt-1.5">vs <span class="text-cyan-300 font-semibold">${s.opponent}</span> • <span class="text-amber-400 uppercase">${s.category}</span></div>
             </div>
-            <a href="${s.videoUrl}" target="_blank" class="bg-slate-800 hover:bg-slate-700 text-cyan-400 text-xs px-3 py-1.5 rounded-lg">Watch Proof ↗</a>
+            <a href="${s.videoUrl}" target="_blank" class="bg-slate-800 text-cyan-400 text-[10px] px-2.5 py-1 rounded-lg">Watch Proof ↗</a>
           </div>
-          <div class="flex flex-wrap items-center gap-2 pt-2 border-t border-slate-800">
+          <div class="flex items-center justify-between pt-2 border-t border-slate-800">
             <div class="flex items-center gap-1.5">
-              <span class="text-xs text-slate-400">Points:</span>
-              <input type="number" id="pts-${sid}" value="25" class="w-20 bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-sm text-white" />
+              <span class="text-[10px] text-slate-400">Pts:</span>
+              <input type="number" id="pts-${sid}" value="25" class="w-16 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-xs text-white text-center" />
             </div>
-            <button onclick="approveSub('${sid}', '${s.uid}', '${s.opponent}', '${s.category}')" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs">Approve & Add Points</button>
-            <button onclick="rejectSub('${sid}')" class="bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 px-3 py-1.5 rounded-lg text-xs">Reject</button>
+            <div class="flex gap-1.5">
+              <button onclick="approveSub('${sid}', '${s.uid}', '${s.opponent}', '${s.category}', '${s.videoUrl}')" class="bg-emerald-500 text-slate-950 font-bold px-2.5 py-1 rounded-lg text-[10px]">Approve</button>
+              <button onclick="rejectSub('${sid}')" class="bg-rose-500/20 text-rose-400 px-2.5 py-1 rounded-lg text-[10px]">Reject</button>
+            </div>
           </div>
         `;
         list.appendChild(div);
@@ -481,32 +538,25 @@
 
     window.updatePlayerIgnByAdmin = async (uid, sid) => {
       const newIgn = document.getElementById('admin-ign-' + sid).value.trim();
-      if (!newIgn) {
-        alert("IGN cannot be empty!");
-        return;
-      }
+      if (!newIgn) return alert("IGN cannot be empty!");
       await updateDoc(doc(db, "players", uid), { ign: newIgn });
       await updateDoc(doc(db, "submissions", sid), { ign: newIgn });
-      alert("Player IGN updated successfully!");
+      alert("IGN updated!");
       loadLeaderboard();
       loadPendingSubmissions();
     };
 
-    window.approveSub = async (sid, uid, opponent, category) => {
+    window.approveSub = async (sid, uid, opponent, category, videoUrl) => {
       const pts = parseInt(document.getElementById('pts-' + sid).value) || 0;
-      const customIgnInput = document.getElementById('admin-ign-' + sid);
-      const finalIgn = customIgnInput ? customIgnInput.value.trim() : null;
-
       const playerRef = doc(db, "players", uid);
       const pSnap = await getDoc(playerRef);
+      
       if (pSnap.exists()) {
         const data = pSnap.data();
         const videos = data.videos || [];
-        videos.unshift({ category, opponent, url: s.videoUrl || "", pointsAdded: pts });
+        videos.unshift({ category, opponent, url: videoUrl || "", pointsAdded: pts });
 
         const updateData = { videos };
-        if (finalIgn) updateData.ign = finalIgn;
-
         if (category === 'long') {
           updateData.longPoints = (data.longPoints || 0) + pts;
           updateData.longMatches = (data.longMatches || 0) + 1;
