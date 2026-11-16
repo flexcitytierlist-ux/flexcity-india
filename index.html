@@ -4,11 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <!-- SEO Title & Description for Google Search -->
+  <!-- SEO Title & Description -->
   <title>Flex City Leaderboard — Official Community 1v1 Tiers</title>
   <meta name="description" content="Flex City India's official community 1v1 PvP leaderboard. Track rankings, submit match screenshot proofs, and view long and short range tier stats." />
 
-  <!-- No-Cache headers -->
+  <!-- Strong No-Cache headers -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
   <meta http-equiv="Pragma" content="no-cache" />
   <meta http-equiv="Expires" content="0" />
@@ -23,6 +23,11 @@
   </style>
 </head>
 <body class="min-h-screen flex flex-col antialiased">
+
+  <!-- Instagram / In-App Browser Warning Banner -->
+  <div id="inAppBanner" class="hidden bg-amber-500 text-slate-950 px-3 py-2 text-center text-xs font-bold">
+    ⚠️ Instagram Browser Detected! Tap <span class="underline">⋮ (3 dots)</span> at top right & select <span class="underline">"Open in Chrome / Browser"</span> to Login.
+  </div>
 
   <!-- Navbar -->
   <nav class="border-b border-slate-800/80 bg-[#0d111a]/90 backdrop-blur sticky top-0 z-40">
@@ -46,11 +51,11 @@
   <!-- Main Content -->
   <main class="max-w-4xl w-full mx-auto px-3 py-4 flex-1">
 
-    <!-- What is this? / Description Box with Hindi Toggle -->
+    <!-- What is this? / Description Box with Instant Hindi Toggle -->
     <div class="card-bg rounded-2xl neon-border p-3.5 mb-4 relative">
-      <div class="flex items-center justify-between mb-1.5">
+      <div class="flex items-center justify-between gap-2 mb-1.5">
         <h2 id="descTitle" class="text-xs font-bold text-cyan-400 uppercase tracking-wider">What is this?</h2>
-        <button onclick="toggleLanguage()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-2.5 py-1 rounded-lg text-[11px] font-semibold transition flex items-center gap-1.5">
+        <button type="button" onclick="toggleLanguage()" class="bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 border border-slate-700 px-2.5 py-1 rounded-lg text-[11px] font-semibold transition flex items-center gap-1.5 cursor-pointer">
           <span id="langFlag">🇮🇳</span> <span id="langBtnText">See in Hindi (हिंदी में पढ़ें)</span>
         </button>
       </div>
@@ -160,7 +165,7 @@
     </div>
   </div>
 
-  <!-- Admin Direct Edit Player Modal (Change Name & Rank/Points) -->
+  <!-- Admin Direct Edit Player Modal -->
   <div id="adminEditPlayerModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
     <div class="card-bg neon-border rounded-2xl max-w-sm w-full p-5 relative">
       <button onclick="closeModal('adminEditPlayerModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg">&times;</button>
@@ -210,7 +215,7 @@
     <div class="card-bg neon-border rounded-2xl max-w-md w-full p-5 relative">
       <button onclick="closeModal('submitModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg">&times;</button>
       <h2 id="submitProofTitle" class="text-base font-bold text-white mb-1">Submit Match Screenshot</h2>
-      <p id="submitProofSub" class="text-xs text-slate-400 mb-3">Upload screenshot to Imgur/Discord/PostImage and paste link here.</p>
+      <p id="submitProofSub" class="text-xs text-slate-400 mb-3">Select your match screenshot from your phone/PC gallery.</p>
 
       <form id="proofForm" class="space-y-2.5">
         <div>
@@ -229,8 +234,8 @@
           </select>
         </div>
         <div>
-          <label id="labelScreenshotUrl" class="text-[11px] text-slate-300 block mb-1">Screenshot Image Link (URL)</label>
-          <input type="url" id="screenshotUrlInput" required placeholder="https://imgur.com/..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" />
+          <label id="labelScreenshotFile" class="text-[11px] text-slate-300 block mb-1">Upload Screenshot Image</label>
+          <input type="file" id="screenshotFileInput" accept="image/*" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-300 file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-cyan-500 file:text-slate-950 hover:file:bg-cyan-400 cursor-pointer" />
         </div>
         <button type="submit" id="submitProofBtn" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs transition mt-2">
           Send Screenshot for Verification
@@ -253,7 +258,13 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, collection, doc, setDoc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getFirestore, collection, doc, setDoc, getDoc, getDocs, addDoc, updateDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    // Detect Instagram / Facebook In-App Browser
+    const ua = navigator.userAgent || navigator.vendor || window.opera;
+    if (ua.indexOf("Instagram") > -1 || ua.indexOf("FBAN") > -1 || ua.indexOf("FBAV") > -1) {
+      document.getElementById('inAppBanner').classList.remove('hidden');
+    }
 
     const firebaseConfig = {
       apiKey: "AIzaSyDZylrN12JJn11p4yQ9lCqd2MGOrr9jk7U",
@@ -281,7 +292,6 @@
     let currentLang = 'en';
     let isAdmin = false;
 
-    // Multi-language Translations Dictionary
     const translations = {
       en: {
         navSub: "Official 1v1 Community Tiers",
@@ -309,11 +319,11 @@
         editIgnSub: "Update your official Flex City In-Game Name.",
         saveIgnBtn: "Save IGN",
         submitProofTitle: "Submit Match Screenshot",
-        submitProofSub: "Upload screenshot to Imgur/Discord/PostImage and paste link here.",
+        submitProofSub: "Select your match screenshot from your phone/PC gallery.",
         labelIgn: "Your IGN (Flex City)",
         labelOpponent: "Opponent Name",
         labelCategory: "Category",
-        labelScreenshotUrl: "Screenshot Image Link (URL)",
+        labelScreenshotFile: "Upload Screenshot Image",
         submitProofBtn: "Send Screenshot for Verification"
       },
       hi: {
@@ -342,50 +352,57 @@
         editIgnSub: "अपना ऑफिशियल Flex City इन-गेम नाम अपडेट करें।",
         saveIgnBtn: "IGN सेव करें",
         submitProofTitle: "मैच स्क्रीनशॉट सबमिट करें",
-        submitProofSub: "स्क्रीनशॉट Imgur/Discord/PostImage पर अपलोड करें और यहाँ लिंक पेस्ट करें।",
+        submitProofSub: "अपने फोन या पीसी गैलरी से मैच का स्क्रीनशॉट चुनें।",
         labelIgn: "आपका इन-गेम नाम (IGN)",
         labelOpponent: "सामने वाले खिलाड़ी का नाम (Opponent)",
         labelCategory: "श्रेणी (Category)",
-        labelScreenshotUrl: "स्क्रीनशॉट इमेज लिंक (URL)",
+        labelScreenshotFile: "स्क्रीनशॉट इमेज अपलोड करें",
         submitProofBtn: "वेरिफिकेशन के लिए स्क्रीनशॉट भेजें"
       }
     };
+
+    function setSafeText(id, text) {
+      const el = document.getElementById(id);
+      if (el) el.innerText = text;
+    }
 
     window.toggleLanguage = () => {
       currentLang = currentLang === 'en' ? 'hi' : 'en';
       const t = translations[currentLang];
       
-      document.getElementById('navSub').innerText = t.navSub;
-      document.getElementById('loginBtn').innerText = t.loginBtn;
-      document.getElementById('descTitle').innerText = t.descTitle;
-      document.getElementById('langBtnText').innerText = t.langBtnText;
-      document.getElementById('descText').innerText = t.descText;
-      document.getElementById('tabRanked').innerText = t.tabRanked;
-      document.getElementById('tabContenders').innerText = t.tabContenders;
-      document.getElementById('sort-total').innerText = t.sortTotal;
-      document.getElementById('sort-long').innerText = t.sortLong;
-      document.getElementById('sort-short').innerText = t.sortShort;
-      document.getElementById('colRank').innerText = t.colRank;
-      document.getElementById('colPlayer').innerText = t.colPlayer;
-      document.getElementById('colRange').innerText = t.colRange;
-      document.getElementById('colTotal').innerText = t.colTotal;
-      document.getElementById('loadingText').innerText = t.loadingText;
-      document.getElementById('footerText1').innerText = t.footerText1;
-      document.getElementById('footerText2').innerText = t.footerText2;
-      document.getElementById('openSubmitBtn').innerText = t.openSubmitBtn;
-      document.getElementById('modalTitle').innerText = t.modalTitle;
-      document.getElementById('modalSubText').innerText = t.modalSubText;
-      document.getElementById('modalSubmitBtn').innerText = t.modalSubmitBtn;
-      document.getElementById('editIgnTitle').innerText = t.editIgnTitle;
-      document.getElementById('editIgnSub').innerText = t.editIgnSub;
-      document.getElementById('saveIgnBtn').innerText = t.saveIgnBtn;
-      document.getElementById('submitProofTitle').innerText = t.submitProofTitle;
-      document.getElementById('submitProofSub').innerText = t.submitProofSub;
-      document.getElementById('labelIgn').innerText = t.labelIgn;
-      document.getElementById('labelOpponent').innerText = t.labelOpponent;
-      document.getElementById('labelCategory').innerText = t.labelCategory;
-      document.getElementById('labelScreenshotUrl').innerText = t.labelScreenshotUrl;
-      document.getElementById('submitProofBtn').innerText = t.submitProofBtn;
+      setSafeText('navSub', t.navSub);
+      setSafeText('loginBtn', t.loginBtn);
+      setSafeText('descTitle', t.descTitle);
+      setSafeText('langBtnText', t.langBtnText);
+      setSafeText('descText', t.descText);
+      setSafeText('tabRanked', t.tabRanked);
+      setSafeText('tabContenders', t.tabContenders);
+      setSafeText('sort-total', t.sortTotal);
+      setSafeText('sort-long', t.sortLong);
+      setSafeText('sort-short', t.sortShort);
+      setSafeText('colRank', t.colRank);
+      setSafeText('colPlayer', t.colPlayer);
+      setSafeText('colRange', t.colRange);
+      setSafeText('colTotal', t.colTotal);
+      setSafeText('loadingText', t.loadingText);
+      setSafeText('footerText1', t.footerText1);
+      setSafeText('footerText2', t.footerText2);
+      setSafeText('openSubmitBtn', t.openSubmitBtn);
+      setSafeText('modalTitle', t.modalTitle);
+      setSafeText('modalSubText', t.modalSubText);
+      setSafeText('modalSubmitBtn', t.modalSubmitBtn);
+      setSafeText('editIgnTitle', t.editIgnTitle);
+      setSafeText('editIgnSub', t.editIgnSub);
+      setSafeText('saveIgnBtn', t.saveIgnBtn);
+      setSafeText('submitProofTitle', t.submitProofTitle);
+      setSafeText('submitProofSub', t.submitProofSub);
+      setSafeText('labelIgn', t.labelIgn);
+      setSafeText('labelOpponent', t.labelOpponent);
+      setSafeText('labelCategory', t.labelCategory);
+      setSafeText('labelScreenshotFile', t.labelScreenshotFile);
+      setSafeText('submitProofBtn', t.submitProofBtn);
+
+      renderLeaderboard();
     };
 
     loadLeaderboard();
@@ -521,12 +538,11 @@
         const rankBadge = currentMainTab === 'contenders' ? '⏳' : (i === 0 ? '🥇 #1' : i === 1 ? '🥈 #2' : i === 2 ? '🥉 #3' : `#${i + 1}`);
         const matchText = currentLang === 'hi' ? 'मैच' : 'matches';
 
-        // Admin 3-dot / Edit button column if user is admin
         let adminActionHtml = '';
         if (isAdmin) {
           adminActionHtml = `
             <div class="col-span-1 text-right">
-              <button onclick="event.stopPropagation(); openAdminEditPlayer('${p.id}')" class="bg-amber-500/20 hover:bg-amber-500/40 text-amber-300 border border-amber-500/40 px-2 py-1 rounded-lg text-xs font-bold" title="Edit Player Name & Rank">⚙️</button>
+              <button onclick="event.stopPropagation(); openAdminEditPlayer('${p.id}')" class="bg-amber-500/20 hover:bg-amber-500/40 text-amber-300 border border-amber-500/40 px-2 py-1 rounded-lg text-xs font-bold" title="Edit Player Name & Rank">⋮</button>
             </div>
           `;
         }
@@ -549,7 +565,6 @@
       }).join('');
     }
 
-    // Admin Quick Edit Modal Trigger
     window.openAdminEditPlayer = (playerId) => {
       const p = allPlayers.find(x => x.id === playerId);
       if (!p) return;
@@ -561,7 +576,6 @@
       document.getElementById('adminEditPlayerModal').classList.add('flex');
     };
 
-    // Save Admin Player Edit Form
     document.getElementById('adminEditPlayerForm').onsubmit = async (e) => {
       e.preventDefault();
       if (!isAdmin) return;
@@ -651,9 +665,7 @@
               <span class="text-white font-semibold">vs ${pr.opponent}</span>
               <span class="text-emerald-400">+${pr.pointsAdded} pts</span>
             </div>
-            <a href="${pr.url}" target="_blank" class="block group">
-              <img src="${pr.url}" class="w-full h-36 rounded-lg object-cover border border-slate-800 group-hover:border-cyan-500/50 transition" alt="Match Screenshot Proof" />
-            </a>
+            <img src="${pr.url}" class="w-full h-36 rounded-lg object-cover border border-slate-800" alt="Match Screenshot Proof" />
           </div>
         `).join('');
       }
@@ -665,30 +677,59 @@
       document.getElementById('submitModal').classList.add('flex');
     };
 
+    // Compress image automatically so mobile screenshots fit cleanly in Firestore (< 300KB)
+    function compressImage(file, callback) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 900;
+          const scaleSize = MAX_WIDTH / img.width;
+          canvas.width = img.width > MAX_WIDTH ? MAX_WIDTH : img.width;
+          canvas.height = img.width > MAX_WIDTH ? img.height * scaleSize : img.height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          callback(canvas.toDataURL('image/jpeg', 0.7));
+        };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
+
     document.getElementById('proofForm').onsubmit = async (e) => {
       e.preventDefault();
       if (!currentUser) return;
       const ign = document.getElementById('ignInput').value.trim();
       const opponent = document.getElementById('opponentInput').value.trim();
       const category = document.getElementById('categoryInput').value;
-      const screenshotUrl = document.getElementById('screenshotUrlInput').value.trim();
+      const fileInput = document.getElementById('screenshotFileInput');
 
-      await updateDoc(doc(db, "players", currentUser.uid), { ign });
-      userIgn = ign;
-      await addDoc(collection(db, "submissions"), {
-        uid: currentUser.uid,
-        ign,
-        opponent,
-        category,
-        screenshotUrl,
-        status: "pending",
-        createdAt: Date.now()
+      if (fileInput.files.length === 0) return alert("Please select a screenshot image!");
+      const btn = document.getElementById('submitProofBtn');
+      btn.disabled = true;
+      btn.innerText = "Uploading...";
+
+      compressImage(fileInput.files[0], async (compressedBase64) => {
+        await updateDoc(doc(db, "players", currentUser.uid), { ign });
+        userIgn = ign;
+        await addDoc(collection(db, "submissions"), {
+          uid: currentUser.uid,
+          ign,
+          opponent,
+          category,
+          screenshotUrl: compressedBase64,
+          status: "pending",
+          createdAt: Date.now()
+        });
+
+        btn.disabled = false;
+        btn.innerText = translations[currentLang].submitProofBtn;
+        alert(currentLang === 'hi' ? "स्क्रीनशॉट प्रूफ सफलतापूर्वक सबमिट हो गया! एडमिन जल्द वेरीफाई करेगा।" : "Screenshot submitted successfully! Admin will verify soon.");
+        closeModal('submitModal');
+        e.target.reset();
+        loadLeaderboard();
       });
-
-      alert(currentLang === 'hi' ? "स्क्रीनशॉट प्रूफ सफलतापूर्वक सबमिट हो गया! एडमिन जल्द वेरीफाई करेगा।" : "Screenshot proof submitted successfully! Admin will verify soon.");
-      closeModal('submitModal');
-      e.target.reset();
-      loadLeaderboard();
     };
 
     document.getElementById('openAdminBtn').onclick = () => {
@@ -697,11 +738,14 @@
       document.getElementById('adminModal').classList.add('flex');
     };
 
+    let pendingCache = {};
+
     async function loadPendingSubmissions() {
       const q = query(collection(db, "submissions"), where("status", "==", "pending"));
       const snap = await getDocs(q);
       document.getElementById('pendingCount').innerText = snap.size;
       const list = document.getElementById('pendingList');
+      pendingCache = {};
 
       if (snap.empty) {
         list.innerHTML = `<p class="text-xs text-slate-400 text-center py-6">No pending screenshot proofs.</p>`;
@@ -712,6 +756,7 @@
       snap.forEach(docSnap => {
         const s = docSnap.data();
         const sid = docSnap.id;
+        pendingCache[sid] = s;
         const div = document.createElement('div');
         div.className = "bg-slate-900 border border-slate-800 rounded-xl p-3 space-y-2.5";
         div.innerHTML = `
@@ -724,9 +769,7 @@
               </div>
               <div class="text-[10px] text-slate-400 mt-1.5">vs <span class="text-cyan-300 font-semibold">${s.opponent}</span> • <span class="text-amber-400 uppercase">${s.category}</span></div>
             </div>
-            <a href="${s.screenshotUrl}" target="_blank" class="w-16 h-16 rounded-lg border border-slate-700 overflow-hidden flex-shrink-0 block">
-              <img src="${s.screenshotUrl}" class="w-full h-full object-cover" />
-            </a>
+            <img onclick="window.open().document.write('<img src=\\'${s.screenshotUrl}\\' style=\\'max-width:100%\\'/>')" src="${s.screenshotUrl}" class="w-16 h-16 rounded-lg border border-slate-700 object-cover cursor-pointer flex-shrink-0" title="Click to view full screenshot" />
           </div>
           <div class="flex items-center justify-between pt-2 border-t border-slate-800">
             <div class="flex items-center gap-1.5">
@@ -734,7 +777,7 @@
               <input type="number" id="pts-${sid}" value="25" class="w-16 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-xs text-white text-center" />
             </div>
             <div class="flex gap-1.5">
-              <button onclick="approveSub('${sid}', '${s.uid}', '${s.opponent}', '${s.category}', '${s.screenshotUrl}')" class="bg-emerald-500 text-slate-950 font-bold px-2.5 py-1 rounded-lg text-[10px]">Approve</button>
+              <button onclick="approveSub('${sid}')" class="bg-emerald-500 text-slate-950 font-bold px-2.5 py-1 rounded-lg text-[10px]">Approve</button>
               <button onclick="rejectSub('${sid}')" class="bg-rose-500/20 text-rose-400 px-2.5 py-1 rounded-lg text-[10px]">Reject</button>
             </div>
           </div>
@@ -753,18 +796,20 @@
       loadPendingSubmissions();
     };
 
-    window.approveSub = async (sid, uid, opponent, category, screenshotUrl) => {
+    window.approveSub = async (sid) => {
+      const s = pendingCache[sid];
+      if (!s) return;
       const pts = parseInt(document.getElementById('pts-' + sid).value) || 0;
-      const playerRef = doc(db, "players", uid);
+      const playerRef = doc(db, "players", s.uid);
       const pSnap = await getDoc(playerRef);
       
       if (pSnap.exists()) {
         const data = pSnap.data();
         const proofs = data.proofs || [];
-        proofs.unshift({ category, opponent, url: screenshotUrl || "", pointsAdded: pts });
+        proofs.unshift({ category: s.category, opponent: s.opponent, url: s.screenshotUrl || "", pointsAdded: pts });
 
         const updateData = { proofs };
-        if (category === 'long') {
+        if (s.category === 'long') {
           updateData.longPoints = (data.longPoints || 0) + pts;
           updateData.longMatches = (data.longMatches || 0) + 1;
         } else {
