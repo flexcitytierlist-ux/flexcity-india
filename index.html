@@ -18,7 +18,7 @@
         <!-- Header -->
         <header class="max-w-4xl mx-auto flex items-center justify-between pb-6 border-b border-gray-800">
             <div class="flex items-center space-x-3">
-                <div class="bg-cyan-500 text-gray-950 font-ext500 font-bold px-3 py-2 rounded-xl text-lg">FC</div>
+                <div class="bg-cyan-500 text-gray-950 font-bold px-3 py-2 rounded-xl text-lg">FC</div>
                 <div>
                     <h1 class="text-xl font-extrabold tracking-wider text-white">FLEX CITY <span class="text-cyan-400">LEADERBOARD</span></h1>
                     <p class="text-xs text-gray-400">Official 1v1 Community Tiers</p>
@@ -38,16 +38,21 @@
         <nav class="max-w-4xl mx-auto flex space-x-4 my-6">
             <button onclick="switchTab('ranked')" id="tabRanked" class="flex-1 py-3 rounded-xl font-bold text-sm bg-gray-800 text-gray-300 transition">🏆 Ranked</button>
             <button onclick="switchTab('contenders')" id="tabContenders" class="flex-1 py-3 rounded-xl font-bold text-sm bg-cyan-500 text-gray-950 glow-btn transition">⚔️ Contenders</button>
-            <button onclick="switchTab('lobby')" id="tabLobby" class="relative flex-1 py-3 rounded-xl font-bold text-sm bg-gray-800 text-gray-300 transition">
-                🎯 1v1 Lobby
-                <span id="lobbyPopup" class="hidden absolute -top-3 right-2 bg-red-500 text-white text-[10px] px-2 py-0.5 rounded-full font-bold animate-bounce">New Challenge!</span>
-            </button>
+            
+            <!-- 1v1 Lobby Tab with properly positioned Unseen Pop-up -->
+            <div class="relative flex-1">
+                <button onclick="switchTab('lobby')" id="tabLobby" class="w-full py-3 rounded-xl font-bold text-sm bg-gray-800 text-gray-300 transition">
+                    🎯 1v1 Lobby
+                </button>
+                <span id="lobbyPopup" class="hidden absolute -top-8 left-1/2 -translate-x-1/2 bg-red-500 text-white text-[10px] px-2.5 py-1 rounded-lg font-bold shadow-lg animate-bounce whitespace-nowrap z-20">
+                    ⚔️ New Challenge! Click
+                </span>
+            </div>
         </nav>
 
         <!-- Main Content Container -->
         <main class="max-w-4xl mx-auto glass-card rounded-2xl p-4 sm:p-6 mb-6">
             <div id="contentArea">
-                <!-- Content will load dynamically based on tabs -->
                 <p class="text-center text-gray-400 py-10">Loading arena...</p>
             </div>
         </main>
@@ -79,23 +84,42 @@
                 <h3 class="text-md font-bold text-white">✨ What's New & Updates</h3>
                 <button onclick="closeUpdatesModal()" class="text-gray-400 hover:text-white font-bold text-sm">✕</button>
             </div>
-            <div id="updatesList" class="space-y-4 text-xs text-gray-300">
-                <!-- Dynamic Updates List -->
-            </div>
-        </div>
-    </div>
-
-    <script>
-        // Mock State & Data simulating LocalStorage / Firebase sync
+            <div id="updatesList" class="space-y-4 text-xs text-gray-300"></div>
+        </div><script>
+        // State & LocalStorage Synchronization
         let currentUser = localStorage.getItem('fc_ign') || null;
         let lastSeenUpdateId = localStorage.getItem('fc_last_update') || '0';
         let lastSeenChallengeId = localStorage.getItem('fc_last_challenge') || '0';
 
-        // Sample Updates Data with Timestamps
+        // Updates Log History with Dates & Times
         const updatesLog = [
-            { id: '2', date: '17 Nov 2026, 10:15 AM', title: 'Interactive Seen-By & Challenge Replies', desc: 'Added WhatsApp-style seen lists (+X more/hide), challenge reply alerts, and updates notification popup.' },
-            { id: '1', date: '17 Nov 2026, 09:00 AM', title: 'Smart Truncation & Secure Logout', desc: 'Fixed long IGN text cutting with clean truncation and added an anti-accidental logout confirmation modal.' }
+            { id: '3', date: '17 Nov 2026, 10:15 AM', title: 'WhatsApp-Style Seen-By & Lobby Pop-ups', desc: 'Added unseen pop-ups for new challenges, seen-by tracking with +X more/hide toggles, and instant reply alerts for posters.' },
+            { id: '2', date: '17 Nov 2026, 09:30 AM', title: 'What\'s New Updates Log & Pop-up', desc: 'Integrated a dedicated updates modal with timestamped changelogs and unread notification badges for all players.' },
+            { id: '1', date: '17 Nov 2026, 09:00 AM', title: 'Smart IGN Truncation & Secure Logout', desc: 'Fixed long name clipping on leaderboard cards with smart truncation and added an anti-accidental logout confirmation modal.' }
         ];
+
+        // Sample Contender Names (Demonstrating Smart Truncation for long IGNs)
+        const contendersData = [
+            { ign: "CHANDRAGUPTA_MAURYA_2026", pts: 0, matches: 0 },
+            { ign: "PxP", pts: 0, matches: 0 },
+            { ign: "20x9xE", pts: 0, matches: 0 },
+            { ign: "ZENO_LIVE", pts: 0, matches: 0 },
+            { ign: "PBx01_ELITE", pts: 0, matches: 0 },
+            { ign: "BoomCraze", pts: 0, matches: 0 },
+            { ign: "SILENT_HUNTER", pts: 0, matches: 0 }
+        ];
+
+        // Sample LFG Lobby Challenge Data with Seen-By list & replies
+        let activeChallenge = {
+            id: 'ch_101',
+            poster: 'ShadowPlayer',
+            text: 'Looking for a 1v1 sniper duel at City Center!',
+            time: '10m ago',
+            seenBy: ['RogueNinja', 'CyberKing', 'AlphaWolf', 'DarkKnight', 'ViperX'],
+            replies: [
+                { ign: 'BoomCraze', text: 'Aaja 1v1, challenge accepted!' }
+            ]
+        };
 
         function initApp() {
             if (currentUser) {
@@ -110,49 +134,121 @@
         }
 
         function checkNotifications() {
-            // Check for new updates
+            // Check for unseen updates
             if (updatesLog.length > 0 && updatesLog[0].id !== lastSeenUpdateId) {
                 document.getElementById('updateBadge').classList.remove('hidden');
             }
-            // Check for new LFG challenges (simulated)
-            if (lastSeenChallengeId === '0') {
+            // Check for unseen lobby challenge
+            if (lastSeenChallengeId !== activeChallenge.id) {
                 document.getElementById('lobbyPopup').classList.remove('hidden');
             }
+        }
+
+        // Smart IGN Truncation Function (Shortens long names for UI, full name shown in profile)
+        function formatIGN(name, limit = 12) {
+            if (name.length > limit) {
+                return name.substring(0, limit) + '...';
+            }
+            return name;
         }
 
         function switchTab(tab) {
             ['ranked', 'contenders', 'lobby'].forEach(t => {
                 const btn = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
-                btn.className = "flex-1 py-3 rounded-xl font-bold text-sm bg-gray-800 text-gray-300 transition";
+                if(btn) btn.className = "flex-1 py-3 rounded-xl font-bold text-sm bg-gray-800 text-gray-300 transition";
             });
             const activeBtn = document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1));
-            activeBtn.className = "flex-1 py-3 rounded-xl font-bold text-sm bg-cyan-500 text-gray-950 glow-btn transition";
+            if(activeBtn) activeBtn.className = "flex-1 py-3 rounded-xl font-bold text-sm bg-cyan-500 text-gray-950 glow-btn transition";
 
             const area = document.getElementById('contentArea');
             if (tab === 'ranked') {
                 area.innerHTML = `<h3 class="text-sm font-bold text-cyan-400 mb-4">🏆 Ranked Tier Board</h3><p class="text-xs text-gray-400">Top ranked players of Flex City India.</p>`;
             } else if (tab === 'contenders') {
-                area.innerHTML = `<h3 class="text-sm font-bold text-cyan-400 mb-4">⚔️ Contenders List</h3>
-                    <div class="space-y-2 text-xs">
-                        <div class="flex justify-between p-3 bg-gray-900/50 rounded-xl border border-gray-800"><span>CHANDRAGUPTA_MAURYA_2026</span><span class="text-green-400">0 pts</span></div>
-                        <div class="flex justify-between p-3 bg-gray-900/50 rounded-xl border border-gray-800"><span>BoomCraze</span><span class="text-green-400">0 pts</span></div>
+                let html = `<h3 class="text-sm font-bold text-cyan-400 mb-4">⚔️ Contenders List</h3><div class="space-y-2 text-xs">`;
+                contendersData.forEach(c => {
+                    let displayName = formatIGN(c.ign, 14);
+                    html += `<div class="flex justify-between items-center p-3 bg-gray-900/50 rounded-xl border border-gray-800">
+                        <span class="font-bold text-white cursor-pointer hover:text-cyan-400" title="${c.ign}" onclick="openProfile('${c.ign}')">${displayName}</span>
+                        <span class="text-green-400 font-semibold">${c.pts} pts</span>
                     </div>`;
+                });
+                html += `</div>`;
+                area.innerHTML = html;
             } else if (tab === 'lobby') {
+                // Hide pop-up & mark challenge as seen
                 document.getElementById('lobbyPopup').classList.add('hidden');
-                localStorage.setItem('fc_last_challenge', 'ch_101');
-                area.innerHTML = `<h3 class="text-sm font-bold text-cyan-400 mb-4">🎯 1v1 Live Lobby</h3>
-                    <div class="p-3 bg-gray-900/60 rounded-xl border border-gray-800 space-y-2">
-                        <div class="flex justify-between text-xs text-gray-400"><span>Posted by: <b>ShadowPlayer</b></span><span>10m ago</span></div>
-                        <p class="text-sm font-semibold text-white">Looking for a 1v1 sniper duel at City Center!</p>
-                        <div class="text-[11px] text-gray-400 border-t border-gray-800 pt-2">👁️ Seen by: RogueNinja, CyberKing, AlphaWolf <button class="text-cyan-400 font-bold ml-1">+2 more</button></div>
-                    </div>`;
+                lastSeenChallengeId = activeChallenge.id;
+                localStorage.setItem('fc_last_challenge', activeChallenge.id);
+
+                // Add current user to seenBy if logged in & not already there
+                if (currentUser && !activeChallenge.seenBy.includes(currentUser) && currentUser !== activeChallenge.poster) {
+                    activeChallenge.seenBy.push(currentUser);
+                }
+
+                renderLobbyView(area);
             }
+        }
+
+        let showAllSeen = false;
+
+        function renderLobbyView(area) {
+            let viewers = activeChallenge.seenBy;
+            let seenText = "";
+            if (viewers.length === 0) {
+                seenText = "No one yet";
+            } else if (showAllSeen || viewers.length <= 3) {
+                seenText = viewers.join(', ');
+                if (viewers.length > 3) seenText += ` <button onclick="toggleSeenList()" class="text-cyan-400 font-bold ml-1 hover:underline">[Hide]</button>`;
+            } else {
+                let top3 = viewers.slice(0, 3).join(', ');
+                let remaining = viewers.length - 3;
+                seenText = `${top3} <button onclick="toggleSeenList()" class="text-cyan-400 font-bold ml-1 hover:underline">+${remaining} more</button>`;
+            }
+
+            let repliesHtml = '';
+            activeChallenge.replies.forEach(r => {
+                repliesHtml += `<div class="mt-2 text-[11px] bg-gray-800/60 p-2 rounded-lg border border-gray-700"><b>${r.ign} replied:</b> "${r.text}"</div>`;
+            });
+
+            area.innerHTML = `<h3 class="text-sm font-bold text-cyan-400 mb-4">🎯 1v1 Live Lobby</h3>
+                <div class="p-4 bg-gray-900/60 rounded-xl border border-gray-800 space-y-3">
+                    <div class="flex justify-between text-xs text-gray-400"><span>Posted by: <b>${activeChallenge.poster}</b></span><span>${activeChallenge.time}</span></div>
+                    <p class="text-sm font-semibold text-white">${activeChallenge.text}</p>
+                    ${repliesHtml}
+                    <div class="flex items-center justify-between text-[11px] text-gray-400 border-t border-gray-800 pt-3">
+                        <span>👁️ Seen by: ${seenText}</span>
+                        <button onclick="acceptChallenge()" class="bg-cyan-500 hover:bg-cyan-400 text-gray-950 font-bold px-3 py-1.5 rounded-lg text-xs transition">Accept Challenge</button>
+                    </div>
+                </div>`;
+        }
+
+        function toggleSeenList() {
+            showAllSeen = !showAllSeen;
+            renderLobbyView(document.getElementById('contentArea'));
+        }
+
+        function acceptChallenge() {
+            if (!currentUser) {
+                alert("Please login / set your IGN first to accept challenges!");
+                handleAuth();
+                return;
+            }
+            let replyMsg = prompt("Enter your reply / message for the challenge poster:", "Aaja 1v1, ready!");
+            if (replyMsg !== null) {
+                activeChallenge.replies.push({ ign: currentUser, text: replyMsg });
+                alert("Challenge accepted & reply sent! Poster will get notified.");
+                renderLobbyView(document.getElementById('contentArea'));
+            }
+        }
+
+        function openProfile(fullIgn) {
+            alert("Player Profile: " + fullIgn + "\n(Full IGN is shown safely here without truncation!)");
         }
 
         function handleAuth() {
             if (!currentUser) {
                 let ign = prompt("Enter your In-Game Name (IGN):");
-                if (ign) {
+                if (ign && ign.trim() !== "") {
                     currentUser = ign.trim();
                     localStorage.setItem('fc_ign', currentUser);
                     initApp();
@@ -181,6 +277,7 @@
             document.getElementById('updatesModal').classList.remove('hidden');
             document.getElementById('updatesModal').classList.add('flex');
             document.getElementById('updateBadge').classList.add('hidden');
+            
             if(updatesLog.length > 0) {
                 lastSeenUpdateId = updatesLog[0].id;
                 localStorage.setItem('fc_last_update', lastSeenUpdateId);
@@ -188,7 +285,11 @@
             
             let html = '';
             updatesLog.forEach(up => {
-                html += `<div class="border-b border-gray-800 pb-3"><div class="text-[10px] text-cyan-400 font-bold mb-1">${up.date}</div><div class="font-bold text-white text-sm mb-1">${up.title}</div><p>${up.desc}</p></div>`;
+                html += `<div class="border-b border-gray-800 pb-3 last:border-0">
+                    <div class="text-[10px] text-cyan-400 font-bold mb-1">${up.date}</div>
+                    <div class="font-bold text-white text-sm mb-1">${up.title}</div>
+                    <p class="text-gray-300">${up.desc}</p>
+                </div>`;
             });
             document.getElementById('updatesList').innerHTML = html;
         }
@@ -198,7 +299,9 @@
             document.getElementById('updatesModal').classList.remove('flex');
         }
 
+        // Initialize App on Load
         window.onload = initApp;
     </script>
 </body>
 </html>
+    </div>
