@@ -1,308 +1,1155 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flex City Leaderboard | Official 1v1 Community Tiers</title>
-    <!-- Google Search Console Verification Tag -->
-    <meta name="google-site-verification" content="zuMmJx8wSnGZGju9FlPyZUGX5pKBlj47MJNoj90Sg9Y" />
-    <meta name="description" content="Official Flex City 1v1 community tier list, leaderboards, and live lobbies for competitive players.">
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
-    <style>
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background-color: #0b0f19; color: #f3f4f6; overflow-x: hidden; }
-        .glass-card { background: rgba(17, 24, 39, 0.7); backdrop-filter: blur(12px); border: 1px solid rgba(255, 255, 255, 0.08); }
-        .glow-btn { box-shadow: 0 0 20px rgba(6, 182, 212, 0.4); }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  
+  <!-- SEO Title & Description -->
+  <title>Flex City Leaderboard — Official Community 1v1 Tiers</title>
+  <meta name="description" content="Flex City India's official community 1v1 PvP leaderboard. Track rankings, submit match screenshot proofs, and view long and short range tier stats." />
+
+  <!-- Strong No-Cache headers -->
+  <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+  <meta http-equiv="Pragma" content="no-cache" />
+  <meta http-equiv="Expires" content="0" />
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { background-color: #0b0e14; color: #e2e8f0; font-family: 'Inter', system-ui, sans-serif; }
+    .neon-border { border: 1px solid rgba(56, 189, 248, 0.2); box-shadow: 0 0 12px rgba(56, 189, 248, 0.08); }
+    .card-bg { background: linear-gradient(145deg, #131824, #0f131d); }
+    @keyframes pulse-slow { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
+    .animate-pulse-slow { animation: pulse-slow 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    .ticker-fade { transition: opacity 0.4s ease-in-out; }
+  </style>
 </head>
-<body class="min-h-screen flex flex-col justify-between p-4 sm:p-6">
+<body class="min-h-screen flex flex-col antialiased">
 
-    <div>
-        <!-- Header (Fully Responsive to prevent overlapping) -->
-        <header class="max-w-4xl mx-auto flex flex-col sm:flex-row items-center justify-between pb-6 border-b border-gray-800 gap-4">
-            <div class="flex items-center space-x-3 w-full sm:w-auto justify-between sm:justify-start">
-                <div class="flex items-center space-x-3">
-                    <div class="bg-cyan-500 text-gray-950 font-bold px-3 py-2 rounded-xl text-lg">FC</div>
-                    <div>
-                        <h1 class="text-lg sm:text-xl font-extrabold tracking-wider text-white">FLEX CITY <span class="text-cyan-400">LEADERBOARD</span></h1>
-                        <p class="text-[11px] text-gray-400">Official 1v1 Community Tiers</p>
-                    </div>
+  <!-- Instagram / In-App Browser Warning Banner -->
+  <div id="inAppBanner" class="hidden bg-amber-500 text-slate-950 px-3 py-2 text-center text-xs font-bold">
+    ⚠️ Instagram Browser Detected! Tap <span class="underline">⋮ (3 dots)</span> at top right & select <span class="underline">"Open in Chrome / Browser"</span> to Login.
+  </div>
+
+  <!-- Live 20-Second Rotating Activity Ticker -->
+  <div class="bg-gradient-to-r from-cyan-950/90 via-slate-900 to-cyan-950/90 border-b border-cyan-500/25 px-3 py-1.5 text-center">
+    <div id="liveTickerText" class="ticker-fade text-[11px] font-semibold text-cyan-300 tracking-wide">
+      ⚡ Latest: Loading live community activity...
+    </div>
+  </div>
+
+  <!-- Navbar -->
+  <nav class="border-b border-slate-800/80 bg-[#0d111a]/90 backdrop-blur sticky top-0 z-40">
+    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between">
+      <div class="flex items-center gap-2.5">
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center font-black text-white text-sm">FC</div>
+        <div>
+          <h1 class="font-bold text-base tracking-wide text-white">FLEX CITY <span class="text-cyan-400">LEADERBOARD</span></h1>
+          <p id="navSub" class="text-[10px] text-slate-400 -mt-1">Official 1v1 Community Tiers</p>
+        </div>
+      </div>
+
+      <div id="authArea" class="flex items-center gap-2">
+        <button id="loginBtn" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold px-3 py-1.5 rounded-lg text-xs transition">
+          Login with Google
+        </button>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Main Content -->
+  <main class="max-w-4xl w-full mx-auto px-3 py-4 flex-1">
+
+    <!-- What is this? + Rules Box with Instant Hindi Toggle -->
+    <div class="card-bg rounded-2xl neon-border p-3.5 mb-4 relative space-y-2.5">
+      <div class="flex items-center justify-between gap-2">
+        <h2 id="descTitle" class="text-xs font-bold text-cyan-400 uppercase tracking-wider">What is this?</h2>
+        <button type="button" onclick="toggleLanguage()" class="bg-slate-800 hover:bg-slate-700 active:scale-95 text-slate-200 border border-slate-700 px-2.5 py-1 rounded-lg text-[11px] font-semibold transition flex items-center gap-1.5 cursor-pointer">
+          <span id="langFlag">🇮🇳</span> <span id="langBtnText">See in Hindi (हिंदी में पढ़ें)</span>
+        </button>
+      </div>
+      <p id="descText" class="text-xs text-slate-300 leading-relaxed">
+        Flex City India's official community 1v1 PvP leaderboard. Challenge higher-ranked players, win matches, swap ranks, and prove your skills!
+      </p>
+
+      <!-- Rules Box -->
+      <div class="bg-slate-950/70 border border-amber-500/25 rounded-xl p-2.5">
+        <div id="rulesHeading" class="text-[11px] font-bold text-amber-400 mb-1">📜 How to Submit Proof & Challenge Rules:</div>
+        <ul id="rulesList" class="text-[11px] text-slate-300 space-y-1 list-disc list-inside leading-snug">
+          <li><strong>Chat Screenshot:</strong> Upload a clear chat screenshot where your opponent agrees to the 1v1 result & points.</li>
+          <li><strong>Rank Swap:</strong> If you defeat a player ranked higher than you, you will take their rank on the leaderboard!</li>
+          <li><strong>Optional Recording:</strong> If you have any doubts or need dispute help, you can personally send your match recording to BoomCraze on Instagram.</li>
+        </ul>
+      </div>
+    </div>
+
+    <!-- Region & Action Bar -->
+    <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3 mb-4">
+      <div class="flex items-center gap-2 bg-slate-900/80 p-1 rounded-xl border border-slate-800 self-start">
+        <button class="px-3 py-1 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-semibold text-xs flex items-center gap-1.5">
+          🇮🇳 India
+        </button>
+        <button disabled class="px-3 py-1 rounded-lg text-slate-500 text-xs cursor-not-allowed">
+          🌍 Global (Soon)
+        </button>
+      </div>
+
+      <div class="flex items-center gap-2">
+        <button id="openSubmitBtn" class="hidden flex-1 sm:flex-none bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-semibold px-3.5 py-2 rounded-xl text-xs transition text-center">
+          + Submit Proof
+        </button>
+        <button id="openAdminBtn" class="hidden flex-1 sm:flex-none bg-amber-500 hover:bg-amber-400 text-slate-950 font-semibold px-3.5 py-2 rounded-xl text-xs transition text-center">
+          🛡️ Admin (<span id="pendingCount">0</span>)
+        </button>
+      </div>
+    </div>
+
+    <!-- 3 Main Section Tabs: Ranked, Contenders, 1v1 Lobby -->
+    <div class="grid grid-cols-3 gap-1.5 mb-4 bg-slate-900/60 p-1.5 rounded-2xl border border-slate-800/80">
+      <button onclick="switchMainTab('ranked')" id="tabRanked" class="py-2 px-2 rounded-xl text-xs font-bold transition bg-cyan-500 text-slate-950 text-center">
+        🏆 Ranked
+      </button>
+      <button onclick="switchMainTab('contenders')" id="tabContenders" class="py-2 px-2 rounded-xl text-xs font-bold transition text-slate-400 hover:text-white text-center">
+        ⚔️ Contenders
+      </button>
+      <button onclick="switchMainTab('lobby')" id="tabLobby" class="py-2 px-2 rounded-xl text-xs font-bold transition text-slate-400 hover:text-white text-center">
+        🎯 1v1 Lobby
+      </button>
+    </div>
+
+    <!-- Category Filter (Only for Ranked) -->
+    <div id="categoryFilters" class="flex items-center gap-1.5 mb-3 overflow-x-auto pb-1">
+      <button onclick="setSort('total')" id="sort-total" class="sort-btn px-2.5 py-1 rounded-lg text-xs font-semibold bg-cyan-500 text-slate-950 whitespace-nowrap">Overall</button>
+      <button onclick="setSort('long')" id="sort-long" class="sort-btn px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 whitespace-nowrap">Long Range Top</button>
+      <button onclick="setSort('short')" id="sort-short" class="sort-btn px-2.5 py-1 rounded-lg text-xs font-semibold bg-slate-800 text-slate-300 whitespace-nowrap">Short Range Top</button>
+    </div>
+
+    <!-- Leaderboard Card Container (Ranked & Contenders) -->
+    <div id="leaderboardCard" class="card-bg rounded-2xl neon-border overflow-hidden">
+      <div class="grid grid-cols-12 px-3 py-2.5 border-b border-slate-800/80 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+        <div id="colRank" class="col-span-2">Rank</div>
+        <div id="colPlayer" class="col-span-6">Player</div>
+        <div id="colRange" class="col-span-2 text-center">Range Pts</div>
+        <div id="colTotal" class="col-span-2 text-right">Total</div>
+      </div>
+      <div id="leaderboardList" class="divide-y divide-slate-800/50">
+        <div id="loadingText" class="p-6 text-center text-slate-400 text-xs animate-pulse-slow">Loading fresh leaderboard data...</div>
+      </div>
+    </div>
+
+    <!-- 1v1 Matchmaking Lobby Section -->
+    <div id="lobbySection" class="hidden space-y-3">
+      <!-- Post Looking For Match Form (Visible when Logged In) -->
+      <div id="lobbyPostBox" class="hidden card-bg rounded-2xl neon-border p-3.5">
+        <div id="lobbyHeading" class="text-xs font-bold text-cyan-400 mb-2">🎯 Looking for a 1v1 Opponent? Post in Lobby!</div>
+        <form id="lobbyForm" class="flex flex-col sm:flex-row gap-2">
+          <select id="lobbyMode" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
+            <option value="Long Range">Long Range 1v1</option>
+            <option value="Short Range">Short Range 1v1</option>
+            <option value="Any Range">Any Range 1v1</option>
+          </select>
+          <input type="text" id="lobbyNote" maxlength="60" placeholder="Note (e.g. Online now, DM on Insta @...)" class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" />
+          <button type="submit" id="lobbyPostBtn" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs transition whitespace-nowrap">
+            + Post LFG
+          </button>
+        </form>
+      </div>
+
+      <div id="lobbyLoginPrompt" class="card-bg rounded-2xl neon-border p-3 text-center text-xs text-slate-400">
+        Login with Google to post your 1v1 challenge status in the lobby!
+      </div>
+
+      <div class="card-bg rounded-2xl neon-border overflow-hidden">
+        <div class="px-3.5 py-2.5 border-b border-slate-800/80 text-[11px] font-semibold text-slate-400 uppercase tracking-wider flex justify-between">
+          <span id="lobbyListTitle">Active Challengers Looking to Play</span>
+          <span class="text-emerald-400">● Live</span>
+        </div>
+        <div id="lobbyList" class="divide-y divide-slate-800/50">
+          <div class="p-6 text-center text-slate-400 text-xs">Loading active players...</div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- Footer with Contact Info & Instagram Link -->
+  <footer class="border-t border-slate-800/60 py-5 text-center text-[11px] text-slate-400 px-4 space-y-2 mt-6">
+    <p id="footerContactText">If you have any issues or want to send 1v1 recordings, contact us:</p>
+    <a href="https://ig.me/m/boomcrraze" target="_blank" class="inline-flex items-center gap-1.5 bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-semibold px-3.5 py-1.5 rounded-xl text-xs transition shadow-lg">
+      📸 Instagram: <span class="underline">@boomcrraze</span>
+    </a>
+    <p id="footerText1" class="text-[10px] text-slate-500 pt-1">Flex City India Community Leaderboard • Unofficial fan-made platform.</p>
+  </footer>
+
+  <!-- Forced IGN Setup Modal -->
+  <div id="forcedIgnModal" class="fixed inset-0 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+    <div class="card-bg neon-border rounded-2xl max-w-sm w-full p-6 relative">
+      <h2 id="modalTitle" class="text-base font-bold text-white mb-1">Welcome to Flex City Leaderboard!</h2>
+      <p id="modalSubText" class="text-xs text-slate-400 mb-4">Please enter your official In-Game Name (IGN) to continue.</p>
+      <form id="forcedIgnForm" class="space-y-3">
+        <input type="text" id="forcedIgnInput" required placeholder="e.g. BoomCraze" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500" />
+        <button type="submit" id="modalSubmitBtn" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs transition">
+          Continue to Leaderboard
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Player Profile Modal (With Streak & Head-to-Head Rivalry Stats) -->
+  <div id="playerModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+    <div class="card-bg neon-border rounded-2xl max-w-md w-full p-5 relative max-h-[85vh] overflow-y-auto">
+      <button onclick="closeModal('playerModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg">&times;</button>
+      <div class="flex items-center gap-3 mb-3">
+        <img id="modalAvatar" src="" class="w-11 h-11 rounded-full border border-cyan-500/40 object-cover" />
+        <div>
+          <div class="flex items-center gap-1.5">
+            <h2 id="modalName" class="text-base font-bold text-white">Player Name</h2>
+            <span id="modalStreakBadge"></span>
+          </div>
+          <p id="modalSub" class="text-[11px] text-slate-400">Total 1v1s: 0 • Total Pts: 0</p>
+        </div>
+      </div>
+
+      <div class="grid grid-cols-2 gap-2 bg-slate-900/90 p-1 rounded-xl mb-3 border border-slate-800">
+        <button id="tabLongBtn" onclick="switchPlayerTab('long')" class="py-1.5 rounded-lg text-xs font-semibold bg-cyan-500 text-slate-950">
+          🎯 Long Range
+        </button>
+        <button id="tabShortBtn" onclick="switchPlayerTab('short')" class="py-1.5 rounded-lg text-xs font-semibold text-slate-400">
+          ⚔️ Short Range
+        </button>
+      </div>
+
+      <div id="modalStats" class="grid grid-cols-2 gap-2.5 mb-3"></div>
+
+      <!-- Head-to-Head Rivalry Section -->
+      <div id="rivalrySection" class="mb-3 hidden">
+        <h3 id="rivalryTitle" class="text-[11px] font-semibold uppercase text-amber-400 mb-1.5 tracking-wider">⚔️ Head-to-Head Victories</h3>
+        <div id="rivalryList" class="flex flex-wrap gap-1.5"></div>
+      </div>
+
+      <h3 id="proofsTitle" class="text-[11px] font-semibold uppercase text-slate-400 mb-2 tracking-wider">Verified Match Screenshots</h3>
+      <div id="modalProofs" class="space-y-2.5"></div>
+    </div>
+  </div>
+
+  <!-- Admin Direct Edit Player Modal -->
+  <div id="adminEditPlayerModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+    <div class="card-bg neon-border rounded-2xl max-w-sm w-full p-5 relative">
+      <button onclick="closeModal('adminEditPlayerModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg">&times;</button>
+      <h2 class="text-base font-bold text-amber-400 mb-1">⚡ Admin Edit Player</h2>
+      <p class="text-xs text-slate-400 mb-3">Update player IGN, points, or streak directly.</p>
+      
+      <form id="adminEditPlayerForm" class="space-y-2.5">
+        <input type="hidden" id="editPlayerId" />
+        <div>
+          <label class="text-[11px] text-slate-300 block mb-1">Player IGN (Name)</label>
+          <input type="text" id="editPlayerIgn" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" />
+        </div>
+        <div class="grid grid-cols-3 gap-2">
+          <div>
+            <label class="text-[11px] text-slate-300 block mb-1">Long Pts</label>
+            <input type="number" id="editLongPts" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2 py-2 text-xs text-white text-center" />
+          </div>
+          <div>
+            <label class="text-[11px] text-slate-300 block mb-1">Short Pts</label>
+            <input type="number" id="editShortPts" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2 py-2 text-xs text-white text-center" />
+          </div>
+          <div>
+            <label class="text-[11px] text-slate-300 block mb-1">Streak</label>
+            <input type="number" id="editStreak" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2 py-2 text-xs text-white text-center" />
+          </div>
+        </div>
+        <button type="submit" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs transition mt-2">
+          Save Player Changes
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Set IGN Modal -->
+  <div id="ignModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+    <div class="card-bg neon-border rounded-2xl max-w-sm w-full p-5 relative">
+      <button onclick="closeModal('ignModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg">&times;</button>
+      <h2 id="editIgnTitle" class="text-base font-bold text-white mb-1">Edit Your IGN</h2>
+      <p id="editIgnSub" class="text-xs text-slate-400 mb-3">Update your official Flex City In-Game Name.</p>
+      <form id="ignForm" class="space-y-3">
+        <input type="text" id="newIgnInput" required placeholder="e.g. BoomCraze" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500" />
+        <button type="submit" id="saveIgnBtn" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-2 rounded-xl text-xs transition">
+          Save IGN
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Submit Screenshot Proof Modal -->
+  <div id="submitModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+    <div class="card-bg neon-border rounded-2xl max-w-md w-full p-5 relative max-h-[90vh] overflow-y-auto">
+      <button onclick="closeModal('submitModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg">&times;</button>
+      <h2 id="submitProofTitle" class="text-base font-bold text-white mb-1">Submit Match Screenshot</h2>
+      
+      <div id="modalRuleNote" class="bg-cyan-500/10 border border-cyan-500/30 rounded-xl p-2.5 mb-3 text-[11px] text-cyan-300 leading-snug">
+        💡 <strong>Rule:</strong> Upload the chat screenshot where your opponent agrees to the match result. Defeating a higher-ranked player swaps your rank with theirs!
+      </div>
+
+      <form id="proofForm" class="space-y-2.5">
+        <div>
+          <label id="labelIgn" class="text-[11px] text-slate-300 block mb-1">Your IGN (Flex City)</label>
+          <input type="text" id="ignInput" required placeholder="e.g. BoomCraze" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" />
+        </div>
+        <div>
+          <label id="labelOpponent" class="text-[11px] text-slate-300 block mb-1">Opponent Name</label>
+          <input type="text" id="opponentInput" required placeholder="Opponent IGN" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" />
+        </div>
+        <div>
+          <label id="labelCategory" class="text-[11px] text-slate-300 block mb-1">Category</label>
+          <select id="categoryInput" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white">
+            <option value="long">Long Range</option>
+            <option value="short">Short Range</option>
+          </select>
+        </div>
+        <div>
+          <label id="labelScreenshotFile" class="text-[11px] text-slate-300 block mb-1">Upload Chat Screenshot</label>
+          <input type="file" id="screenshotFileInput" accept="image/*" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-slate-300 file:mr-3 file:py-1 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-cyan-500 file:text-slate-950 hover:file:bg-cyan-400 cursor-pointer" />
+        </div>
+        <button type="submit" id="submitProofBtn" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs transition mt-2">
+          Send Screenshot for Verification
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Admin Panel Modal -->
+  <div id="adminModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+    <div class="card-bg neon-border rounded-2xl max-w-xl w-full p-5 relative max-h-[85vh] overflow-y-auto">
+      <button onclick="closeModal('adminModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg">&times;</button>
+      <h2 class="text-base font-bold text-amber-400 mb-1">🛡️ Admin Verification Queue</h2>
+      <p class="text-xs text-slate-400 mb-3">Approving verifies chat proof, updates points & streak, and posts to live ticker. Rejecting permanently deletes screenshot.</p>
+      <div id="pendingList" class="space-y-2.5"></div>
+    </div>
+  </div>
+
+  <!-- Firebase SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
+    import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
+    import { getFirestore, collection, doc, setDoc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+
+    const ua = navigator.userAgent || navigator.vendor || window.opera;
+    if (ua.indexOf("Instagram") > -1 || ua.indexOf("FBAN") > -1 || ua.indexOf("FBAV") > -1) {
+      document.getElementById('inAppBanner').classList.remove('hidden');
+    }
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDZylrN12JJn11p4yQ9lCqd2MGOrr9jk7U",
+      authDomain: "flex-city-tier-lists.firebaseapp.com",
+      projectId: "flex-city-tier-lists",
+      storageBucket: "flex-city-tier-lists.firebasestorage.app",
+      messagingSenderId: "652569201048",
+      appId: "1:652569201048:web:80bbd8bb452ea5c2f7c3ed"
+    };
+
+    const ADMIN_EMAIL = "flexcity.tierlist@gmail.com";
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+    const db = getFirestore(app);
+    const provider = new GoogleAuthProvider();
+
+    let currentUser = null;
+    let allPlayers = [];
+    let currentSort = 'total';
+    let currentMainTab = 'ranked';
+    let selectedPlayer = null;
+    let selectedModalTab = 'long';
+    let userIgn = "";
+    let currentLang = 'en';
+    let isAdmin = false;
+
+    // Ticker state (rotates between latest 2 events every 20 seconds)
+    let tickerMessages = [];
+    let tickerIndex = 0;
+
+    const translations = {
+      en: {
+        navSub: "Official 1v1 Community Tiers",
+        loginBtn: "Login with Google",
+        descTitle: "What is this?",
+        langBtnText: "See in Hindi (हिंदी में पढ़ें)",
+        descText: "Flex City India's official community 1v1 PvP leaderboard. Challenge higher-ranked players, win matches, swap ranks, and prove your skills!",
+        rulesHeading: "📜 How to Submit Proof & Challenge Rules:",
+        rulesHtml: `
+          <li><strong>Chat Screenshot:</strong> Upload a clear chat screenshot where your opponent agrees to the 1v1 result & points.</li>
+          <li><strong>Rank Swap:</strong> If you defeat a player ranked higher than you, you will take their rank on the leaderboard!</li>
+          <li><strong>Optional Recording:</strong> If you have any doubts or need dispute help, you can personally send your match recording to BoomCraze on Instagram.</li>
+        `,
+        modalRuleNote: "💡 <strong>Rule:</strong> Upload the chat screenshot where your opponent agrees to the match result. Defeating a higher-ranked player swaps your rank with theirs!",
+        tabRanked: "🏆 Ranked",
+        tabContenders: "⚔️ Contenders",
+        tabLobby: "🎯 1v1 Lobby",
+        sortTotal: "Overall",
+        sortLong: "Long Range Top",
+        sortShort: "Short Range Top",
+        colRank: "Rank",
+        colPlayer: "Player",
+        colRange: "Range Pts",
+        colTotal: "Total",
+        loadingText: "Loading fresh leaderboard data...",
+        lobbyHeading: "🎯 Looking for a 1v1 Opponent? Post in Lobby!",
+        lobbyPostBtn: "+ Post LFG",
+        lobbyLoginPrompt: "Login with Google to post your 1v1 challenge status in the lobby!",
+        lobbyListTitle: "Active Challengers Looking to Play",
+        footerContactText: "If you have any issues or want to send 1v1 recordings, contact us:",
+        footerText1: "Flex City India Community Leaderboard • Unofficial fan-made platform.",
+        openSubmitBtn: "+ Submit Proof",
+        modalTitle: "Welcome to Flex City Leaderboard!",
+        modalSubText: "Please enter your official In-Game Name (IGN) to continue.",
+        modalSubmitBtn: "Continue to Leaderboard",
+        editIgnTitle: "Edit Your IGN",
+        editIgnSub: "Update your official Flex City In-Game Name.",
+        saveIgnBtn: "Save IGN",
+        submitProofTitle: "Submit Match Screenshot",
+        labelIgn: "Your IGN (Flex City)",
+        labelOpponent: "Opponent Name",
+        labelCategory: "Category",
+        labelScreenshotFile: "Upload Chat Screenshot",
+        submitProofBtn: "Send Screenshot for Verification"
+      },
+      hi: {
+        navSub: "ऑफिशियल 1v1 कम्युनिटी लीडरबोर्ड",
+        loginBtn: "गूगल से लॉगिन करें",
+        descTitle: "यह क्या है? (What is this?)",
+        langBtnText: "See in English (अंग्रेजी में देखें)",
+        descText: "यह Flex City India का ऑफिशियल कम्युनिटी 1v1 PvP लीडरबोर्ड है। ऊपर के रैंक वाले प्लेयर्स को चैलेंज करें, मैच जीतें, रैंक आपस में बदलें (Rank Swap करें) और अपना हुनर साबित करें!",
+        rulesHeading: "📜 प्रूफ सबमिट करने के नियम:",
+        rulesHtml: `
+          <li><strong>चैट स्क्रीनशॉट:</strong> गेम की चैट का एक साफ़ स्क्रीनशॉट अपलोड करें जिसमें आपका Opponent 1v1 के रिजल्ट और पॉइंट्स पर राज़ी हो।</li>
+          <li><strong>रैंक स्वैप (Rank Swap):</strong> अगर आप अपने से ऊपर की रैंक वाले खिलाड़ी को हराते हैं, तो आपको उसकी रैंक मिल जाएगी!</li>
+          <li><strong>पर्सनल रिकॉर्डिंग:</strong> अगर मैच में कोई डाउट हो, तो आप इंस्टाग्राम पर BoomCraze को अपनी रिकॉर्डिंग भेज सकते हैं।</li>
+        `,
+        modalRuleNote: "💡 <strong>नियम:</strong> चैट का ऐसा स्क्रीनशॉट डालें जिसमें Opponent रिजल्ट पर राज़ी हो। ऊपर वाले खिलाड़ी को हराने पर रैंक स्वैप हो जाएगी!",
+        tabRanked: "🏆 रैंकड",
+        tabContenders: "⚔️ कंटेंडर्स",
+        tabLobby: "🎯 1v1 लॉबी",
+        sortTotal: "कुल पॉइंट्स (Overall)",
+        sortLong: "लॉन्ग रेंज टॉप",
+        sortShort: "शॉर्ट रेंज टॉप",
+        colRank: "रैंक",
+        colPlayer: "प्लेयर",
+        colRange: "रेंज पॉइंट्स",
+        colTotal: "कुल",
+        loadingText: "लीडरबोर्ड डाटा लोड हो रहा है...",
+        lobbyHeading: "🎯 1v1 खेलने के लिए खिलाड़ी ढूंढ रहे हैं? लॉबी में पोस्ट करें!",
+        lobbyPostBtn: "+ पोस्ट करें",
+        lobbyLoginPrompt: "लॉबी में अपना 1v1 स्टेटस पोस्ट करने के लिए गूगल से लॉगिन करें!",
+        lobbyListTitle: "खेलने के लिए तैयार खिलाड़ी (Active Challengers)",
+        footerContactText: "यदि आपको कोई समस्या है या 1v1 रिकॉर्डिंग भेजनी है, तो संपर्क करें:",
+        footerText1: "Flex City इंडिया कम्युनिटी लीडरबोर्ड • अनौपचारिक फैन-मेड प्लेटफॉर्म।",
+        openSubmitBtn: "+ प्रूफ सबमिट करें",
+        modalTitle: "Flex City लीडरबोर्ड में आपका स्वागत है!",
+        modalSubText: "कृपया आगे बढ़ने के लिए अपना ऑफिशियल इन-गेम नाम (IGN) दर्ज करें।",
+        modalSubmitBtn: "लीडरबोर्ड पर जाएं",
+        editIgnTitle: "अपना IGN बदलें",
+        editIgnSub: "अपना ऑफिशियल Flex City इन-गेम नाम अपडेट करें।",
+        saveIgnBtn: "IGN सेव करें",
+        submitProofTitle: "मैच स्क्रीनशॉट सबमिट करें",
+        labelIgn: "आपका इन-गेम नाम (IGN)",
+        labelOpponent: "सामने वाले खिलाड़ी का नाम (Opponent)",
+        labelCategory: "श्रेणी (Category)",
+        labelScreenshotFile: "चैट स्क्रीनशॉट अपलोड करें",
+        submitProofBtn: "वेरिफिकेशन के लिए भेजें"
+      }
+    };
+
+    function setSafeText(id, text) {
+      const el = document.getElementById(id);
+      if (el) el.innerText = text;
+    }
+
+    window.toggleLanguage = () => {
+      currentLang = currentLang === 'en' ? 'hi' : 'en';
+      const t = translations[currentLang];
+      
+      setSafeText('navSub', t.navSub);
+      setSafeText('loginBtn', t.loginBtn);
+      setSafeText('descTitle', t.descTitle);
+      setSafeText('langBtnText', t.langBtnText);
+      setSafeText('descText', t.descText);
+      setSafeText('rulesHeading', t.rulesHeading);
+      
+      const rulesListEl = document.getElementById('rulesList');
+      if (rulesListEl) rulesListEl.innerHTML = t.rulesHtml;
+
+      const modalRuleEl = document.getElementById('modalRuleNote');
+      if (modalRuleEl) modalRuleEl.innerHTML = t.modalRuleNote;
+
+      setSafeText('tabRanked', t.tabRanked);
+      setSafeText('tabContenders', t.tabContenders);
+      setSafeText('tabLobby', t.tabLobby);
+      setSafeText('sort-total', t.sortTotal);
+      setSafeText('sort-long', t.sortLong);
+      setSafeText('sort-short', t.sortShort);
+      setSafeText('colRank', t.colRank);
+      setSafeText('colPlayer', t.colPlayer);
+      setSafeText('colRange', t.colRange);
+      setSafeText('colTotal', t.colTotal);
+      setSafeText('loadingText', t.loadingText);
+      setSafeText('lobbyHeading', t.lobbyHeading);
+      setSafeText('lobbyPostBtn', t.lobbyPostBtn);
+      setSafeText('lobbyLoginPrompt', t.lobbyLoginPrompt);
+      setSafeText('lobbyListTitle', t.lobbyListTitle);
+      setSafeText('footerContactText', t.footerContactText);
+      setSafeText('footerText1', t.footerText1);
+      setSafeText('openSubmitBtn', t.openSubmitBtn);
+      setSafeText('modalTitle', t.modalTitle);
+      setSafeText('modalSubText', t.modalSubText);
+      setSafeText('modalSubmitBtn', t.modalSubmitBtn);
+      setSafeText('editIgnTitle', t.editIgnTitle);
+      setSafeText('editIgnSub', t.editIgnSub);
+      setSafeText('saveIgnBtn', t.saveIgnBtn);
+      setSafeText('submitProofTitle', t.submitProofTitle);
+      setSafeText('labelIgn', t.labelIgn);
+      setSafeText('labelOpponent', t.labelOpponent);
+      setSafeText('labelCategory', t.labelCategory);
+      setSafeText('labelScreenshotFile', t.labelScreenshotFile);
+      setSafeText('submitProofBtn', t.submitProofBtn);
+
+      buildLiveTicker();
+      renderLeaderboard();
+      renderLobby();
+    };
+
+    loadLeaderboard();
+
+    // Rotate the 2 latest events every 20 seconds
+    setInterval(() => {
+      if (tickerMessages.length > 1) {
+        const el = document.getElementById('liveTickerText');
+        el.style.opacity = 0;
+        setTimeout(() => {
+          tickerIndex = (tickerIndex + 1) % tickerMessages.length;
+          el.innerText = tickerMessages[tickerIndex];
+          el.style.opacity = 1;
+        }, 400);
+      }
+    }, 20000);
+
+    function buildLiveTicker() {
+      let events = [];
+
+      allPlayers.forEach(p => {
+        const ign = p.ign || p.name || "Player";
+        const pts = (p.longPoints || 0) + (p.shortPoints || 0);
+        const tabName = pts > 0 ? "Ranked Leaderboard" : "Contenders Queue";
+        
+        // Event 1: Player Joined
+        if (p.joinedAt) {
+          events.push({
+            time: p.joinedAt,
+            textEn: `⚔️ Latest: ${ign} has joined the ${tabName}!`,
+            textHi: `⚔️ नया अपडेट: ${ign} ने ${pts > 0 ? 'रैंकड लीडरबोर्ड' : 'कंटेंडर्स कतार'} ज्वाइन किया है!`
+          });
+        }
+
+        // Event 2: Verified Matches Won
+        if (p.proofs && p.proofs.length > 0) {
+          p.proofs.forEach(pr => {
+            if (pr.timestamp) {
+              const catName = pr.category === 'long' ? 'Long Range' : 'Short Range';
+              events.push({
+                time: pr.timestamp,
+                textEn: `🔥 Latest: ${ign} defeated ${pr.opponent} in ${catName}!`,
+                textHi: `🔥 नया मैच: ${ign} ने ${pr.opponent} को ${catName} में हराया!`
+              });
+            }
+          });
+        }
+      });
+
+      // Sort newest first & pick ONLY top 2 most recent events
+      events.sort((a, b) => b.time - a.time);
+      const topTwo = events.slice(0, 2);
+
+      if (topTwo.length === 0) {
+        tickerMessages = [
+          currentLang === 'hi' 
+            ? "⚡ नया अपडेट: Flex City 1v1 लीडरबोर्ड लाइव है! लॉगिन करें और चैलेंज शुरू करें!" 
+            : "⚡ Latest: Flex City 1v1 Leaderboard is LIVE! Login and join the Contenders Queue!"
+        ];
+      } else {
+        tickerMessages = topTwo.map(ev => currentLang === 'hi' ? ev.textHi : ev.textEn);
+      }
+
+      tickerIndex = 0;
+      const el = document.getElementById('liveTickerText');
+      if (el) el.innerText = tickerMessages[0];
+    }
+
+    onAuthStateChanged(auth, async (user) => {
+      currentUser = user;
+      const authArea = document.getElementById('authArea');
+      const submitBtn = document.getElementById('openSubmitBtn');
+      const adminBtn = document.getElementById('openAdminBtn');
+      const lobbyPostBox = document.getElementById('lobbyPostBox');
+      const lobbyLoginPrompt = document.getElementById('lobbyLoginPrompt');
+
+      if (user) {
+        isAdmin = (user.email === ADMIN_EMAIL);
+        const playerRef = doc(db, "players", user.uid);
+        const snap = await getDoc(playerRef);
+        
+        if (!snap.exists()) {
+          document.getElementById('forcedIgnModal').classList.remove('hidden');
+          document.getElementById('forcedIgnModal').classList.add('flex');
+        } else {
+          userIgn = snap.data().ign || user.displayName || "Player";
+        }
+
+        authArea.innerHTML = `
+          <div class="flex items-center gap-1.5">
+            <span class="text-xs text-cyan-300 font-semibold hidden sm:inline max-w-[100px] truncate">${userIgn}</span>
+            <button onclick="openIgnModal()" class="bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 border border-cyan-500/30 px-2 py-1 rounded-lg text-[11px] font-semibold">✏️ IGN</button>
+            <button id="logoutBtn" class="bg-slate-800 hover:bg-slate-700 text-slate-200 px-2.5 py-1 rounded-lg text-[11px]">Logout</button>
+          </div>
+        `;
+        document.getElementById('logoutBtn').onclick = () => signOut(auth);
+        submitBtn.classList.remove('hidden');
+        lobbyPostBox.classList.remove('hidden');
+        lobbyLoginPrompt.classList.add('hidden');
+        document.getElementById('ignInput').value = userIgn;
+
+        if (isAdmin) {
+          adminBtn.classList.remove('hidden');
+          loadPendingSubmissions();
+        }
+      } else {
+        isAdmin = false;
+        authArea.innerHTML = `<button id="loginBtn" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold px-3 py-1.5 rounded-lg text-xs transition">${translations[currentLang].loginBtn}</button>`;
+        document.getElementById('loginBtn').onclick = () => signInWithPopup(auth, provider);
+        submitBtn.classList.add('hidden');
+        adminBtn.classList.add('hidden');
+        lobbyPostBox.classList.add('hidden');
+        lobbyLoginPrompt.classList.remove('hidden');
+      }
+      loadLeaderboard();
+    });
+
+    document.getElementById('forcedIgnForm').onsubmit = async (e) => {
+      e.preventDefault();
+      if (!currentUser) return;
+      const ign = document.getElementById('forcedIgnInput').value.trim();
+      if (!ign) return;
+
+      userIgn = ign;
+      await setDoc(doc(db, "players", currentUser.uid), {
+        uid: currentUser.uid,
+        name: currentUser.displayName || "Player",
+        ign: userIgn,
+        photo: currentUser.photoURL || "https://api.dicebear.com/7.x/avataaars/svg?seed=" + currentUser.uid,
+        longPoints: 0,
+        shortPoints: 0,
+        longMatches: 0,
+        shortMatches: 0,
+        streak: 0,
+        joinedAt: Date.now(),
+        proofs: []
+      }, { merge: true });
+
+      closeModal('forcedIgnModal');
+      location.reload();
+    };
+
+    async function loadLeaderboard() {
+      try {
+        const snap = await getDocs(collection(db, "players"));
+        allPlayers = [];
+        snap.forEach(d => allPlayers.push({ id: d.id, ...d.data() }));
+        buildLiveTicker();
+        renderLeaderboard();
+        renderLobby();
+      } catch (err) {
+        console.error("Error loading leaderboard:", err);
+      }
+    }
+
+    window.switchMainTab = (tab) => {
+      currentMainTab = tab;
+      const rankedBtn = document.getElementById('tabRanked');
+      const contendersBtn = document.getElementById('tabContenders');
+      const lobbyBtn = document.getElementById('tabLobby');
+      const filters = document.getElementById('categoryFilters');
+      const lbCard = document.getElementById('leaderboardCard');
+      const lobbySec = document.getElementById('lobbySection');
+
+      const activeClass = "py-2 px-2 rounded-xl text-xs font-bold transition bg-cyan-500 text-slate-950 text-center";
+      const inactiveClass = "py-2 px-2 rounded-xl text-xs font-bold transition text-slate-400 hover:text-white text-center";
+
+      rankedBtn.className = tab === 'ranked' ? activeClass : inactiveClass;
+      contendersBtn.className = tab === 'contenders' ? activeClass : inactiveClass;
+      lobbyBtn.className = tab === 'lobby' ? activeClass : inactiveClass;
+
+      if (tab === 'lobby') {
+        filters.classList.add('hidden');
+        lbCard.classList.add('hidden');
+        lobbySec.classList.remove('hidden');
+        renderLobby();
+      } else {
+        lbCard.classList.remove('hidden');
+        lobbySec.classList.add('hidden');
+        if (tab === 'ranked') filters.classList.remove('hidden');
+        else filters.classList.add('hidden');
+        renderLeaderboard();
+      }
+    };
+
+    window.setSort = (type) => {
+      currentSort = type;
+      document.querySelectorAll('.sort-btn').forEach(b => {
+        b.classList.remove('bg-cyan-500', 'text-slate-950');
+        b.classList.add('bg-slate-800', 'text-slate-300');
+      });
+      document.getElementById('sort-' + type).classList.add('bg-cyan-500', 'text-slate-950');
+      document.getElementById('sort-' + type).classList.remove('bg-slate-800', 'text-slate-300');
+      renderLeaderboard();
+    };
+
+    function getStreakBadgeHtml(streak) {
+      if (!streak || streak < 2) return '';
+      if (streak >= 5) {
+        return `<span class="bg-amber-500/20 text-amber-300 border border-amber-500/40 px-1.5 py-0.5 rounded text-[9px] font-bold">👑 ${streak} Streak</span>`;
+      }
+      return `<span class="bg-orange-500/20 text-orange-400 border border-orange-500/40 px-1.5 py-0.5 rounded text-[9px] font-bold">🔥 ${streak} Streak</span>`;
+    }
+
+    function renderLeaderboard() {
+      const list = document.getElementById('leaderboardList');
+      
+      const filtered = allPlayers.filter(p => {
+        const pts = (p.longPoints || 0) + (p.shortPoints || 0);
+        return currentMainTab === 'ranked' ? pts > 0 : pts === 0;
+      });
+
+      const sorted = filtered.sort((a, b) => {
+        if (currentMainTab === 'contenders') return (b.joinedAt || 0) - (a.joinedAt || 0);
+        if (currentSort === 'long') return (b.longPoints || 0) - (a.longPoints || 0);
+        if (currentSort === 'short') return (b.shortPoints || 0) - (a.shortPoints || 0);
+        return ((b.longPoints || 0) + (b.shortPoints || 0)) - ((a.longPoints || 0) + (a.shortPoints || 0));
+      });
+
+      if (sorted.length === 0) {
+        list.innerHTML = `<div class="p-8 text-center text-slate-400 text-xs">${currentMainTab === 'ranked' ? (currentLang === 'hi' ? 'कोई रैंकड खिलाड़ी नहीं है। लीडरबोर्ड पर आने के लिए चैट स्क्रीनशॉट प्रूफ सबमिट करें!' : 'No ranked players yet. Submit a chat screenshot proof to get on the leaderboard!') : (currentLang === 'hi' ? 'कतार में कोई कंटेंडर नहीं है।' : 'No contenders in queue.')}</div>`;
+        return;
+      }
+
+      list.innerHTML = sorted.map((p, i) => {
+        const totalPts = (p.longPoints || 0) + (p.shortPoints || 0);
+        const rankBadge = currentMainTab === 'contenders' ? '⏳' : (i === 0 ? '🥇 #1' : i === 1 ? '🥈 #2' : i === 2 ? '🥉 #3' : `#${i + 1}`);
+        const matchText = currentLang === 'hi' ? 'मैच' : 'matches';
+        const streakBadge = getStreakBadgeHtml(p.streak);
+
+        let adminActionHtml = '';
+        if (isAdmin) {
+          adminActionHtml = `
+            <div class="col-span-1 text-right">
+              <button onclick="event.stopPropagation(); openAdminEditPlayer('${p.id}')" class="bg-amber-500/20 hover:bg-amber-500/40 text-amber-300 border border-amber-500/40 px-2 py-1 rounded-lg text-xs font-bold" title="Edit Player">⋮</button>
+            </div>
+          `;
+        }
+
+        return `
+          <div onclick="openPlayer('${p.id}')" class="grid grid-cols-12 items-center px-3 py-3 hover:bg-slate-800/40 cursor-pointer transition">
+            <div class="col-span-2 font-bold text-xs ${i < 3 && currentMainTab === 'ranked' ? 'text-cyan-400' : 'text-slate-400'}">${rankBadge}</div>
+            <div class="${isAdmin ? 'col-span-5' : 'col-span-6'} flex items-center gap-2">
+              <img src="${p.photo}" class="w-7 h-7 rounded-full border border-slate-700 object-cover flex-shrink-0" />
+              <div class="truncate">
+                <div class="flex items-center gap-1.5 flex-wrap">
+                  <span class="font-semibold text-xs text-white truncate">${p.ign || p.name}</span>
+                  ${streakBadge}
                 </div>
+                <div class="text-[10px] text-slate-400">${(p.longMatches || 0) + (p.shortMatches || 0)} ${matchText}</div>
+              </div>
             </div>
-            <div class="flex items-center space-x-2 w-full sm:w-auto justify-end">
-                <button onclick="openUpdatesModal()" class="relative bg-gray-800 hover:bg-gray-700 text-cyan-400 px-3 py-2 rounded-xl text-xs font-semibold flex items-center space-x-1 border border-cyan-500/30">
-                    <span>🔔 What's New</span>
-                    <span id="updateBadge" class="hidden absolute -top-1 -right-1 w-3 h-3 bg-red-500 rounded-full animate-ping"></span>
-                </button>
-                <button id="authBtn" onclick="handleAuth()" class="bg-cyan-500 hover:bg-cyan-400 text-gray-950 px-3 sm:px-4 py-2 rounded-xl font-bold text-xs transition">Login / IGN</button>
-                <button id="logoutBtn" onclick="confirmLogout()" class="hidden bg-red-500/10 hover:bg-red-500/20 text-red-400 border border-red-500/30 px-3 py-2 rounded-xl font-semibold text-xs transition">Logout</button>
-            </div>
-        </header>
+            <div class="col-span-2 text-center text-xs font-medium text-sky-300">${currentMainTab === 'ranked' ? (currentSort === 'long' ? p.longPoints || 0 : (currentSort === 'short' ? p.shortPoints || 0 : (p.longPoints || 0) + (p.shortPoints || 0))) : '-'}</div>
+            <div class="col-span-2 text-right font-bold text-xs text-emerald-400">${totalPts}</div>
+            ${adminActionHtml}
+          </div>
+        `;
+      }).join('');
+    }
 
-        <!-- Navigation Tabs -->
-        <nav class="max-w-4xl mx-auto flex space-x-2 sm:space-x-4 my-6">
-            <button onclick="switchTab('ranked')" id="tabRanked" class="flex-1 py-3 rounded-xl font-bold text-xs sm:text-sm bg-gray-800 text-gray-300 transition">🏆 Ranked</button>
-            <button onclick="switchTab('contenders')" id="tabContenders" class="flex-1 py-3 rounded-xl font-bold text-xs sm:text-sm bg-cyan-500 text-gray-950 glow-btn transition">⚔️ Contenders</button>
-            
-            <!-- 1v1 Lobby Tab with Unseen Pop-up -->
-            <div class="relative flex-1">
-                <button onclick="switchTab('lobby')" id="tabLobby" class="w-full py-3 rounded-xl font-bold text-xs sm:text-sm bg-gray-800 text-gray-300 transition">
-                    🎯 1v1 Lobby
-                </button>
-                <span id="lobbyPopup" class="hidden absolute -top-8 left-1/2 -translate-x-1/2 bg-red-500 text-white text-[10px] px-2.5 py-1 rounded-lg font-bold shadow-lg animate-bounce whitespace-nowrap z-20">
-                    ⚔️ New Challenge!
-                </span>
-            </div>
-        </nav>
+    // 1v1 Matchmaking Lobby Logic
+    document.getElementById('lobbyForm').onsubmit = async (e) => {
+      e.preventDefault();
+      if (!currentUser) return;
+      const mode = document.getElementById('lobbyMode').value;
+      const note = document.getElementById('lobbyNote').value.trim() || "Ready for 1v1 challenge!";
 
-        <!-- Main Content Container -->
-        <main class="max-w-4xl mx-auto glass-card rounded-2xl p-4 sm:p-6 mb-6">
-            <div id="contentArea">
-                <p class="text-center text-gray-400 py-10">Loading arena...</p>
-            </div>
-        </main>
-    </div>
+      await updateDoc(doc(db, "players", currentUser.uid), {
+        lfgActive: true,
+        lfgMode: mode,
+        lfgNote: note,
+        lfgTime: Date.now()
+      });
 
-    <!-- Footer -->
-    <footer class="max-w-4xl mx-auto text-center text-xs text-gray-500 pb-2">
-        <p class="mb-2">If you have any issues or want to send 1v1 recordings, contact us:</p>
-        <a href="https://instagram.com/boomcrraze" target="_blank" class="inline-block bg-gradient-to-r from-purple-600 to-pink-600 text-white font-bold px-4 py-2 rounded-xl text-xs mb-3 shadow-lg">📸 Instagram: @boomcrraze</a>
-        <p>Flex City India Community Leaderboard • Unofficial fan-made platform.</p>
-    </footer>
+      document.getElementById('lobbyNote').value = "";
+      loadLeaderboard();
+    };
 
-    <!-- Logout Confirmation Modal -->
-    <div id="logoutModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
-        <div class="glass-card max-w-sm w-full p-6 rounded-2xl border border-gray-700 text-center">
-            <h3 class="text-lg font-bold text-white mb-2">Are you sure you want to logout?</h3>
-            <p class="text-xs text-gray-400 mb-6">Your rank will stay safe on the leaderboard, but you won't be able to submit match proofs or post in the lobby until you login again.</p>
-            <div class="flex space-x-3">
-                <button onclick="closeLogoutModal()" class="flex-1 bg-gray-800 hover:bg-gray-700 text-gray-300 py-2.5 rounded-xl text-xs font-bold transition">Stay Logged In</button>
-                <button onclick="executeLogout()" class="flex-1 bg-red-600 hover:bg-red-500 text-white py-2.5 rounded-xl text-xs font-bold transition">Logout</button>
+    window.removeMyLobbyPost = async () => {
+      if (!currentUser) return;
+      await updateDoc(doc(db, "players", currentUser.uid), { lfgActive: false });
+      loadLeaderboard();
+    };
+
+    function renderLobby() {
+      const lobbyList = document.getElementById('lobbyList');
+      if (!lobbyList) return;
+
+      // Show LFG posts from last 12 hours
+      const twelveHoursAgo = Date.now() - (12 * 60 * 60 * 1000);
+      const activePlayers = allPlayers
+        .filter(p => p.lfgActive && (p.lfgTime || 0) > twelveHoursAgo)
+        .sort((a, b) => (b.lfgTime || 0) - (a.lfgTime || 0));
+
+      if (activePlayers.length === 0) {
+        lobbyList.innerHTML = `<div class="p-6 text-center text-slate-400 text-xs">${currentLang === 'hi' ? 'अभी कोई खिलाड़ी लॉबी में नहीं है। सबसे पहले पोस्ट करें!' : 'No active challengers in lobby right now. Be the first to post!'}</div>`;
+        return;
+      }
+
+      lobbyList.innerHTML = activePlayers.map(p => {
+        const isMe = currentUser && p.id === currentUser.uid;
+        return `
+          <div class="p-3 flex items-center justify-between gap-2 hover:bg-slate-800/30 transition">
+            <div class="flex items-center gap-2.5 truncate">
+              <img src="${p.photo}" class="w-8 h-8 rounded-full border border-emerald-500/40 object-cover flex-shrink-0" />
+              <div class="truncate">
+                <div class="flex items-center gap-1.5">
+                  <span class="font-bold text-xs text-white">${p.ign || p.name}</span>
+                  <span class="bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 px-1.5 py-0.5 rounded text-[9px] font-semibold">${p.lfgMode || '1v1'}</span>
+                </div>
+                <p class="text-[11px] text-slate-300 truncate mt-0.5">${p.lfgNote || ''}</p>
+              </div>
             </div>
+            ${isMe ? `<button onclick="removeMyLobbyPost()" class="bg-rose-500/20 text-rose-400 px-2.5 py-1 rounded-lg text-[10px] font-semibold flex-shrink-0">Remove</button>` : `<button onclick="openPlayer('${p.id}')" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 px-2.5 py-1 rounded-lg text-[10px] font-semibold flex-shrink-0">Stats</button>`}
+          </div>
+        `;
+      }).join('');
+    }
+
+    window.openAdminEditPlayer = (playerId) => {
+      const p = allPlayers.find(x => x.id === playerId);
+      if (!p) return;
+      document.getElementById('editPlayerId').value = p.id;
+      document.getElementById('editPlayerIgn').value = p.ign || p.name || '';
+      document.getElementById('editLongPts').value = p.longPoints || 0;
+      document.getElementById('editShortPts').value = p.shortPoints || 0;
+      document.getElementById('editStreak').value = p.streak || 0;
+      document.getElementById('adminEditPlayerModal').classList.remove('hidden');
+      document.getElementById('adminEditPlayerModal').classList.add('flex');
+    };
+
+    document.getElementById('adminEditPlayerForm').onsubmit = async (e) => {
+      e.preventDefault();
+      if (!isAdmin) return;
+      const pid = document.getElementById('editPlayerId').value;
+      const newIgn = document.getElementById('editPlayerIgn').value.trim();
+      const newLongPts = parseInt(document.getElementById('editLongPts').value) || 0;
+      const newShortPts = parseInt(document.getElementById('editShortPts').value) || 0;
+      const newStreak = parseInt(document.getElementById('editStreak').value) || 0;
+
+      if (!newIgn) return alert("IGN cannot be empty!");
+
+      await updateDoc(doc(db, "players", pid), {
+        ign: newIgn,
+        longPoints: newLongPts,
+        shortPoints: newShortPts,
+        streak: newStreak
+      });
+
+      alert("Player details updated successfully!");
+      closeModal('adminEditPlayerModal');
+      loadLeaderboard();
+    };
+
+    window.openIgnModal = () => {
+      document.getElementById('newIgnInput').value = userIgn;
+      document.getElementById('ignModal').classList.remove('hidden');
+      document.getElementById('ignModal').classList.add('flex');
+    };
+
+    document.getElementById('ignForm').onsubmit = async (e) => {
+      e.preventDefault();
+      if (!currentUser) return;
+      const newIgn = document.getElementById('newIgnInput').value.trim();
+      if (!newIgn) return;
+
+      await updateDoc(doc(db, "players", currentUser.uid), { ign: newIgn });
+      userIgn = newIgn;
+      closeModal('ignModal');
+      loadLeaderboard();
+      alert(currentLang === 'hi' ? "IGN सफलतापूर्वक अपडेट हो गया!" : "IGN updated successfully!");
+    };
+
+    window.openPlayer = (id) => {
+      selectedPlayer = allPlayers.find(p => p.id === id);
+      if (!selectedPlayer) return;
+      document.getElementById('modalAvatar').src = selectedPlayer.photo;
+      document.getElementById('modalName').innerText = selectedPlayer.ign || selectedPlayer.name;
+      document.getElementById('modalStreakBadge').innerHTML = getStreakBadgeHtml(selectedPlayer.streak);
+      
+      const total1v1 = (selectedPlayer.longMatches || 0) + (selectedPlayer.shortMatches || 0);
+      const totalPts = (selectedPlayer.longPoints || 0) + (selectedPlayer.shortPoints || 0);
+      document.getElementById('modalSub').innerText = `${currentLang === 'hi' ? 'कुल 1v1s' : 'Total 1v1s'}: ${total1v1} • ${currentLang === 'hi' ? 'कुल पॉइंट्स' : 'Total Pts'}: ${totalPts}`;
+      
+      // Build Head-to-Head Rivalry Stats
+      const rivalryMap = {};
+      (selectedPlayer.proofs || []).forEach(pr => {
+        if (pr.opponent) {
+          const oppName = pr.opponent.trim();
+          rivalryMap[oppName] = (rivalryMap[oppName] || 0) + 1;
+        }
+      });
+
+      const rivalryEntries = Object.entries(rivalryMap);
+      const rivalrySec = document.getElementById('rivalrySection');
+      const rivalryList = document.getElementById('rivalryList');
+
+      if (rivalryEntries.length > 0) {
+        rivalrySec.classList.remove('hidden');
+        rivalryList.innerHTML = rivalryEntries.map(([opp, wins]) => `
+          <span class="bg-slate-900 border border-slate-700 text-slate-200 px-2.5 py-1 rounded-lg text-[10px] font-semibold">
+            vs <span class="text-cyan-400">${opp}</span>: <span class="text-emerald-400">${wins} ${wins > 1 ? 'Wins' : 'Win'}</span>
+          </span>
+        `).join('');
+      } else {
+        rivalrySec.classList.add('hidden');
+      }
+
+      switchPlayerTab('long');
+      document.getElementById('playerModal').classList.remove('hidden');
+      document.getElementById('playerModal').classList.add('flex');
+    };
+
+    window.switchPlayerTab = (tab) => {
+      selectedModalTab = tab;
+      const longBtn = document.getElementById('tabLongBtn');
+      const shortBtn = document.getElementById('tabShortBtn');
+      if (tab === 'long') {
+        longBtn.className = "py-1.5 rounded-lg text-xs font-semibold bg-cyan-500 text-slate-950";
+        shortBtn.className = "py-1.5 rounded-lg text-xs font-semibold text-slate-400";
+      } else {
+        shortBtn.className = "py-1.5 rounded-lg text-xs font-semibold bg-cyan-500 text-slate-950";
+        longBtn.className = "py-1.5 rounded-lg text-xs font-semibold text-slate-400";
+      }
+
+      const pts = tab === 'long' ? (selectedPlayer.longPoints || 0) : (selectedPlayer.shortPoints || 0);
+      const matches = tab === 'long' ? (selectedPlayer.longMatches || 0) : (selectedPlayer.shortMatches || 0);
+      document.getElementById('modalStats').innerHTML = `
+        <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-xl">
+          <div class="text-[10px] text-slate-400">${tab === 'long' ? (currentLang === 'hi' ? 'लॉन्ग रेंज' : 'Long Range') : (currentLang === 'hi' ? 'शॉर्ट रेंज' : 'Short Range')} Pts</div>
+          <div class="text-base font-bold text-cyan-400">${pts}</div>
         </div>
-    </div>
-
-    <!-- What's New / Updates Modal -->
-    <div id="updatesModal" class="fixed inset-0 bg-black/70 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
-        <div class="glass-card max-w-lg w-full p-6 rounded-2xl border border-gray-700 max-h-[80vh] overflow-y-auto">
-            <div class="flex justify-between items-center mb-4 border-b border-gray-800 pb-3">
-                <h3 class="text-md font-bold text-white">✨ What's New & Updates</h3>
-                <button onclick="closeUpdatesModal()" class="text-gray-400 hover:text-white font-bold text-sm">✕</button>
-            </div>
-            <div id="updatesList" class="space-y-4 text-xs text-gray-300"></div>
+        <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-xl">
+          <div class="text-[10px] text-slate-400">${currentLang === 'hi' ? 'खेले गए मैच' : 'Matches Played'}</div>
+          <div class="text-base font-bold text-emerald-400">${matches}</div>
         </div>
-    </div>
+      `;
 
-    <script>
-        let currentUser = localStorage.getItem('fc_ign') || null;
-        let lastSeenUpdateId = localStorage.getItem('fc_last_update') || '0';
-        let lastSeenChallengeId = localStorage.getItem('fc_last_challenge') || '0';
+      const proofs = (selectedPlayer.proofs || []).filter(p => p.category === tab);
+      const proofContainer = document.getElementById('modalProofs');
+      if (proofs.length === 0) {
+        proofContainer.innerHTML = `<p class="text-[11px] text-slate-500 bg-slate-900/40 p-3 rounded-xl text-center">${currentLang === 'hi' ? 'अभी कोई सत्यापित स्क्रीनशॉट नहीं है।' : `No verified ${tab} range screenshots yet.`}</p>`;
+      } else {
+        proofContainer.innerHTML = proofs.map(pr => `
+          <div class="bg-slate-900 border border-slate-800 rounded-xl p-2.5 space-y-2">
+            <div class="flex justify-between text-[11px]">
+              <span class="text-white font-semibold">vs ${pr.opponent}</span>
+              <span class="text-emerald-400">+${pr.pointsAdded} pts</span>
+            </div>
+            <img src="${pr.url}" class="w-full h-36 rounded-lg object-cover border border-slate-800" alt="Match Screenshot Proof" />
+          </div>
+        `).join('');
+      }
+    };
 
-        // Updates Log History with Dates & Times
-        const updatesLog = [
-            { id: '3', date: '17 Nov 2026, 10:15 AM', title: 'Google SEO & Seen-By Integration', desc: 'Integrated Google Search Console verification, WhatsApp-style seen lists (+X more/hide), and instant reply notifications.' },
-            { id: '2', date: '17 Nov 2026, 09:30 AM', title: 'What\'s New Updates Log & Pop-up', desc: 'Added a dedicated updates modal with timestamped changelogs and unread notification badges.' },
-            { id: '1', date: '17 Nov 2026, 09:00 AM', title: 'Smart IGN Truncation & Secure Logout', desc: 'Fixed long name clipping on leaderboard cards with clean truncation and added an anti-accidental logout confirmation modal.' }
-        ];
+    document.getElementById('openSubmitBtn').onclick = () => {
+      document.getElementById('ignInput').value = userIgn;
+      document.getElementById('submitModal').classList.remove('hidden');
+      document.getElementById('submitModal').classList.add('flex');
+    };
 
-        // Sample Contender Names
-        const contendersData = [
-            { ign: "CHANDRAGUPTA_MAURYA_2026", pts: 0 },
-            { ign: "PxP", pts: 0 },
-            { ign: "20x9xE", pts: 0 },
-            { ign: "ZENO_LIVE", pts: 0 },
-            { ign: "PBx01_ELITE", pts: 0 },
-            { ign: "BoomCraze", pts: 0 },
-            { ign: "SILENT_HUNTER", pts: 0 }
-        ];
-
-        // Sample LFG Lobby Challenge Data
-        let activeChallenge = {
-            id: 'ch_101',
-            poster: 'ShadowPlayer',
-            text: 'Looking for a 1v1 sniper duel at City Center!',
-            time: '10m ago',
-            seenBy: ['RogueNinja', 'CyberKing', 'AlphaWolf', 'DarkKnight', 'ViperX'],
-            replies: [
-                { ign: 'BoomCraze', text: 'Aaja 1v1, challenge accepted!' }
-            ]
+    function compressImage(file, callback) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        const img = new Image();
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          const MAX_WIDTH = 900;
+          const scaleSize = MAX_WIDTH / img.width;
+          canvas.width = img.width > MAX_WIDTH ? MAX_WIDTH : img.width;
+          canvas.height = img.width > MAX_WIDTH ? img.height * scaleSize : img.height;
+          const ctx = canvas.getContext('2d');
+          ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+          callback(canvas.toDataURL('image/jpeg', 0.7));
         };
+        img.src = e.target.result;
+      };
+      reader.readAsDataURL(file);
+    }
 
-        function initApp() {
-            if (currentUser) {
-                document.getElementById('authBtn').innerText = currentUser;
-                document.getElementById('logoutBtn').classList.remove('hidden');
-            } else {
-                document.getElementById('authBtn').innerText = 'Login / IGN';
-                document.getElementById('logoutBtn').classList.add('hidden');
-            }
-            checkNotifications();
-            switchTab('contenders');
+    document.getElementById('proofForm').onsubmit = async (e) => {
+      e.preventDefault();
+      if (!currentUser) return;
+      const ign = document.getElementById('ignInput').value.trim();
+      const opponent = document.getElementById('opponentInput').value.trim();
+      const category = document.getElementById('categoryInput').value;
+      const fileInput = document.getElementById('screenshotFileInput');
+
+      if (ign.toLowerCase() === opponent.toLowerCase()) {
+        return alert(currentLang === 'hi' ? "आप खुद के खिलाफ मैच सबमिट नहीं कर सकते!" : "You cannot submit a match against yourself!");
+      }
+
+      if (fileInput.files.length === 0) return alert("Please select a screenshot image!");
+      const btn = document.getElementById('submitProofBtn');
+      btn.disabled = true;
+      btn.innerText = "Uploading...";
+
+      compressImage(fileInput.files[0], async (compressedBase64) => {
+        await updateDoc(doc(db, "players", currentUser.uid), { ign });
+        userIgn = ign;
+        await addDoc(collection(db, "submissions"), {
+          uid: currentUser.uid,
+          ign,
+          opponent,
+          category,
+          screenshotUrl: compressedBase64,
+          status: "pending",
+          createdAt: Date.now()
+        });
+
+        btn.disabled = false;
+        btn.innerText = translations[currentLang].submitProofBtn;
+        alert(currentLang === 'hi' ? "स्क्रीनशॉट प्रूफ सफलतापूर्वक सबमिट हो गया! एडमिन जल्द वेरीफाई करेगा।" : "Screenshot submitted successfully! Admin will verify soon.");
+        closeModal('submitModal');
+        e.target.reset();
+        loadLeaderboard();
+      });
+    };
+
+    document.getElementById('openAdminBtn').onclick = () => {
+      loadPendingSubmissions();
+      document.getElementById('adminModal').classList.remove('hidden');
+      document.getElementById('adminModal').classList.add('flex');
+    };
+
+    let pendingCache = {};
+
+    async function loadPendingSubmissions() {
+      const q = query(collection(db, "submissions"), where("status", "==", "pending"));
+      const snap = await getDocs(q);
+      document.getElementById('pendingCount').innerText = snap.size;
+      const list = document.getElementById('pendingList');
+      pendingCache = {};
+
+      if (snap.empty) {
+        list.innerHTML = `<p class="text-xs text-slate-400 text-center py-6">No pending screenshot proofs.</p>`;
+        return;
+      }
+
+      list.innerHTML = "";
+      snap.forEach(docSnap => {
+        const s = docSnap.data();
+        const sid = docSnap.id;
+        pendingCache[sid] = s;
+        const div = document.createElement('div');
+        div.className = "bg-slate-900 border border-slate-800 rounded-xl p-3 space-y-2.5";
+        div.innerHTML = `
+          <div class="flex justify-between items-start gap-2">
+            <div>
+              <div class="text-[10px] text-slate-400 mb-0.5">Player IGN:</div>
+              <div class="flex items-center gap-2">
+                <input type="text" id="admin-ign-${sid}" value="${s.ign}" class="bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-xs font-bold text-white" />
+                <button onclick="updatePlayerIgnByAdmin('${s.uid}', '${sid}')" class="bg-cyan-500/20 text-cyan-400 text-[10px] px-2 py-1 rounded-lg border border-cyan-500/30">Update</button>
+              </div>
+              <div class="text-[10px] text-slate-400 mt-1.5">vs <span class="text-cyan-300 font-semibold">${s.opponent}</span> • <span class="text-amber-400 uppercase">${s.category}</span></div>
+            </div>
+            <img onclick="window.open().document.write('<img src=\\'${s.screenshotUrl}\\' style=\\'max-width:100%\\'/>')" src="${s.screenshotUrl}" class="w-16 h-16 rounded-lg border border-slate-700 object-cover cursor-pointer flex-shrink-0" title="Click to view full screenshot" />
+          </div>
+          <div class="flex items-center justify-between pt-2 border-t border-slate-800">
+            <div class="flex items-center gap-1.5">
+              <span class="text-[10px] text-slate-400">Pts:</span>
+              <input type="number" id="pts-${sid}" value="25" class="w-16 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-xs text-white text-center" />
+            </div>
+            <div class="flex gap-1.5">
+              <button onclick="approveSub('${sid}')" class="bg-emerald-500 text-slate-950 font-bold px-2.5 py-1 rounded-lg text-[10px]">Approve</button>
+              <button onclick="rejectSub('${sid}')" class="bg-rose-500/20 text-rose-400 px-2.5 py-1 rounded-lg text-[10px]">Reject & Delete</button>
+            </div>
+          </div>
+        `;
+        list.appendChild(div);
+      });
+    }
+
+    window.updatePlayerIgnByAdmin = async (uid, sid) => {
+      const newIgn = document.getElementById('admin-ign-' + sid).value.trim();
+      if (!newIgn) return alert("IGN cannot be empty!");
+      await updateDoc(doc(db, "players", uid), { ign: newIgn });
+      await updateDoc(doc(db, "submissions", sid), { ign: newIgn });
+      alert("IGN updated!");
+      loadLeaderboard();
+      loadPendingSubmissions();
+    };
+
+    window.approveSub = async (sid) => {
+      const s = pendingCache[sid];
+      if (!s) return;
+      const pts = parseInt(document.getElementById('pts-' + sid).value) || 0;
+      const playerRef = doc(db, "players", s.uid);
+      const pSnap = await getDoc(playerRef);
+      
+      if (pSnap.exists()) {
+        const data = pSnap.data();
+        let proofs = data.proofs || [];
+        proofs.unshift({ 
+          category: s.category, 
+          opponent: s.opponent, 
+          url: s.screenshotUrl || "", 
+          pointsAdded: pts,
+          timestamp: Date.now()
+        });
+        if (proofs.length > 8) proofs = proofs.slice(0, 8);
+
+        const updateData = { 
+          proofs,
+          streak: (data.streak || 0) + 1
+        };
+        if (s.category === 'long') {
+          updateData.longPoints = (data.longPoints || 0) + pts;
+          updateData.longMatches = (data.longMatches || 0) + 1;
+        } else {
+          updateData.shortPoints = (data.shortPoints || 0) + pts;
+          updateData.shortMatches = (data.shortMatches || 0) + 1;
         }
+        await updateDoc(playerRef, updateData);
 
-        function checkNotifications() {
-            if (updatesLog.length > 0 && updatesLog[0].id !== lastSeenUpdateId) {
-                document.getElementById('updateBadge').classList.remove('hidden');
-            }
-            if (lastSeenChallengeId !== activeChallenge.id) {
-                document.getElementById('lobbyPopup').classList.remove('hidden');
-            }
+        // Reset opponent's streak if they are registered on the leaderboard
+        const oppPlayer = allPlayers.find(p => (p.ign || "").toLowerCase() === s.opponent.toLowerCase());
+        if (oppPlayer && oppPlayer.streak > 0) {
+          await updateDoc(doc(db, "players", oppPlayer.id), { streak: 0 });
         }
+      }
+      await deleteDoc(doc(db, "submissions", sid));
+      loadPendingSubmissions();
+      loadLeaderboard();
+    };
 
-        function formatIGN(name, limit = 12) {
-            if (name.length > limit) {
-                return name.substring(0, limit) + '...';
-            }
-            return name;
-        }
+    window.rejectSub = async (sid) => {
+      await deleteDoc(doc(db, "submissions", sid));
+      loadPendingSubmissions();
+    };
 
-        function switchTab(tab) {
-            ['ranked', 'contenders', 'lobby'].forEach(t => {
-                const btn = document.getElementById('tab' + t.charAt(0).toUpperCase() + t.slice(1));
-                if(btn) btn.className = "flex-1 py-3 rounded-xl font-bold text-xs sm:text-sm bg-gray-800 text-gray-300 transition";
-            });
-            const activeBtn = document.getElementById('tab' + tab.charAt(0).toUpperCase() + tab.slice(1));
-            if(activeBtn) activeBtn.className = "flex-1 py-3 rounded-xl font-bold text-xs sm:text-sm bg-cyan-500 text-gray-950 glow-btn transition";
-
-            const area = document.getElementById('contentArea');
-            if (tab === 'ranked') {
-                area.innerHTML = `<h3 class="text-sm font-bold text-cyan-400 mb-4">🏆 Ranked Tier Board</h3><p class="text-xs text-gray-400">Top ranked players of Flex City India.</p>`;
-            } else if (tab === 'contenders') {
-                let html = `<h3 class="text-sm font-bold text-cyan-400 mb-4">⚔️ Contenders List</h3><div class="space-y-2 text-xs">`;
-                contendersData.forEach(c => {
-                    let displayName = formatIGN(c.ign, 14);
-                    html += `<div class="flex justify-between items-center p-3 bg-gray-900/50 rounded-xl border border-gray-800">
-                        <span class="font-bold text-white cursor-pointer hover:text-cyan-400" title="${c.ign}" onclick="openProfile('${c.ign}')">${displayName}</span>
-                        <span class="text-green-400 font-semibold">${c.pts} pts</span>
-                    </div>`;
-                });
-                html += `</div>`;
-                area.innerHTML = html;
-            } else if (tab === 'lobby') {
-                document.getElementById('lobbyPopup').classList.add('hidden');
-                lastSeenChallengeId = activeChallenge.id;
-                localStorage.setItem('fc_last_challenge', activeChallenge.id);
-
-                if (currentUser && !activeChallenge.seenBy.includes(currentUser) && currentUser !== activeChallenge.poster) {
-                    activeChallenge.seenBy.push(currentUser);
-                }
-
-                renderLobbyView(area);
-            }
-        }
-
-        let showAllSeen = false;
-
-        function renderLobbyView(area) {
-            let viewers = activeChallenge.seenBy;
-            let seenText = "";
-            if (viewers.length === 0) {
-                seenText = "No one yet";
-            } else if (showAllSeen || viewers.length <= 3) {
-                seenText = viewers.join(', ');
-                if (viewers.length > 3) seenText += ` <button onclick="toggleSeenList()" class="text-cyan-400 font-bold ml-1 hover:underline">[Hide]</button>`;
-            } else {
-                let top3 = viewers.slice(0, 3).join(', ');
-                let remaining = viewers.length - 3;
-                seenText = `${top3} <button onclick="toggleSeenList()" class="text-cyan-400 font-bold ml-1 hover:underline">+${remaining} more</button>`;
-            }
-
-            let repliesHtml = '';
-            activeChallenge.replies.forEach(r => {
-                repliesHtml += `<div class="mt-2 text-[11px] bg-gray-800/60 p-2 rounded-lg border border-gray-700"><b>${r.ign} replied:</b> "${r.text}"</div>`;
-            });
-
-            area.innerHTML = `<h3 class="text-sm font-bold text-cyan-400 mb-4">🎯 1v1 Live Lobby</h3>
-                <div class="p-4 bg-gray-900/60 rounded-xl border border-gray-800 space-y-3">
-                    <div class="flex justify-between text-xs text-gray-400"><span>Posted by: <b>${activeChallenge.poster}</b></span><span>${activeChallenge.time}</span></div>
-                    <p class="text-sm font-semibold text-white">${activeChallenge.text}</p>
-                    ${repliesHtml}
-                    <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between text-[11px] text-gray-400 border-t border-gray-800 pt-3 gap-2">
-                        <span>👁️ Seen by: ${seenText}</span>
-                        <button onclick="acceptChallenge()" class="bg-cyan-500 hover:bg-cyan-400 text-gray-950 font-bold px-3 py-1.5 rounded-lg text-xs transition">Accept Challenge</button>
-                    </div>
-                </div>`;
-        }
-
-        function toggleSeenList() {
-            showAllSeen = !showAllSeen;
-            renderLobbyView(document.getElementById('contentArea'));
-        }
-
-        function acceptChallenge() {
-            if (!currentUser) {
-                alert("Please login / set your IGN first to accept challenges!");
-                handleAuth();
-                return;
-            }
-            let replyMsg = prompt("Enter your reply / message for the challenge poster:", "Aaja 1v1, ready!");
-            if (replyMsg !== null) {
-                activeChallenge.replies.push({ ign: currentUser, text: replyMsg });
-                alert("Challenge accepted & reply sent!");
-                renderLobbyView(document.getElementById('contentArea'));
-            }
-        }
-
-        function openProfile(fullIgn) {
-            alert("Player Profile: " + fullIgn);
-        }
-
-        function handleAuth() {
-            if (!currentUser) {
-                let ign = prompt("Enter your In-Game Name (IGN):");
-                if (ign && ign.trim() !== "") {
-                    currentUser = ign.trim();
-                    localStorage.setItem('fc_ign', currentUser);
-                    initApp();
-                }
-            }
-        }
-
-        function confirmLogout() {
-            document.getElementById('logoutModal').classList.remove('hidden');
-            document.getElementById('logoutModal').classList.add('flex');
-        }
-
-        function closeLogoutModal() {
-            document.getElementById('logoutModal').classList.add('hidden');
-            document.getElementById('logoutModal').classList.remove('flex');
-        }
-
-        function executeLogout() {
-            localStorage.removeItem('fc_ign');
-            currentUser = null;
-            closeLogoutModal();
-            initApp();
-        }
-
-        function openUpdatesModal() {
-            document.getElementById('updatesModal').classList.remove('hidden');
-            document.getElementById('updatesModal').classList.add('flex');
-            document.getElementById('updateBadge').classList.add('hidden');
-            
-            if(updatesLog.length > 0) {
-                lastSeenUpdateId = updatesLog[0].id;
-                localStorage.setItem('fc_last_update', lastSeenUpdateId);
-            }
-            
-            let html = '';
-            updatesLog.forEach(up => {
-                html += `<div class="border-b border-gray-800 pb-3 last:border-0">
-                    <div class="text-[10px] text-cyan-400 font-bold mb-1">${up.date}</div>
-                    <div class="font-bold text-white text-sm mb-1">${up.title}</div>
-                    <p class="text-gray-300">${up.desc}</p>
-                </div>`;
-            });
-            document.getElementById('updatesList').innerHTML = html;
-        }
-
-        function closeUpdatesModal() {
-            document.getElementById('updatesModal').classList.add('hidden');
-            document.getElementById('updatesModal').classList.remove('flex');
-        }
-
-        window.onload = initApp;
-    </script>
+    window.closeModal = (id) => {
+      document.getElementById(id).classList.add('hidden');
+      document.getElementById(id).classList.remove('flex');
+    };
+  </script>
 </body>
 </html>
