@@ -51,7 +51,7 @@
         <!-- What's New Feature Button with Red Dot -->
         <button onclick="openWhatsNewModal()" class="relative bg-slate-800/90 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 cursor-pointer shadow-sm">
           <span>✨ <span id="whatsNewBtnText">What's New</span></span>
-          <span id="whatsNewDot" class="w-2 h-2 rounded-full bg-red-500 animate-ping-dot"></span>
+          <span id="whatsNewDot" class="w-2 h-2 rounded-full bg-red-500 animate-ping-dot hidden"></span>
         </button>
         <div id="authArea" class="flex items-center gap-2">
           <button id="loginBtn" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold px-3.5 py-1.5 rounded-xl text-xs transition">
@@ -110,10 +110,10 @@
       </div>
 
       <div class="flex items-center gap-2.5">
-        <button id="openSubmitBtn" class="hidden flex-1 sm:flex-none bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-xs transition text-center shadow-md">
+        <button onclick="openSubmitProofModal()" id="openSubmitBtn" class="hidden flex-1 sm:flex-none bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-xs transition text-center shadow-md cursor-pointer">
           + Submit Proof
         </button>
-        <button id="openAdminBtn" class="hidden flex-1 sm:flex-none bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-xs transition text-center shadow-md">
+        <button onclick="openAdminModal()" id="openAdminBtn" class="hidden flex-1 sm:flex-none bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-xs transition text-center shadow-md cursor-pointer">
           🛡️ Admin (<span id="pendingCount">0</span>)
         </button>
       </div>
@@ -128,7 +128,7 @@
         ⚔️ Contenders
       </button>
       <button onclick="switchMainTab('lobby')" id="tabLobby" class="py-2.5 px-2 rounded-xl text-xs font-bold transition text-slate-400 hover:text-white text-center relative">
-        🎯 1v1 Lobby <span id="lobbyTabBadge" class="hidden absolute top-2 right-2.5 w-2 h-2 rounded-full bg-cyan-400"></span>
+        🎯 1v1 Lobby <span id="lobbyTabBadge" class="hidden absolute top-2 right-2.5 w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping"></span>
       </button>
     </div>
 
@@ -197,7 +197,7 @@
         <div class="bg-slate-900/80 border border-slate-800 rounded-xl overflow-hidden transition">
           <button onclick="toggleFaq(1)" class="w-full px-4 py-3 text-left flex items-center justify-between text-xs font-bold text-white cursor-pointer">
             <span id="faq1Q">01. What is Flex City 1v1 Leaderboard?</span>
-            <span id="faq1Icon-1" class="text-cyan-400 text-sm font-black">+</span>
+            <span class="text-cyan-400 text-sm font-black">+</span>
           </button>
           <div id="faq1Ans" class="hidden px-4 pb-3 text-xs text-slate-300 leading-relaxed border-t border-slate-800/60 pt-2">
             Flex City India's official community PvP platform where players compete in Long Range and Short Range 1v1 matches, submit screenshot proofs, swap ranks, and climb the leaderboard!
@@ -208,7 +208,7 @@
         <div class="bg-slate-900/80 border border-slate-800 rounded-xl overflow-hidden transition">
           <button onclick="toggleFaq(2)" class="w-full px-4 py-3 text-left flex items-center justify-between text-xs font-bold text-white cursor-pointer">
             <span id="faq2Q">02. How do I submit match screenshot proofs?</span>
-            <span id="faq2Icon-2" class="text-cyan-400 text-sm font-black">+</span>
+            <span class="text-cyan-400 text-sm font-black">+</span>
           </button>
           <div id="faq2Ans" class="hidden px-4 pb-3 text-xs text-slate-300 leading-relaxed border-t border-slate-800/60 pt-2">
             After winning a 1v1 match, click the "+ Submit Proof" button, enter your IGN and opponent's name, choose your category, and upload a clear chat screenshot where your opponent agrees to the result.
@@ -219,7 +219,7 @@
         <div class="bg-slate-900/80 border border-slate-800 rounded-xl overflow-hidden transition">
           <button onclick="toggleFaq(3)" class="w-full px-4 py-3 text-left flex items-center justify-between text-xs font-bold text-white cursor-pointer">
             <span id="faq3Q">03. What is Rank Swap and how does it work?</span>
-            <span id="faq3Icon-3" class="text-cyan-400 text-sm font-black">+</span>
+            <span class="text-cyan-400 text-sm font-black">+</span>
           </button>
           <div id="faq3Ans" class="hidden px-4 pb-3 text-xs text-slate-300 leading-relaxed border-t border-slate-800/60 pt-2">
             If you defeat a player ranked higher than you on the leaderboard and have your proof verified by an admin, you take their exact position on the leaderboard!
@@ -230,7 +230,7 @@
         <div class="bg-slate-900/80 border border-slate-800 rounded-xl overflow-hidden transition">
           <button onclick="toggleFaq(4)" class="w-full px-4 py-3 text-left flex items-center justify-between text-xs font-bold text-white cursor-pointer">
             <span id="faq4Q">04. How are total points calculated?</span>
-            <span id="faq4Icon-4" class="text-cyan-400 text-sm font-black">+</span>
+            <span class="text-cyan-400 text-sm font-black">+</span>
           </button>
           <div id="faq4Ans" class="hidden px-4 pb-3 text-xs text-slate-300 leading-relaxed border-t border-slate-800/60 pt-2">
             Total points are the sum of your Long Range points and Short Range points earned through verified match wins.
@@ -241,7 +241,7 @@
 
   </main>
 
-  <!-- What's New Modal (With Date & Time & Auto Read) -->
+  <!-- What's New Modal -->
   <div id="whatsNewModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
     <div class="card-bg neon-border rounded-2xl max-w-md w-full p-5 relative space-y-3.5 shadow-2xl">
       <button onclick="closeModal('whatsNewModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg">&times;</button>
@@ -299,7 +299,7 @@
     </div>
   </div>
 
-  <!-- Player Profile Modal (With Seen, Reply & Rivalry Stats) -->
+  <!-- Player Profile Modal -->
   <div id="playerModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
     <div class="card-bg neon-border rounded-2xl max-w-md w-full p-5 relative max-h-[85vh] overflow-y-auto shadow-2xl">
       <button onclick="closeModal('playerModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg">&times;</button>
@@ -388,7 +388,7 @@
       <h2 id="editIgnTitle" class="text-base font-bold text-white mb-1">Edit Your IGN</h2>
       <p id="editIgnSub" class="text-xs text-slate-400 mb-3">Update your official Flex City In-Game Name.</p>
       <form id="ignForm" class="space-y-3">
-        <input type="text" id="newIgnInput" required placeholder="e.g. BoomCraze" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-500" />
+        <input type="text" id="newIgnInput" required placeholder="e.g. BoomCraze" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500" />
         <button type="submit" id="saveIgnBtn" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs transition shadow-md">
           Save IGN
         </button>
@@ -483,23 +483,25 @@
     // What's New Feature List with Date & Time
     const whatsNewData = [
       {
+        version: "v1.3",
         date: "Nov 18, 2026 • 10:00 AM",
         en: "🔥 Real-Time Seen & Reply Tracking: See who viewed your 1v1 lobby challenge and get instant pop-up notifications when someone replies!",
         hi: "🔥 रियल-टाइम सीन और रिप्लाई ट्रैकिंग: देखें कि आपके 1v1 लॉबी चैलेंज को किसने देखा और रिप्लाई मिलने पर तुरंत पॉप-अप नोटिफिकेशन पाएं!"
       },
       {
+        version: "v1.2",
         date: "Nov 17, 2026 • 04:30 PM",
         en: "⚡ Live Activity Ticker & FAQ: Faster 5-second ticker updates showcasing top recent active players + Added Frequently Asked Questions section.",
         hi: "⚡ लाइव एक्टिविटी टिकर और FAQ: हाल ही में खेलने वाले टॉप 3 खिलाड़ियों को दिखाने वाला तेज 5-सेकंड टिकर + अक्सर पूछे जाने वाले सवाल (FAQ) जोड़े गए।"
       },
       {
+        version: "v1.1",
         date: "Nov 16, 2026 • 02:15 PM",
         en: "🛡️ Admin Screenshot Deletion & Safe Logout: Admins can now individually remove specific screenshots with auto point recalculation + Secure logout confirmation popup.",
         hi: "🛡️ एडमिन स्क्रीनशॉट डिलीट और सुरक्षित लॉगआउट: एडमिन अब पॉइंट्स री-कैलकुलेशन के साथ विशिष्ट स्क्रीनशॉट हटा सकते हैं + सुरक्षित लॉगआउट कन्फर्मेशन पॉप-अप।"
       }
     ];
 
-    // Ticker state (rotates between top 3 events every 5 seconds)
     let tickerMessages = [];
     let tickerIndex = 0;
 
@@ -617,7 +619,7 @@
       
       setSafeText('navSub', t.navSub);
       setSafeText('loginBtn', t.loginBtn);
-      setSafeText('whatsNewBtn', t.whatsNewBtn);
+      setSafeText('whatsNewBtnText', t.whatsNewBtn);
       setSafeText('descTitle', t.descTitle);
       setSafeText('langBtnText', t.langBtnText);
       setSafeText('descText', t.descText);
@@ -673,10 +675,10 @@
 
     loadLeaderboard();
 
-    // Rotate top 3 ticker events every 5 seconds
     setInterval(() => {
       if (tickerMessages.length > 1) {
         const el = document.getElementById('liveTickerText');
+        if (!el) return;
         el.style.opacity = 0;
         setTimeout(() => {
           tickerIndex = (tickerIndex + 1) % tickerMessages.length;
@@ -688,7 +690,6 @@
 
     function buildLiveTicker() {
       let events = [];
-
       allPlayers.forEach(p => {
         const ign = p.ign || p.name || "Player";
         const pts = (p.longPoints || 0) + (p.shortPoints || 0);
@@ -757,8 +758,8 @@
         authArea.innerHTML = `
           <div class="flex items-center gap-2">
             <span class="text-xs text-cyan-300 font-semibold hidden sm:inline max-w-[90px] truncate">${userIgn}</span>
-            <button onclick="openIgnModal()" class="bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 border border-cyan-500/30 px-2.5 py-1.5 rounded-xl text-xs font-semibold">✏️ IGN</button>
-            <button onclick="openLogoutModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3 py-1.5 rounded-xl text-xs font-semibold transition">Logout</button>
+            <button onclick="openIgnModal()" class="bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 border border-cyan-500/30 px-2.5 py-1.5 rounded-xl text-xs font-semibold cursor-pointer">✏️ IGN</button>
+            <button onclick="openLogoutModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer">Logout</button>
           </div>
         `;
         submitBtn.classList.remove('hidden');
@@ -772,15 +773,16 @@
         }
 
         checkUserNotifications(user.uid);
-        checkWhatsNewStatus();
+        checkWhatsNewStatus(user.uid);
       } else {
         isAdmin = false;
-        authArea.innerHTML = `<button id="loginBtn" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold px-3.5 py-1.5 rounded-xl text-xs transition">${translations[currentLang].loginBtn}</button>`;
+        authArea.innerHTML = `<button id="loginBtn" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold px-3.5 py-1.5 rounded-xl text-xs transition cursor-pointer">${translations[currentLang].loginBtn}</button>`;
         document.getElementById('loginBtn').onclick = () => signInWithPopup(auth, provider);
         submitBtn.classList.add('hidden');
         adminBtn.classList.add('hidden');
         lobbyPostBox.classList.add('hidden');
         lobbyLoginPrompt.classList.remove('hidden');
+        document.getElementById('whatsNewDot').classList.add('hidden');
       }
       loadLeaderboard();
     });
@@ -804,7 +806,8 @@
         streak: 0,
         joinedAt: Date.now(),
         proofs: [],
-        replies: []
+        replies: [],
+        whatsNewSeenVersion: ""
       }, { merge: true });
 
       closeModal('forcedIgnModal');
@@ -819,6 +822,9 @@
         buildLiveTicker();
         renderLeaderboard();
         renderLobby();
+        if (currentUser) {
+          checkUserNotifications(currentUser.uid);
+        }
         if (selectedPlayer) {
           const updated = allPlayers.find(p => p.id === selectedPlayer.id);
           if (updated) {
@@ -858,28 +864,34 @@
       document.getElementById('globalPopup').classList.add('hidden');
     };
 
-    // Automatically remove red dot once What's New modal is opened and viewed
-    function checkWhatsNewStatus() {
-      const seenVersion = localStorage.getItem('flexCity_whatsNew_seenVersion');
-      const latestVersion = whatsNewData[0].date; // Latest update timestamp/identifier
+    // Firebase-synced What's New Red Dot Check
+    async function checkWhatsNewStatus(uid) {
+      const me = allPlayers.find(p => p.id === uid);
       const dot = document.getElementById('whatsNewDot');
-      if (seenVersion === latestVersion) {
-        if (dot) dot.classList.add('hidden');
+      if (!dot) return;
+
+      const latestVersion = whatsNewData[0].version;
+      if (me && me.whatsNewSeenVersion === latestVersion) {
+        dot.classList.add('hidden');
       } else {
-        if (dot) dot.classList.remove('hidden');
+        dot.classList.remove('hidden');
       }
     }
 
-    window.openWhatsNewModal = () => {
+    window.openWhatsNewModal = async () => {
       renderWhatsNewContent();
       document.getElementById('whatsNewModal').classList.remove('hidden');
       document.getElementById('whatsNewModal').classList.add('flex');
 
-      // Automatically mark as read/seen once opened
-      const latestVersion = whatsNewData[0].date;
-      localStorage.setItem('flexCity_whatsNew_seenVersion', latestVersion);
       const dot = document.getElementById('whatsNewDot');
       if (dot) dot.classList.add('hidden');
+
+      if (currentUser) {
+        const latestVersion = whatsNewData[0].version;
+        await updateDoc(doc(db, "players", currentUser.uid), { whatsNewSeenVersion: latestVersion });
+        const me = allPlayers.find(p => p.id === currentUser.uid);
+        if (me) me.whatsNewSeenVersion = latestVersion;
+      }
     };
 
     function renderWhatsNewContent() {
@@ -894,7 +906,6 @@
       `).join('');
     }
 
-    // Secure Logout Flow
     window.openLogoutModal = () => {
       document.getElementById('logoutConfirmModal').classList.remove('hidden');
       document.getElementById('logoutConfirmModal').classList.add('flex');
@@ -907,10 +918,8 @@
       });
     };
 
-    // FAQ Toggle function
     window.toggleFaq = (id) => {
       const ans = document.getElementById(`faq${id}Ans`);
-      const icon = document.getElementById(`faq1Icon-${id}` ) || document.getElementById(`faq${id}Icon-${id}`);
       if (ans.classList.contains('hidden')) {
         ans.classList.remove('hidden');
       } else {
@@ -918,7 +927,7 @@
       }
     };
 
-    window.switchMainTab = (tab) => {
+    window.switchMainTab = async (tab) => {
       currentMainTab = tab;
       const rankedBtn = document.getElementById('tabRanked');
       const contendersBtn = document.getElementById('tabContenders');
@@ -941,6 +950,15 @@
         const badge = document.getElementById('lobbyTabBadge');
         if (badge) badge.classList.add('hidden');
         document.getElementById('globalPopup').classList.add('hidden');
+
+        // Clear user replies notification on entering lobby tab
+        if (currentUser) {
+          const me = allPlayers.find(p => p.id === currentUser.uid);
+          if (me && me.replies && me.replies.length > 0) {
+            await updateDoc(doc(db, "players", currentUser.uid), { replies: [] });
+            me.replies = [];
+          }
+        }
         renderLobby();
       } else {
         lbCard.classList.remove('hidden');
@@ -973,6 +991,7 @@
 
     function renderLeaderboard() {
       const list = document.getElementById('leaderboardList');
+      if (!list) return;
       
       const filtered = allPlayers.filter(p => {
         const pts = (p.longPoints || 0) + (p.shortPoints || 0);
@@ -1001,7 +1020,7 @@
         if (isAdmin) {
           adminActionHtml = `
             <div class="col-span-1 text-right">
-              <button onclick="event.stopPropagation(); openAdminEditPlayer('${p.id}')" class="bg-amber-500/20 hover:bg-amber-500/40 text-amber-300 border border-amber-500/40 px-2 py-1 rounded-lg text-xs font-bold" title="Edit Player">⋮</button>
+              <button onclick="event.stopPropagation(); openAdminEditPlayer('${p.id}')" class="bg-amber-500/20 hover:bg-amber-500/40 text-amber-300 border border-amber-500/40 px-2 py-1 rounded-lg text-xs font-bold cursor-pointer" title="Edit Player">⋮</button>
             </div>
           `;
         }
@@ -1089,7 +1108,7 @@
                 ${seenHtml}
               </div>
             </div>
-            ${isMe ? `<button onclick="removeMyLobbyPost()" class="bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 border border-rose-500/30 px-3 py-1.5 rounded-xl text-xs font-semibold flex-shrink-0 transition">Remove</button>` : `<button onclick="openPlayerWithSeen('${p.id}')" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 px-3 py-1.5 rounded-xl text-xs font-semibold flex-shrink-0 transition shadow-sm">Stats & Reply</button>`}
+            ${isMe ? `<button onclick="removeMyLobbyPost()" class="bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 border border-rose-500/30 px-3 py-1.5 rounded-xl text-xs font-semibold flex-shrink-0 transition cursor-pointer">Remove</button>` : `<button onclick="openPlayerWithSeen('${p.id}')" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 px-3 py-1.5 rounded-xl text-xs font-semibold flex-shrink-0 transition shadow-sm cursor-pointer">Stats & Reply</button>`}
           </div>
         `;
       }).join('');
@@ -1264,7 +1283,7 @@
           <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 space-y-2">
             <div class="flex justify-between items-center text-[11px]">
               <span class="text-white font-semibold">vs ${pr.opponent} <span class="text-emerald-400 ml-1">+${pr.pointsAdded} pts</span></span>
-              ${isAdmin ? `<button onclick="deletePlayerProof('${selectedPlayer.id}', ${pr.originalIndex})" class="bg-red-500/20 hover:bg-red-500/40 text-red-400 border border-red-500/30 px-2 py-0.5 rounded text-[10px] font-bold">🗑️ Delete SS</button>` : ''}
+              ${isAdmin ? `<button onclick="deletePlayerProof('${selectedPlayer.id}', ${pr.originalIndex})" class="bg-red-500/20 hover:bg-red-500/40 text-red-400 border border-red-500/30 px-2 py-0.5 rounded text-[10px] font-bold cursor-pointer">🗑️ Delete SS</button>` : ''}
             </div>
             <img src="${pr.url}" class="w-full h-36 rounded-lg object-cover border border-slate-800" alt="Match Screenshot Proof" />
           </div>
@@ -1326,6 +1345,19 @@
       reader.readAsDataURL(file);
     }
 
+    // Explicit Proof Modal triggers
+    window.openSubmitProofModal = () => {
+      document.getElementById('ignInput').value = userIgn;
+      document.getElementById('submitModal').classList.remove('hidden');
+      document.getElementById('submitModal').classList.add('flex');
+    };
+
+    window.openAdminModal = () => {
+      loadPendingSubmissions();
+      document.getElementById('adminModal').classList.remove('hidden');
+      document.getElementById('adminModal').classList.add('flex');
+    };
+
     document.getElementById('proofForm').onsubmit = async (e) => {
       e.preventDefault();
       if (!currentUser) return;
@@ -1365,12 +1397,6 @@
       });
     };
 
-    document.getElementById('openAdminBtn').onclick = () => {
-      loadPendingSubmissions();
-      document.getElementById('adminModal').classList.remove('hidden');
-      document.getElementById('adminModal').classList.add('flex');
-    };
-
     let pendingCache = {};
 
     async function loadPendingSubmissions() {
@@ -1398,7 +1424,7 @@
               <div class="text-[10px] text-slate-400 mb-0.5">Player IGN:</div>
               <div class="flex items-center gap-2">
                 <input type="text" id="admin-ign-${sid}" value="${s.ign}" class="bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1 text-xs font-bold text-white" />
-                <button onclick="updatePlayerIgnByAdmin('${s.uid}', '${sid}')" class="bg-cyan-500/20 text-cyan-400 text-[10px] px-2.5 py-1 rounded-lg border border-cyan-500/30 font-semibold">Update</button>
+                <button onclick="updatePlayerIgnByAdmin('${s.uid}', '${sid}')" class="bg-cyan-500/20 text-cyan-400 text-[10px] px-2.5 py-1 rounded-lg border border-cyan-500/30 font-semibold cursor-pointer">Update</button>
               </div>
               <div class="text-[10px] text-slate-400 mt-2">vs <span class="text-cyan-300 font-semibold">${s.opponent}</span> • <span class="text-amber-400 uppercase">${s.category}</span></div>
             </div>
@@ -1410,8 +1436,8 @@
               <input type="number" id="pts-${sid}" value="25" class="w-16 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-xs text-white text-center font-bold" />
             </div>
             <div class="flex gap-2">
-              <button id="approve-btn-${sid}" onclick="approveSub('${sid}')" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-3 py-1.5 rounded-xl text-xs transition shadow-sm">Approve</button>
-              <button onclick="rejectSub('${sid}')" class="bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 px-3 py-1.5 rounded-xl text-xs font-semibold">Reject</button>
+              <button id="approve-btn-${sid}" onclick="approveSub('${sid}')" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-3 py-1.5 rounded-xl text-xs transition shadow-sm cursor-pointer">Approve</button>
+              <button onclick="rejectSub('${sid}')" class="bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 px-3 py-1.5 rounded-xl text-xs font-semibold cursor-pointer">Reject</button>
             </div>
           </div>
         `;
