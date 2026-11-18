@@ -659,6 +659,13 @@
         buildLiveTicker();
         renderLeaderboard();
         renderLobby();
+        if (selectedPlayer) {
+          const updated = allPlayers.find(p => p.id === selectedPlayer.id);
+          if (updated) {
+            selectedPlayer = updated;
+            updatePlayerModalView();
+          }
+        }
       } catch (err) {
         console.error("Error loading leaderboard:", err);
       }
@@ -887,7 +894,13 @@
       document.getElementById('modalAvatar').src = selectedPlayer.photo;
       document.getElementById('modalName').innerText = selectedPlayer.ign || selectedPlayer.name;
       document.getElementById('modalStreakBadge').innerHTML = getStreakBadgeHtml(selectedPlayer.streak);
-      
+      updatePlayerModalView();
+      document.getElementById('playerModal').classList.remove('hidden');
+      document.getElementById('playerModal').classList.add('flex');
+    };
+
+    function updatePlayerModalView() {
+      if (!selectedPlayer) return;
       const total1v1 = (selectedPlayer.longMatches || 0) + (selectedPlayer.shortMatches || 0);
       const totalPts = (selectedPlayer.longPoints || 0) + (selectedPlayer.shortPoints || 0);
       document.getElementById('modalSub').innerText = `${currentLang === 'hi' ? 'कुल 1v1s' : 'Total 1v1s'}: ${total1v1} • ${currentLang === 'hi' ? 'कुल पॉइंट्स' : 'Total Pts'}: ${totalPts}`;
@@ -915,10 +928,8 @@
         rivalrySec.classList.add('hidden');
       }
 
-      switchPlayerTab('long');
-      document.getElementById('playerModal').classList.remove('hidden');
-      document.getElementById('playerModal').classList.add('flex');
-    };
+      switchPlayerTab(selectedModalTab);
+    }
 
     window.switchPlayerTab = (tab) => {
       selectedModalTab = tab;
@@ -932,6 +943,7 @@
         longBtn.className = "py-1.5 rounded-lg text-xs font-semibold text-slate-400";
       }
 
+      if (!selectedPlayer) return;
       const pts = tab === 'long' ? (selectedPlayer.longPoints || 0) : (selectedPlayer.shortPoints || 0);
       const matches = tab === 'long' ? (selectedPlayer.longMatches || 0) : (selectedPlayer.shortMatches || 0);
       document.getElementById('modalStats').innerHTML = `
@@ -945,20 +957,60 @@
         </div>
       `;
 
-      const proofs = (selectedPlayer.proofs || []).filter(p => p.category === tab);
+      const proofs = (selectedPlayer.proofs || []).map((p, idx) => ({ ...p, originalIndex: idx })).filter(p => p.category === tab);
       const proofContainer = document.getElementById('modalProofs');
       if (proofs.length === 0) {
         proofContainer.innerHTML = `<p class="text-[11px] text-slate-500 bg-slate-900/40 p-3 rounded-xl text-center">${currentLang === 'hi' ? 'अभी कोई सत्यापित स्क्रीनशॉट नहीं है।' : `No verified ${tab} range screenshots yet.`}</p>`;
       } else {
         proofContainer.innerHTML = proofs.map(pr => `
           <div class="bg-slate-900 border border-slate-800 rounded-xl p-2.5 space-y-2">
-            <div class="flex justify-between text-[11px]">
-              <span class="text-white font-semibold">vs ${pr.opponent}</span>
-              <span class="text-emerald-400">+${pr.pointsAdded} pts</span>
+            <div class="flex justify-between items-center text-[11px]">
+              <span class="text-white font-semibold">vs ${pr.opponent} <span class="text-emerald-400 ml-1">+${pr.pointsAdded} pts</span></span>
+              ${isAdmin ? `<button onclick="deletePlayerProof('${selectedPlayer.id}', ${pr.originalIndex})" class="bg-red-500/20 hover:bg-red-500/40 text-red-400 border border-red-500/30 px-2 py-0.5 rounded text-[10px] font-bold">🗑️ Delete SS</button>` : ''}
             </div>
             <img src="${pr.url}" class="w-full h-36 rounded-lg object-cover border border-slate-800" alt="Match Screenshot Proof" />
           </div>
         `).join('');
+      }
+    };
+
+    // Admin Delete Specific Screenshot from Player Profile
+    window.deletePlayerProof = async (playerId, proofIndex) => {
+      if (!isAdmin) return;
+      if (!confirm("Are you sure you want to delete this screenshot and recalculate player stats?")) return;
+
+      try {
+        const playerRef = doc(db, "players", playerId);
+        const pSnap = await getDoc(playerRef);
+        if (!pSnap.exists()) return;
+
+        const data = pSnap.data();
+        let proofs = data.proofs || [];
+        const targetProof = proofs[proofIndex];
+
+        if (!targetProof) return;
+
+        // Remove proof at index
+        proofs.splice(proofIndex, 1);
+
+        // Deduct points & matches
+        const isLong = targetProof.category === 'long';
+        const ptsToRemove = targetProof.pointsAdded || 0;
+
+        const updateData = {
+          proofs: proofs,
+          longPoints: isLong ? Math.max(0, (data.longPoints || 0) - ptsToRemove) : (data.longPoints || 0),
+          shortPoints: !isLong ? Math.max(0, (data.shortPoints || 0) - ptsToRemove) : (data.shortPoints || 0),
+          longMatches: isLong ? Math.max(0, (data.longMatches || 0) - 1) : (data.longMatches || 0),
+          shortMatches: !isLong ? Math.max(0, (data.shortMatches || 0) - 1) : (data.shortMatches || 0)
+        };
+
+        await updateDoc(playerRef, updateData);
+        alert("Screenshot deleted and stats updated successfully!");
+        await loadLeaderboard();
+      } catch (err) {
+        console.error("Error deleting proof:", err);
+        alert("Failed to delete screenshot.");
       }
     };
 
@@ -1065,8 +1117,8 @@
               <input type="number" id="pts-${sid}" value="25" class="w-16 bg-slate-950 border border-slate-700 rounded-lg px-2 py-1 text-xs text-white text-center" />
             </div>
             <div class="flex gap-1.5">
-              <button onclick="approveSub('${sid}')" class="bg-emerald-500 text-slate-950 font-bold px-2.5 py-1 rounded-lg text-[10px]">Approve</button>
-              <button onclick="rejectSub('${sid}')" class="bg-rose-500/20 text-rose-400 px-2.5 py-1 rounded-lg text-[10px]">Reject & Delete</button>
+              <button id="approve-btn-${sid}" onclick="approveSub('${sid}')" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-2.5 py-1 rounded-lg text-[10px] transition">Approve</button>
+              <button onclick="rejectSub('${sid}')" class="bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 px-2.5 py-1 rounded-lg text-[10px]">Reject & Delete</button>
             </div>
           </div>
         `;
@@ -1087,48 +1139,85 @@
     window.approveSub = async (sid) => {
       const s = pendingCache[sid];
       if (!s) return;
-      const pts = parseInt(document.getElementById('pts-' + sid).value) || 0;
-      const playerRef = doc(db, "players", s.uid);
-      const pSnap = await getDoc(playerRef);
-      
-      if (pSnap.exists()) {
-        const data = pSnap.data();
-        let proofs = data.proofs || [];
-        proofs.unshift({ 
-          category: s.category, 
-          opponent: s.opponent, 
-          url: s.screenshotUrl || "", 
-          pointsAdded: pts,
-          timestamp: Date.now()
-        });
-        if (proofs.length > 8) proofs = proofs.slice(0, 8);
 
-        const updateData = { 
-          proofs,
-          streak: (data.streak || 0) + 1
-        };
-        if (s.category === 'long') {
-          updateData.longPoints = (data.longPoints || 0) + pts;
-          updateData.longMatches = (data.longMatches || 0) + 1;
-        } else {
-          updateData.shortPoints = (data.shortPoints || 0) + pts;
-          updateData.shortMatches = (data.shortMatches || 0) + 1;
+      // 🛡️ Double-Click Prevention: Disable the button instantly
+      const approveBtn = document.getElementById('approve-btn-' + sid);
+      if (approveBtn) {
+        approveBtn.disabled = true;
+        approveBtn.innerText = "Processing...";
+        approveBtn.classList.add('opacity-55', 'cursor-not-allowed');
+      }
+
+      try {
+        // Double check submission exists & status is pending to avoid race conditions
+        const subRef = doc(db, "submissions", sid);
+        const subSnap = await getDoc(subRef);
+        if (!subSnap.exists()) {
+          alert("This submission has already been processed or deleted!");
+          loadPendingSubmissions();
+          return;
         }
-        await updateDoc(playerRef, updateData);
 
-        const oppPlayer = allPlayers.find(p => (p.ign || "").toLowerCase() === s.opponent.toLowerCase());
-        if (oppPlayer && oppPlayer.streak > 0) {
-          await updateDoc(doc(db, "players", oppPlayer.id), { streak: 0 });
+        const pts = parseInt(document.getElementById('pts-' + sid).value) || 0;
+        const playerRef = doc(db, "players", s.uid);
+        const pSnap = await getDoc(playerRef);
+        
+        if (pSnap.exists()) {
+          const data = pSnap.data();
+          let proofs = data.proofs || [];
+          proofs.unshift({ 
+            category: s.category, 
+            opponent: s.opponent, 
+            url: s.screenshotUrl || "", 
+            pointsAdded: pts,
+            timestamp: Date.now()
+          });
+          if (proofs.length > 15) proofs = proofs.slice(0, 15);
+
+          const updateData = { 
+            proofs,
+            streak: (data.streak || 0) + 1
+          };
+          if (s.category === 'long') {
+            updateData.longPoints = (data.longPoints || 0) + pts;
+            updateData.longMatches = (data.longMatches || 0) + 1;
+          } else {
+            updateData.shortPoints = (data.shortPoints || 0) + pts;
+            updateData.shortMatches = (data.shortMatches || 0) + 1;
+          }
+          await updateDoc(playerRef, updateData);
+
+          const oppPlayer = allPlayers.find(p => (p.ign || "").toLowerCase() === s.opponent.toLowerCase());
+          if (oppPlayer && oppPlayer.streak > 0) {
+            await updateDoc(doc(db, "players", oppPlayer.id), { streak: 0 });
+          }
+        }
+        
+        // Delete submission so it can never be approved twice
+        await deleteDoc(subRef);
+        alert("Proof approved successfully! Points and streak updated.");
+        loadPendingSubmissions();
+        loadLeaderboard();
+      } catch (err) {
+        console.error("Error approving proof:", err);
+        alert("Failed to approve proof.");
+        if (approveBtn) {
+          approveBtn.disabled = false;
+          approveBtn.innerText = "Approve";
+          approveBtn.classList.remove('opacity-55', 'cursor-not-allowed');
         }
       }
-      await deleteDoc(doc(db, "submissions", sid));
-      loadPendingSubmissions();
-      loadLeaderboard();
     };
 
     window.rejectSub = async (sid) => {
-      await deleteDoc(doc(db, "submissions", sid));
-      loadPendingSubmissions();
+      if (confirm("Permanently reject and delete this proof?")) {
+        try {
+          await deleteDoc(doc(db, "submissions", sid));
+          loadPendingSubmissions();
+        } catch (err) {
+          console.error("Error rejecting proof:", err);
+        }
+      }
     };
 
     window.closeModal = (id) => {
