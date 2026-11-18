@@ -19,6 +19,8 @@
     .card-bg { background: linear-gradient(145deg, #131824, #0f131d); }
     @keyframes pulse-slow { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
     .animate-pulse-slow { animation: pulse-slow 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
+    @keyframes ping-dot { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
+    .animate-ping-dot { animation: ping-dot 1.5s infinite; }
     .ticker-fade { transition: opacity 0.4s ease-in-out; }
   </style></head><body class="min-h-screen flex flex-col antialiased">
 
@@ -27,8 +29,8 @@
     ⚠️ Instagram Browser Detected! Tap <span class="underline">⋮ (3 dots)</span> at top right & select <span class="underline">"Open in Chrome / Browser"</span> to Login.
   </div>
 
-  <!-- Live 20-Second Rotating Activity Ticker -->
-  <div class="bg-gradient-to-r from-cyan-950/90 via-slate-900 to-cyan-950/90 border-b border-cyan-500/25 px-3 py-1.5 text-center">
+  <!-- Live 5-Second Rotating Activity Ticker (Top 3 Players) -->
+  <div class="bg-gradient-to-r from-cyan-950/90 via-slate-900 to-cyan-950/90 border-b border-cyan-500/25 px-3 py-1.5 text-center flex items-center justify-center gap-2">
     <div id="liveTickerText" class="ticker-fade text-[11px] font-semibold text-cyan-300 tracking-wide">
       ⚡ Latest: Loading live community activity...
     </div>
@@ -45,13 +47,30 @@
         </div>
       </div>
 
-      <div id="authArea" class="flex items-center gap-2">
-        <button id="loginBtn" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold px-3 py-1.5 rounded-lg text-xs transition">
-          Login with Google
+      <div class="flex items-center gap-2">
+        <!-- What's New Feature Button with Red Dot -->
+        <button onclick="openWhatsNewModal()" class="relative bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-2.5 py-1.5 rounded-lg text-xs font-semibold transition flex items-center gap-1.5 cursor-pointer">
+          <span>✨ What's New</span>
+          <span id="whatsNewDot" class="w-2 h-2 rounded-full bg-red-500 animate-ping-dot"></span>
         </button>
+        <div id="authArea" class="flex items-center gap-2">
+          <button id="loginBtn" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold px-3 py-1.5 rounded-lg text-xs transition">
+            Login with Google
+          </button>
+        </div>
       </div>
     </div>
   </nav>
+
+  <!-- Global Popup Notification Banner -->
+  <div id="globalPopup" class="hidden max-w-4xl mx-auto w-full px-3 pt-3">
+    <div class="bg-cyan-500/15 border border-cyan-500/40 rounded-xl px-4 py-2.5 flex items-center justify-between gap-3 text-xs text-cyan-200">
+      <div id="globalPopupText" class="flex items-center gap-2 font-medium">
+        🔔 Notification message goes here...
+      </div>
+      <button onclick="dismissPopup()" class="text-slate-400 hover:text-white font-bold text-sm">&times;</button>
+    </div>
+  </div>
 
   <!-- Main Content -->
   <main class="max-w-4xl w-full mx-auto px-3 py-4 flex-1">
@@ -108,8 +127,8 @@
       <button onclick="switchMainTab('contenders')" id="tabContenders" class="py-2 px-2 rounded-xl text-xs font-bold transition text-slate-400 hover:text-white text-center">
         ⚔️ Contenders
       </button>
-      <button onclick="switchMainTab('lobby')" id="tabLobby" class="py-2 px-2 rounded-xl text-xs font-bold transition text-slate-400 hover:text-white text-center">
-        🎯 1v1 Lobby
+      <button onclick="switchMainTab('lobby')" id="tabLobby" class="py-2 px-2 rounded-xl text-xs font-bold transition text-slate-400 hover:text-white text-center relative">
+        🎯 1v1 Lobby <span id="lobbyTabBadge" class="hidden absolute top-1.5 right-2 w-2 h-2 rounded-full bg-cyan-400"></span>
       </button>
     </div>
 
@@ -168,6 +187,28 @@
 
   </main>
 
+  <!-- What's New Modal -->
+  <div id="whatsNewModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+    <div class="card-bg neon-border rounded-2xl max-w-md w-full p-5 relative space-y-3">
+      <button onclick="closeModal('whatsNewModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg">&times;</button>
+      <h2 class="text-base font-bold text-cyan-400">✨ What's New in Flex City</h2>
+      <div class="space-y-2 text-xs text-slate-300 max-h-60 overflow-y-auto pr-1">
+        <div class="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
+          <span class="font-bold text-emerald-400">🔥 Real-Time Seen & Reply Tracking:</span> Now you can see who viewed your 1v1 lobby challenge and get instant notifications when someone challenges or replies!
+        </div>
+        <div class="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
+          <span class="font-bold text-cyan-400">⚡ Live Activity Ticker:</span> Faster 5-second updates showcasing the top recent active community players.
+        </div>
+        <div class="bg-slate-900/80 p-2.5 rounded-xl border border-slate-800">
+          <span class="font-bold text-amber-400">🛡️ Admin Screenshot Deletion:</span> Admins can now individually remove specific screenshots directly from player profiles with automatic point recalculation.
+        </div>
+      </div>
+      <button onclick="markWhatsNewSeen()" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-2 rounded-xl text-xs transition">
+        Got it, Mark as Read
+      </button>
+    </div>
+  </div>
+
   <!-- Footer with Contact Info & Instagram Link -->
   <footer class="border-t border-slate-800/60 py-5 text-center text-[11px] text-slate-400 px-4 space-y-2 mt-6">
     <p id="footerContactText">If you have any issues or want to send 1v1 recordings, contact us:</p>
@@ -191,7 +232,7 @@
     </div>
   </div>
 
-  <!-- Player Profile Modal (With Streak & Head-to-Head Rivalry Stats) -->
+  <!-- Player Profile Modal (With Seen, Reply & Rivalry Stats) -->
   <div id="playerModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
     <div class="card-bg neon-border rounded-2xl max-w-md w-full p-5 relative max-h-[85vh] overflow-y-auto">
       <button onclick="closeModal('playerModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg">&times;</button>
@@ -203,6 +244,17 @@
             <span id="modalStreakBadge"></span>
           </div>
           <p id="modalSub" class="text-[11px] text-slate-400">Total 1v1s: 0 • Total Pts: 0</p>
+        </div>
+      </div>
+
+      <!-- Quick Reply/Action to Challenge if viewing someone else -->
+      <div id="playerModalActionBox" class="mb-3 hidden">
+        <div class="bg-slate-900 border border-slate-800 p-2.5 rounded-xl space-y-2">
+          <div class="text-[11px] font-semibold text-cyan-400">💬 Reply to this player's challenge:</div>
+          <div class="flex gap-2">
+            <input type="text" id="playerModalReplyInput" placeholder="Type reply (e.g. Let's play now!)" class="flex-1 bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1.5 text-xs text-white" />
+            <button onclick="sendPlayerReply()" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-3 py-1.5 rounded-lg text-xs">Send Reply</button>
+          </div>
         </div>
       </div>
 
@@ -361,7 +413,7 @@
     let currentLang = 'en';
     let isAdmin = false;
 
-    // Ticker state (rotates between latest 2 events every 20 seconds)
+    // Ticker state (rotates between top 3 events every 5 seconds)
     let tickerMessages = [];
     let tickerIndex = 0;
 
@@ -516,7 +568,7 @@
 
     loadLeaderboard();
 
-    // Rotate the 2 latest events every 20 seconds
+    // Rotate top 3 ticker events every 5 seconds
     setInterval(() => {
       if (tickerMessages.length > 1) {
         const el = document.getElementById('liveTickerText');
@@ -527,7 +579,7 @@
           el.style.opacity = 1;
         }, 400);
       }
-    }, 20000);
+    }, 5000);
 
     function buildLiveTicker() {
       let events = [];
@@ -540,8 +592,8 @@
         if (p.joinedAt) {
           events.push({
             time: p.joinedAt,
-            textEn: `⚔️ Latest: ${ign} has joined the ${tabName}!`,
-            textHi: `⚔️ नया अपडेट: ${ign} ने ${pts > 0 ? 'रैंकड लीडरबोर्ड' : 'कंटेंडर्स कतार'} ज्वाइन किया है!`
+            textEn: `⚔️ Latest: ${ign} joined ${tabName}!`,
+            textHi: `⚔️ नया अपडेट: ${ign} ने ${tabName} ज्वाइन किया!`
           });
         }
 
@@ -560,21 +612,21 @@
       });
 
       events.sort((a, b) => b.time - a.time);
-      const topTwo = events.slice(0, 2);
+      const topThree = events.slice(0, 3); // Top 3 players/events
 
-      if (topTwo.length === 0) {
+      if (topThree.length === 0) {
         tickerMessages = [
           currentLang === 'hi' 
-            ? "⚡ नया अपडेट: Flex City 1v1 लीडरबोर्ड लाइव है! लॉगिन करें और चैलेंज शुरू करें!" 
-            : "⚡ Latest: Flex City 1v1 Leaderboard is LIVE! Login and join the Contenders Queue!"
+            ? "⚡ नया अपडेट: Flex City 1v1 लीडरबोर्ड लाइव है!" 
+            : "⚡ Latest: Flex City 1v1 Leaderboard is LIVE!"
         ];
       } else {
-        tickerMessages = topTwo.map(ev => currentLang === 'hi' ? ev.textHi : ev.textEn);
+        tickerMessages = topThree.map(ev => currentLang === 'hi' ? ev.textHi : ev.textEn);
       }
 
       tickerIndex = 0;
       const el = document.getElementById('liveTickerText');
-      if (el) el.innerText = tickerMessages[0];
+      if (el && tickerMessages.length > 0) el.innerText = tickerMessages[0];
     }
 
     onAuthStateChanged(auth, async (user) => {
@@ -614,6 +666,9 @@
           adminBtn.classList.remove('hidden');
           loadPendingSubmissions();
         }
+
+        checkUserNotifications(user.uid);
+        checkWhatsNewStatus();
       } else {
         isAdmin = false;
         authArea.innerHTML = `<button id="loginBtn" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold px-3 py-1.5 rounded-lg text-xs transition">${translations[currentLang].loginBtn}</button>`;
@@ -644,7 +699,8 @@
         shortMatches: 0,
         streak: 0,
         joinedAt: Date.now(),
-        proofs: []
+        proofs: [],
+        replies: []
       }, { merge: true });
 
       closeModal('forcedIgnModal');
@@ -671,6 +727,56 @@
       }
     }
 
+    // Notification Pop-Up System checking upon website load
+    function checkUserNotifications(uid) {
+      const me = allPlayers.find(p => p.id === uid);
+      if (!me) return;
+
+      const twelveHoursAgo = Date.now() - (12 * 60 * 60 * 1000);
+      const activeLfg = allPlayers.some(p => p.lfgActive && p.id !== uid && (p.lfgTime || 0) > twelveHoursAgo);
+      const hasReplies = me.replies && me.replies.length > 0;
+
+      const popup = document.getElementById('globalPopup');
+      const popupText = document.getElementById('globalPopupText');
+      const lobbyTabBadge = document.getElementById('lobbyTabBadge');
+
+      if (hasReplies) {
+        popupText.innerHTML = `💬 Someone replied to your 1v1 challenge! <button onclick="switchMainTab('lobby')" class="underline font-bold text-cyan-300 ml-1">Click to view</button>`;
+        popup.classList.remove('hidden');
+        if (lobbyTabBadge) lobbyTabBadge.classList.remove('hidden');
+      } else if (activeLfg) {
+        popupText.innerHTML = `🎯 Someone Challenged for 1v1 in Lobby! <button onclick="switchMainTab('lobby')" class="underline font-bold text-cyan-300 ml-1">Click to view</button>`;
+        popup.classList.remove('hidden');
+        if (lobbyTabBadge) lobbyTabBadge.classList.remove('hidden');
+      }
+    }
+
+    window.dismissPopup = () => {
+      document.getElementById('globalPopup').classList.add('hidden');
+    };
+
+    function checkWhatsNewStatus() {
+      const seen = localStorage.getItem('flexCity_whatsNew_seen');
+      const dot = document.getElementById('whatsNewDot');
+      if (seen === 'true') {
+        if (dot) dot.classList.add('hidden');
+      } else {
+        if (dot) dot.classList.remove('hidden');
+      }
+    }
+
+    window.openWhatsNewModal = () => {
+      document.getElementById('whatsNewModal').classList.remove('hidden');
+      document.getElementById('whatsNewModal').classList.add('flex');
+    };
+
+    window.markWhatsNewSeen = () => {
+      localStorage.setItem('flexCity_whatsNew_seen', 'true');
+      const dot = document.getElementById('whatsNewDot');
+      if (dot) dot.classList.add('hidden');
+      closeModal('whatsNewModal');
+    };
+
     window.switchMainTab = (tab) => {
       currentMainTab = tab;
       const rankedBtn = document.getElementById('tabRanked');
@@ -691,6 +797,9 @@
         filters.classList.add('hidden');
         lbCard.classList.add('hidden');
         lobbySec.classList.remove('hidden');
+        const badge = document.getElementById('lobbyTabBadge');
+        if (badge) badge.classList.add('hidden');
+        document.getElementById('globalPopup').classList.add('hidden');
         renderLobby();
       } else {
         lbCard.classList.remove('hidden');
@@ -787,7 +896,8 @@
         lfgActive: true,
         lfgMode: mode,
         lfgNote: note,
-        lfgTime: Date.now()
+        lfgTime: Date.now(),
+        seenBy: []
       });
 
       document.getElementById('lobbyNote').value = "";
@@ -796,7 +906,7 @@
 
     window.removeMyLobbyPost = async () => {
       if (!currentUser) return;
-      await updateDoc(doc(db, "players", currentUser.uid), { lfgActive: false });
+      await updateDoc(doc(db, "players", currentUser.uid), { lfgActive: false, seenBy: [] });
       loadLeaderboard();
     };
 
@@ -816,8 +926,16 @@
 
       lobbyList.innerHTML = activePlayers.map(p => {
         const isMe = currentUser && p.id === currentUser.uid;
+        const seenList = p.seenBy || [];
+        let seenHtml = "";
+        if (seenList.length > 0) {
+          const displayNames = seenList.slice(0, 3).map(s => s.ign).join(', ');
+          const extraCount = seenList.length > 3 ? ` +${seenList.length - 3}` : '';
+          seenHtml = `<div class="text-[10px] text-cyan-400 mt-1">👀 Seen by: ${displayNames}${extraCount}</div>`;
+        }
+
         return `
-          <div class="p-3 flex items-center justify-between gap-2 hover:bg-slate-800/30 transition">
+          <div class="p-3.5 flex items-center justify-between gap-2 hover:bg-slate-800/30 transition">
             <div class="flex items-center gap-2.5 truncate">
               <img src="${p.photo}" class="w-8 h-8 rounded-full border border-emerald-500/40 object-cover flex-shrink-0" />
               <div class="truncate">
@@ -826,13 +944,29 @@
                   <span class="bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 px-1.5 py-0.5 rounded text-[9px] font-semibold">${p.lfgMode || '1v1'}</span>
                 </div>
                 <p class="text-[11px] text-slate-300 truncate mt-0.5">${p.lfgNote || ''}</p>
+                ${seenHtml}
               </div>
             </div>
-            ${isMe ? `<button onclick="removeMyLobbyPost()" class="bg-rose-500/20 text-rose-400 px-2.5 py-1 rounded-lg text-[10px] font-semibold flex-shrink-0">Remove</button>` : `<button onclick="openPlayer('${p.id}')" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 px-2.5 py-1 rounded-lg text-[10px] font-semibold flex-shrink-0">Stats</button>`}
+            ${isMe ? `<button onclick="removeMyLobbyPost()" class="bg-rose-500/20 text-rose-400 px-2.5 py-1 rounded-lg text-[10px] font-semibold flex-shrink-0">Remove</button>` : `<button onclick="openPlayerWithSeen('${p.id}')" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 px-2.5 py-1 rounded-lg text-[10px] font-semibold flex-shrink-0">Stats & Reply</button>`}
           </div>
         `;
       }).join('');
     }
+
+    // Mark player's challenge as "seen" when opening their profile
+    window.openPlayerWithSeen = async (id) => {
+      openPlayer(id);
+      if (currentUser && currentUser.uid !== id) {
+        const targetPlayer = allPlayers.find(p => p.id === id);
+        if (targetPlayer && targetPlayer.lfgActive) {
+          let seenBy = targetPlayer.seenBy || [];
+          if (!seenBy.some(s => s.uid === currentUser.uid)) {
+            seenBy.push({ uid: currentUser.uid, ign: userIgn });
+            await updateDoc(doc(db, "players", id), { seenBy });
+          }
+        }
+      }
+    };
 
     window.openAdminEditPlayer = (playerId) => {
       const p = allPlayers.find(x => x.id === playerId);
@@ -894,9 +1028,33 @@
       document.getElementById('modalAvatar').src = selectedPlayer.photo;
       document.getElementById('modalName').innerText = selectedPlayer.ign || selectedPlayer.name;
       document.getElementById('modalStreakBadge').innerHTML = getStreakBadgeHtml(selectedPlayer.streak);
+      
+      const actionBox = document.getElementById('playerModalActionBox');
+      if (currentUser && currentUser.uid !== id && selectedPlayer.lfgActive) {
+        actionBox.classList.remove('hidden');
+      } else {
+        actionBox.classList.add('hidden');
+      }
+
       updatePlayerModalView();
       document.getElementById('playerModal').classList.remove('hidden');
       document.getElementById('playerModal').classList.add('flex');
+    };
+
+    // Send reply to a challenger
+    window.sendPlayerReply = async () => {
+      if (!currentUser || !selectedPlayer) return;
+      const replyText = document.getElementById('playerModalReplyInput').value.trim();
+      if (!replyText) return alert("Please type a reply message!");
+
+      let replies = selectedPlayer.replies || [];
+      replies.push({ fromIgn: userIgn, text: replyText, timestamp: Date.now() });
+
+      await updateDoc(doc(db, "players", selectedPlayer.id), { replies });
+      document.getElementById('playerModalReplyInput').value = "";
+      alert("Reply sent successfully to " + (selectedPlayer.ign || "Player") + "!");
+      closeModal('playerModal');
+      loadLeaderboard();
     };
 
     function updatePlayerModalView() {
@@ -974,7 +1132,6 @@
       }
     };
 
-    // Admin Delete Specific Screenshot from Player Profile
     window.deletePlayerProof = async (playerId, proofIndex) => {
       if (!isAdmin) return;
       if (!confirm("Are you sure you want to delete this screenshot and recalculate player stats?")) return;
@@ -987,13 +1144,9 @@
         const data = pSnap.data();
         let proofs = data.proofs || [];
         const targetProof = proofs[proofIndex];
-
         if (!targetProof) return;
 
-        // Remove proof at index
         proofs.splice(proofIndex, 1);
-
-        // Deduct points & matches
         const isLong = targetProof.category === 'long';
         const ptsToRemove = targetProof.pointsAdded || 0;
 
@@ -1140,7 +1293,6 @@
       const s = pendingCache[sid];
       if (!s) return;
 
-      // 🛡️ Double-Click Prevention: Disable the button instantly
       const approveBtn = document.getElementById('approve-btn-' + sid);
       if (approveBtn) {
         approveBtn.disabled = true;
@@ -1149,7 +1301,6 @@
       }
 
       try {
-        // Double check submission exists & status is pending to avoid race conditions
         const subRef = doc(db, "submissions", sid);
         const subSnap = await getDoc(subRef);
         if (!subSnap.exists()) {
@@ -1193,7 +1344,6 @@
           }
         }
         
-        // Delete submission so it can never be approved twice
         await deleteDoc(subRef);
         alert("Proof approved successfully! Points and streak updated.");
         loadPendingSubmissions();
