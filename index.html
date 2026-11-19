@@ -2,10 +2,27 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
-  <!-- SEO Title & Description -->
-  <title>Flex City Leaderboard — Official Community 1v1 Tiers</title>
-  <meta name="description" content="Flex City India's official community 1v1 PvP leaderboard. Track rankings, submit match screenshot proofs, and view long and short range tier stats." />
+  <!-- SEO Title, Site Identity & Description -->
+  <title>Flex City Leaderboard — Official Community 1v1 Tiers & Top Players</title>
+  <meta name="description" content="Official Flex City India community leaderboard featuring top player rankings, 1v1 PvP tiers, verified match proofs, and live rank swaps." />
   <meta name="google-site-verification" content="zuMmJx8wSnGZGju9FlPyZUGX5pKBlj47MJNoj90Sg9Y" />
+
+  <!-- OpenGraph & Self-Contained FC SVG Favicon -->
+  <meta property="og:site_name" content="Flex City Leaderboard" />
+  <meta property="og:title" content="Flex City Leaderboard — Official Community 1v1 Tiers" />
+  <meta property="og:description" content="Discover every Flex City top player in India, compare 1v1 PvP rankings, and challenge contenders directly." />
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2306b6d4'/%3E%3Ctext x='50%25' y='56%25' dominant-baseline='middle' text-anchor='middle' fill='%230b0e14' font-family='Arial,sans-serif' font-size='30' font-weight='900'%3EFC%3C/text%3E%3C/svg%3E" />
+
+  <!-- Structured Data for Google Search Site Name -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "WebSite",
+    "name": "Flex City Leaderboard",
+    "alternateName": ["Flex City India Top Players", "Flex City 1v1 Leaderboard"],
+    "url": "https://flexcity-india.vercel.app/"
+  }
+  </script>
 
   <!-- Strong No-Cache headers -->
   <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
@@ -25,6 +42,26 @@
     .chat-scroll::-webkit-scrollbar { width: 4px; }
     .chat-scroll::-webkit-scrollbar-track { background: #0f131d; }
     .chat-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+
+    /* Press & Hold Animation for Chat Bubbles */
+    .msg-bubble {
+      transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.22s ease, filter 0.22s ease;
+      user-select: none;
+      -webkit-user-select: none;
+      touch-action: manipulation;
+    }
+    .msg-holding {
+      transform: scale(0.93);
+      box-shadow: 0 0 18px rgba(56, 189, 248, 0.55);
+      filter: brightness(1.15);
+    }
+    @keyframes popInMenu {
+      0% { opacity: 0; transform: scale(0.85) translateY(8px); }
+      100% { opacity: 1; transform: scale(1) translateY(0); }
+    }
+    .animate-pop-menu {
+      animation: popInMenu 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
   </style></head><body class="min-h-screen flex flex-col antialiased pb-16">
 
   <!-- Instagram / In-App Browser Warning Banner -->
@@ -32,7 +69,7 @@
     ⚠️ Instagram Browser Detected! Tap <span class="underline">⋮ (3 dots)</span> at top right & select <span class="underline">"Open in Chrome / Browser"</span> to Login.
   </div>
 
-  <!-- Auto Allow Notification Prompt Banner (Appears on Entry if not allowed yet) -->
+  <!-- Auto Allow Notification Prompt Banner -->
   <div id="notifPromptBanner" class="hidden bg-gradient-to-r from-cyan-600 to-blue-700 text-white px-3 py-2.5 text-xs flex items-center justify-between gap-2 shadow-md">
     <div class="flex items-center gap-2 font-medium">
       <span>🔔</span>
@@ -63,7 +100,6 @@
       </div>
 
       <div class="flex items-center gap-2">
-        <!-- What's New Feature Button with Red Dot -->
         <button onclick="openWhatsNewModal()" class="relative bg-slate-800/90 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 cursor-pointer shadow-sm">
           <span>✨ <span id="whatsNewBtnText">What's New</span></span>
           <span id="whatsNewDot" class="w-2 h-2 rounded-full bg-red-500 animate-ping-dot hidden"></span>
@@ -80,7 +116,7 @@
   <!-- Main Content -->
   <main class="max-w-4xl w-full mx-auto px-3 py-5 flex-1 space-y-4">
 
-    <!-- What is this? + Rules Box with Instant Hindi Toggle -->
+    <!-- Natural SEO-Friendly Description & Rules Box -->
     <div class="card-bg rounded-2xl neon-border p-4 sm:p-5 relative space-y-3 shadow-lg">
       <div class="flex items-center justify-between gap-2">
         <h2 id="descTitle" class="text-xs font-bold text-cyan-400 uppercase tracking-wider">What is this?</h2>
@@ -89,7 +125,7 @@
         </button>
       </div>
       <p id="descText" class="text-xs sm:text-sm text-slate-300 leading-relaxed">
-        Flex City India's official community 1v1 PvP leaderboard. Challenge higher-ranked players, win matches, swap ranks, and prove your skills!
+        Welcome to the official community hub tracking every Flex City top player across India. Compete in Long Range and Short Range 1v1 PvP duels, climb the live rankings, swap positions with higher-tiered rivals, and prove your skill on the Flex City India top player board.
       </p>
 
       <!-- Rules Box -->
@@ -97,7 +133,7 @@
         <div id="rulesHeading" class="text-xs font-bold text-amber-400 mb-1">📜 How to Submit Proof & Challenge Rules:</div>
         <ul id="rulesList" class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
           <li><strong>Chat Screenshot:</strong> Upload a clear chat screenshot where your opponent agrees to the 1v1 result & points.</li>
-          <li><strong>Rank Swap:</strong> If you defeat a player ranked higher than you, you will take their rank on the leaderboard!</li>
+          <li><strong>Rank Swap:</strong> Defeat a higher-ranked Flex City player to take their exact spot on the leaderboard!</li>
           <li><strong>Direct Challenge:</strong> Tap on any player or use the bottom-right Chat icon to message opponents directly for 1v1s.</li>
         </ul>
       </div>
@@ -158,17 +194,17 @@
     <div class="card-bg rounded-2xl neon-border p-4 sm:p-6 space-y-4 shadow-lg">
       <div>
         <h3 id="faqTitle" class="text-sm font-bold text-cyan-400 uppercase tracking-wider">Frequently Asked Questions</h3>
-        <p id="faqSub" class="text-xs text-slate-400 mt-0.5">Quick answers about tiers, tier tests, points and the Flex City server.</p>
+        <p id="faqSub" class="text-xs text-slate-400 mt-0.5">Quick answers about Flex City PvP tiers, top player rankings, and points.</p>
       </div>
 
       <div class="space-y-2.5">
         <div class="bg-slate-900/80 border border-slate-800 rounded-xl overflow-hidden transition">
           <button onclick="toggleFaq(1)" class="w-full px-4 py-3 text-left flex items-center justify-between text-xs font-bold text-white cursor-pointer">
-            <span id="faq1Q">01. What is Flex City 1v1 Leaderboard?</span>
+            <span id="faq1Q">01. How are Flex City top player rankings decided?</span>
             <span class="text-cyan-400 text-sm font-black">+</span>
           </button>
           <div id="faq1Ans" class="hidden px-4 pb-3 text-xs text-slate-300 leading-relaxed border-t border-slate-800/60 pt-2">
-            Flex City India's official community PvP platform where players compete in Long Range and Short Range 1v1 matches, submit screenshot proofs, swap ranks, and climb the leaderboard!
+            Every Flex City India top player earns points through verified Long Range and Short Range 1v1 matches. Winning streaks and rank swaps keep the live standings competitive and accurate.
           </div>
         </div>
 
@@ -216,7 +252,7 @@
 
   <!-- Floating Chat & DM Drawer Modal -->
   <div id="chatDrawerModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-end sm:items-center justify-center p-0 sm:p-4 z-50">
-    <div class="card-bg neon-border rounded-t-3xl sm:rounded-2xl max-w-md w-full h-[85vh] sm:h-[600px] flex flex-col overflow-hidden shadow-2xl">
+    <div class="card-bg neon-border rounded-t-3xl sm:rounded-2xl max-w-md w-full h-[85vh] sm:h-[600px] flex flex-col overflow-hidden shadow-2xl relative">
       
       <!-- Drawer Header -->
       <div class="px-4 py-3.5 border-b border-slate-800 flex items-center justify-between bg-[#0d111a]">
@@ -230,7 +266,7 @@
         </div>
       </div>
 
-      <!-- Mode Switcher (All Chat vs Direct Messages) -->
+      <!-- Mode Switcher -->
       <div id="chatModeTabs" class="grid grid-cols-2 gap-1.5 p-2 bg-slate-950/90 border-b border-slate-800">
         <button onclick="switchChatTab('global')" id="tabChatGlobal" class="py-1.5 rounded-xl text-xs font-bold bg-cyan-500 text-slate-950 transition cursor-pointer">
           🌍 All (Global Chat)
@@ -249,6 +285,9 @@
 
       <!-- VIEW 1: Global Chat Room -->
       <div id="globalChatView" class="flex-1 flex flex-col overflow-hidden">
+        <div class="text-[10px] text-slate-500 text-center py-1 bg-slate-950/50 border-b border-slate-800/50">
+          Tip: Press & hold any message for options
+        </div>
         <div id="globalMessagesList" class="flex-1 overflow-y-auto p-3.5 space-y-2.5 chat-scroll">
           <div class="text-center text-xs text-slate-500 py-8">Loading global chat...</div>
         </div>
@@ -268,10 +307,49 @@
 
       <!-- VIEW 3: Active 1-on-1 Conversation -->
       <div id="activeDmView" class="hidden flex-1 flex flex-col overflow-hidden">
+        <div class="text-[10px] text-slate-500 text-center py-1 bg-slate-950/50 border-b border-slate-800/50">
+          Tip: Press & hold any message to Rewrite, Hide, or Erase Globally
+        </div>
         <div id="dmMessagesList" class="flex-1 overflow-y-auto p-3.5 space-y-2.5 chat-scroll"></div>
         <form id="dmChatForm" class="p-2.5 border-t border-slate-800 bg-[#0d111a] flex gap-2">
           <input type="text" id="dmMsgInput" maxlength="150" placeholder="Type a direct message..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500" />
           <button type="submit" id="sendDmBtn" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-3.5 py-2 rounded-xl text-xs transition cursor-pointer">Send</button>
+        </form>
+      </div>
+
+      <!-- Long-Press Message Action Menu Overlay (Unique Controls) -->
+      <div id="msgActionOverlay" onclick="closeMsgActionMenu()" class="hidden absolute inset-0 bg-black/70 backdrop-blur-[2px] z-50 flex items-center justify-center p-4">
+        <div onclick="event.stopPropagation()" class="bg-[#131926] border border-cyan-500/40 rounded-2xl p-4 w-full max-w-[260px] shadow-2xl space-y-2 animate-pop-menu">
+          <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider text-center pb-1 border-b border-slate-800">Message Controls</div>
+          <div id="msgPreviewBox" class="text-xs text-slate-300 bg-slate-950/90 px-3 py-2 rounded-xl truncate border border-slate-800/80"></div>
+          
+          <button id="actionRewriteBtn" onclick="triggerMsgRewrite()" class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-slate-800/90 hover:bg-cyan-500/20 hover:text-cyan-300 text-xs font-semibold text-white transition cursor-pointer">
+            <span>✏️</span> <span>Rewrite Message</span>
+          </button>
+
+          <button id="actionHideLocalBtn" onclick="triggerMsgHideForMe()" class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-slate-800/90 hover:bg-amber-500/20 hover:text-amber-300 text-xs font-semibold text-white transition cursor-pointer">
+            <span>🙈</span> <span>Hide for Me</span>
+          </button>
+
+          <button id="actionEraseGlobalBtn" onclick="triggerMsgEraseGlobally()" class="w-full flex items-center gap-2.5 px-3 py-2.5 rounded-xl bg-rose-500/15 hover:bg-rose-500/30 text-rose-400 text-xs font-bold transition cursor-pointer">
+            <span>💥</span> <span>Erase Globally</span>
+          </button>
+
+          <button onclick="closeMsgActionMenu()" class="w-full py-1.5 text-[11px] text-slate-400 hover:text-white text-center pt-1 cursor-pointer">
+            Cancel
+          </button>
+        </div>
+      </div>
+
+      <!-- Inline Rewrite Message Modal -->
+      <div id="rewriteMsgOverlay" onclick="closeRewriteOverlay()" class="hidden absolute inset-0 bg-black/75 backdrop-blur-xs z-50 flex items-center justify-center p-4">
+        <form onclick="event.stopPropagation()" onsubmit="submitMsgRewrite(event)" class="bg-[#131926] border border-cyan-500/40 rounded-2xl p-4 w-full max-w-[290px] shadow-2xl space-y-3 animate-pop-menu">
+          <div class="text-xs font-bold text-cyan-400">✏️ Rewrite Message</div>
+          <input type="text" id="rewriteMsgInput" maxlength="150" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500" />
+          <div class="grid grid-cols-2 gap-2">
+            <button type="button" onclick="closeRewriteOverlay()" class="bg-slate-800 text-slate-300 py-2 rounded-xl text-xs font-semibold cursor-pointer">Cancel</button>
+            <button type="submit" class="bg-cyan-500 text-slate-950 py-2 rounded-xl text-xs font-bold cursor-pointer">Save Rewrite</button>
+          </div>
         </form>
       </div>
 
@@ -478,7 +556,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, collection, doc, setDoc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, query, where, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getFirestore, collection, doc, setDoc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, query, where, orderBy, limit, onSnapshot, arrayUnion } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const ua = navigator.userAgent || navigator.vendor || window.opera;
     if (ua.indexOf("Instagram") > -1 || ua.indexOf("FBAN") > -1 || ua.indexOf("FBAV") > -1) {
@@ -501,7 +579,6 @@
     const db = getFirestore(app);
     const provider = new GoogleAuthProvider();
 
-    // Register Service Worker for Push Notifications
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/firebase-messaging-sw.js').catch(() => {});
     }
@@ -516,14 +593,18 @@
     let currentLang = 'en';
     let isAdmin = false;
 
-    // Chat & Notification States
+    // Chat, Notification & Hold-Menu States
     let activeChatTab = 'global';
     let activeDmPartner = null;
     let lastMsgSentTime = 0;
     let unsubscribeGlobalChat = null;
     let unsubscribeDmListener = null;
     let allUserDms = [];
+    let latestGlobalMsgs = [];
     let isFirstDmSnapshot = true;
+
+    let holdTimer = null;
+    let selectedActionMsg = null;
 
     function playPingSound() {
       try {
@@ -542,19 +623,19 @@
       } catch (e) {}
     }
 
-    // What's New Items (Ideas + Bug Fixes only — adding a new top entry triggers automatic alert!)
+    // What's New Items (Ideas + Bug Fixes)
     const whatsNewData = [
+      {
+        version: "v2.3",
+        date: "Nov 19, 2026 • 09:20 PM",
+        en: "✨ Idea: Press & hold any chat message for animated controls — Rewrite your message, Hide for Me, or Erase Globally + added custom FC site icon & top player rankings info. 🛠️ Bug Fix: Improved search visibility and message bubble touch responsiveness.",
+        hi: "✨ आइडिया: किसी भी चैट मैसेज को दबाकर रखें (Hold) और एनिमेटेड कंट्रोल पाएं — Rewrite, Hide for Me, या Erase Globally + नया FC आइकन जोड़ा गया। 🛠️ बग फिक्स: सर्च विजिबिलिटी और टच रिस्पॉन्स बेहतर किया गया।"
+      },
       {
         version: "v2.2",
         date: "Nov 19, 2026 • 03:50 PM",
-        en: "✨ Idea: Auto notification permission prompt on site entry + instant DM sender & message preview in notifications + auto alerts when What's New updates. 🛠️ Bug Fix: Added Service Worker support for reliable notifications.",
+        en: "✨ Idea: Auto notification prompt on entry + sender name & message preview inside notifications + auto alerts when What's New updates. 🛠️ Bug Fix: Added Service Worker support for reliable notifications.",
         hi: "✨ आइडिया: वेबसाइट खोलते ही Allow Notification प्रॉम्प्ट + नोटिफिकेशन में भेजने वाले का नाम और पूरा मैसेज + What's New अपडेट होने पर ऑटो अलर्ट। 🛠️ बग फिक्स: नोटिफिकेशन के लिए सर्विस वर्कर जोड़ा गया।"
-      },
-      {
-        version: "v2.1",
-        date: "Nov 19, 2026 • 03:20 PM",
-        en: "✨ Idea: Seen indicator highlight in Personal DMs when opponent reads your message. 🛠️ Bug Fix: Cleaned up What's New notes and fixed duplicate message listener refresh.",
-        hi: "✨ आइडिया: पर्सनल DM में सामने वाला मैसेज पढ़े तो Seen कलर हाइलाइट होगा। 🛠️ बग फिक्स: What's New नोट्स साफ किए और मैसेज रिफ्रेश बग फिक्स किया।"
       }
     ];
 
@@ -568,11 +649,11 @@
         whatsNewBtn: "What's New",
         descTitle: "What is this?",
         langBtnText: "See in Hindi (हिंदी में पढ़ें)",
-        descText: "Flex City India's official community 1v1 PvP leaderboard. Challenge higher-ranked players, win matches, swap ranks, and prove your skills!",
+        descText: "Welcome to the official community hub tracking every Flex City top player across India. Compete in Long Range and Short Range 1v1 PvP duels, climb the live rankings, swap positions with higher-tiered rivals, and prove your skill on the Flex City India top player board.",
         rulesHeading: "📜 How to Submit Proof & Challenge Rules:",
         rulesHtml: `
           <li><strong>Chat Screenshot:</strong> Upload a clear chat screenshot where your opponent agrees to the 1v1 result & points.</li>
-          <li><strong>Rank Swap:</strong> If you defeat a player ranked higher than you, you will take their rank on the leaderboard!</li>
+          <li><strong>Rank Swap:</strong> Defeat a higher-ranked Flex City player to take their exact spot on the leaderboard!</li>
           <li><strong>Direct Challenge:</strong> Tap on any player or use the bottom-right Chat icon to message opponents directly for 1v1s.</li>
         `,
         modalRuleNote: "💡 <strong>Rule:</strong> Upload the chat screenshot where your opponent agrees to the match result. Defeating a higher-ranked player swaps your rank with theirs!",
@@ -603,7 +684,7 @@
         submitProofBtn: "Send Screenshot for Verification",
         whatsNewModalTitle: "✨ What's New in Flex City",
         faqTitle: "Frequently Asked Questions",
-        faqSub: "Quick answers about tiers, tier tests, points and the Flex City server.",
+        faqSub: "Quick answers about Flex City PvP tiers, top player rankings, and points.",
         logoutModalTitle: "Are You Sure You Want to Log Out?",
         logoutModalSub: "After logging out, you won't be able to submit match screenshot proofs, send messages, or challenge players until you log back in with Google."
       },
@@ -613,11 +694,11 @@
         whatsNewBtn: "नया क्या है",
         descTitle: "यह क्या है? (What is this?)",
         langBtnText: "See in English (अंग्रेजी में देखें)",
-        descText: "यह Flex City India का ऑफिशियल कम्युनिटी 1v1 PvP लीडरबोर्ड है। ऊपर के रैंक वाले प्लेयर्स को चैलेंज करें, मैच जीतें, रैंक आपस में बदलें (Rank Swap करें) और अपना हुनर साबित करें!",
+        descText: "यह भारत के हर Flex City टॉप प्लेयर की लाइव रैंकिंग दिखाने वाला ऑफिशियल कम्युनिटी लीडरबोर्ड है। लॉन्ग रेंज और शॉर्ट रेंज 1v1 मैच खेलें, ऊपर के खिलाड़ियों को हराकर रैंक स्वैप करें और Flex City India टॉप प्लेयर लिस्ट में अपनी जगह बनाएं।",
         rulesHeading: "📜 प्रूफ सबमिट करने के नियम:",
         rulesHtml: `
           <li><strong>चैट स्क्रीनशॉट:</strong> गेम की चैट का एक साफ़ स्क्रीनशॉट अपलोड करें जिसमें आपका Opponent 1v1 के रिजल्ट और पॉइंट्स पर राज़ी हो।</li>
-          <li><strong>रैंक स्वैप (Rank Swap):</strong> अगर आप अपने से ऊपर की रैंक वाले खिलाड़ी को हराते हैं, तो आपको उसकी रैंक मिल जाएगी!</li>
+          <li><strong>रैंक स्वैप (Rank Swap):</strong> अपने से ऊपर की रैंक वाले Flex City खिलाड़ी को हराएं और उसकी जगह लें!</li>
           <li><strong>डायरेक्ट चैलेंज:</strong> किसी भी खिलाड़ी पर टैप करें या नीचे दाएं कोने में चैट आइकन से सीधे मैसेज करें।</li>
         `,
         modalRuleNote: "💡 <strong>नियम:</strong> चैट का ऐसा स्क्रीनशॉट डालें जिसमें Opponent रिजल्ट पर राज़ी हो। ऊपर वाले खिलाड़ी को हराने पर रैंक स्वैप हो जाएगी!",
@@ -648,7 +729,7 @@
         submitProofBtn: "वेरिफिकेशन के लिए भेजें",
         whatsNewModalTitle: "✨ फ्लेक्स सिटी में नया क्या है",
         faqTitle: "अक्सर पूछे जाने वाले सवाल (FAQ)",
-        faqSub: "टीयर्स, पॉइंट्स और फ्लेक्स सिटी सर्वर के बारे में त्वरित उत्तर।",
+        faqSub: "टीयर्स, टॉप प्लेयर रैंकिंग और फ्लेक्स सिटी के बारे में त्वरित उत्तर।",
         logoutModalTitle: "क्या आप वाकई लॉग आउट करना चाहते हैं?",
         logoutModalSub: "लॉग आउट करने के बाद, आप Google से दोबारा लॉगिन करने तक मैच स्क्रीनशॉट प्रूफ सबमिट नहीं कर पाएंगे या मैसेज नहीं भेज पाएंगे।"
       }
@@ -713,14 +794,12 @@
       renderLeaderboard();
     };
 
-    // Trigger Notification Prompt on Site Entry
     initNotificationPromptOnEntry();
     loadLeaderboard();
 
     function initNotificationPromptOnEntry() {
       if (!("Notification" in window)) return;
       if (Notification.permission === "default") {
-        // Attempt direct browser request first, and show banner as reliable fallback
         try {
           Notification.requestPermission().then(perm => {
             if (perm === "granted") {
@@ -742,7 +821,6 @@
       document.getElementById('notifPromptBanner').classList.add('hidden');
     };
 
-    // Automatic What's New Notification for visitors & logged-in users
     function checkWhatsNewGuestAlert() {
       const latest = whatsNewData[0];
       const seenLocal = localStorage.getItem('fc_whatsnew_notified');
@@ -907,7 +985,7 @@
       }
     }
 
-    // ==================== MESSAGING & NOTIFICATION ENGINE ====================
+    // ==================== MESSAGING, HOLD CONTROLS & NOTIFICATIONS ====================
 
     function checkNotificationPermissionBtn() {
       const btn = document.getElementById('enableNotifBtn');
@@ -951,6 +1029,88 @@
       } catch (e) {}
     }
 
+    // Press & Hold Handlers for Message Bubbles
+    window.startMsgHold = (el, collectionName, msgId, senderUid, currentText) => {
+      clearTimeout(holdTimer);
+      el.classList.add('msg-holding');
+      holdTimer = setTimeout(() => {
+        el.classList.remove('msg-holding');
+        if (navigator.vibrate) navigator.vibrate(35);
+        openMsgActionMenu(collectionName, msgId, senderUid, currentText);
+      }, 420);
+    };
+
+    window.cancelMsgHold = (el) => {
+      clearTimeout(holdTimer);
+      if (el) el.classList.remove('msg-holding');
+    };
+
+    window.openMsgActionMenu = (collectionName, msgId, senderUid, currentText) => {
+      if (!currentUser) return;
+      selectedActionMsg = { collectionName, msgId, senderUid, currentText };
+
+      const isMine = (senderUid === currentUser.uid);
+      const canEraseGlobal = isMine || isAdmin;
+
+      document.getElementById('msgPreviewBox').innerText = currentText;
+      document.getElementById('actionRewriteBtn').style.display = isMine ? 'flex' : 'none';
+      document.getElementById('actionEraseGlobalBtn').style.display = canEraseGlobal ? 'flex' : 'none';
+
+      document.getElementById('msgActionOverlay').classList.remove('hidden');
+    };
+
+    window.closeMsgActionMenu = () => {
+      document.getElementById('msgActionOverlay').classList.add('hidden');
+    };
+
+    window.triggerMsgRewrite = () => {
+      if (!selectedActionMsg) return;
+      closeMsgActionMenu();
+      document.getElementById('rewriteMsgInput').value = selectedActionMsg.currentText;
+      document.getElementById('rewriteMsgOverlay').classList.remove('hidden');
+      document.getElementById('rewriteMsgInput').focus();
+    };
+
+    window.closeRewriteOverlay = () => {
+      document.getElementById('rewriteMsgOverlay').classList.add('hidden');
+    };
+
+    window.submitMsgRewrite = async (e) => {
+      e.preventDefault();
+      if (!selectedActionMsg || !currentUser) return;
+      const newText = document.getElementById('rewriteMsgInput').value.trim();
+      if (!newText || newText === selectedActionMsg.currentText) {
+        closeRewriteOverlay();
+        return;
+      }
+
+      const { collectionName, msgId } = selectedActionMsg;
+      closeRewriteOverlay();
+
+      await updateDoc(doc(db, collectionName, msgId), {
+        text: newText,
+        rewritten: true
+      });
+    };
+
+    window.triggerMsgHideForMe = async () => {
+      if (!selectedActionMsg || !currentUser) return;
+      const { collectionName, msgId } = selectedActionMsg;
+      closeMsgActionMenu();
+
+      await updateDoc(doc(db, collectionName, msgId), {
+        hiddenFor: arrayUnion(currentUser.uid)
+      });
+    };
+
+    window.triggerMsgEraseGlobally = async () => {
+      if (!selectedActionMsg || !currentUser) return;
+      const { collectionName, msgId } = selectedActionMsg;
+      closeMsgActionMenu();
+
+      await deleteDoc(doc(db, collectionName, msgId));
+    };
+
     function startRealtimeDmListener(uid) {
       if (unsubscribeDmListener) unsubscribeDmListener();
       isFirstDmSnapshot = true;
@@ -962,6 +1122,8 @@
 
         snapshot.forEach(d => {
           const msg = { id: d.id, ...d.data() };
+          // Skip messages hidden locally by current user
+          if (msg.hiddenFor && msg.hiddenFor.includes(uid)) return;
           allUserDms.push(msg);
           if (msg.receiverUid === uid && !msg.read) {
             unreadCount++;
@@ -976,7 +1138,6 @@
               const newMsg = change.doc.data();
               if (newMsg.receiverUid === uid && !newMsg.read) {
                 playPingSound();
-                // Show exact sender name + actual message inside notification
                 triggerSystemNotification(
                   `💬 ${newMsg.senderIgn} sent you a message`,
                   newMsg.text
@@ -1068,56 +1229,66 @@
       if (unsubscribeGlobalChat) return;
       const q = query(collection(db, "global_chat"), orderBy("timestamp", "desc"), limit(35));
       unsubscribeGlobalChat = onSnapshot(q, (snapshot) => {
-        const msgs = [];
-        snapshot.forEach(d => msgs.push({ id: d.id, ...d.data() }));
-        msgs.reverse();
-
-        const list = document.getElementById('globalMessagesList');
-        if (!list) return;
-
-        if (msgs.length === 0) {
-          list.innerHTML = `<div class="text-center text-xs text-slate-500 py-8">No messages yet. Say hi or ask for a 1v1!</div>`;
-          return;
-        }
-
-        list.innerHTML = msgs.map(m => {
-          const isMe = currentUser && m.uid === currentUser.uid;
-          const timeStr = new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
-          const deleteHtml = isAdmin ? `<button onclick="deleteGlobalMsg('${m.id}')" class="text-rose-400 hover:text-rose-300 ml-1.5 text-[10px] cursor-pointer" title="Delete message">🗑️</button>` : '';
-
-          if (isMe) {
-            return `
-              <div class="flex flex-col items-end">
-                <div class="bg-cyan-600 text-white px-3 py-2 rounded-2xl rounded-br-sm max-w-[80%] text-xs shadow-sm">
-                  ${escapeHtml(m.text)}
-                </div>
-                <span class="text-[9px] text-slate-500 mt-0.5">${timeStr}</span>
-              </div>
-            `;
-          } else {
-            return `
-              <div class="flex flex-col items-start">
-                <div class="flex items-center gap-1.5 mb-0.5">
-                  <button onclick="openDmWithUser('${m.uid}', '${escapeHtml(m.ign)}')" class="text-[10px] font-bold text-cyan-400 hover:underline cursor-pointer">${escapeHtml(m.ign)}</button>
-                  <span class="text-[9px] text-slate-500">${timeStr}</span>
-                  ${deleteHtml}
-                </div>
-                <div class="bg-slate-800 text-slate-200 border border-slate-700/80 px-3 py-2 rounded-2xl rounded-bl-sm max-w-[80%] text-xs shadow-sm">
-                  ${escapeHtml(m.text)}
-                </div>
-              </div>
-            `;
-          }
-        }).join('');
-
-        list.scrollTop = list.scrollHeight;
+        latestGlobalMsgs = [];
+        snapshot.forEach(d => latestGlobalMsgs.push({ id: d.id, ...d.data() }));
+        latestGlobalMsgs.reverse();
+        renderGlobalChatMessages();
       });
     }
 
-    window.deleteGlobalMsg = async (msgId) => {
-      if (!isAdmin) return;
-      await deleteDoc(doc(db, "global_chat", msgId));
-    };
+    function renderGlobalChatMessages() {
+      const list = document.getElementById('globalMessagesList');
+      if (!list) return;
+
+      const visibleMsgs = latestGlobalMsgs.filter(m => !(currentUser && m.hiddenFor && m.hiddenFor.includes(currentUser.uid)));
+
+      if (visibleMsgs.length === 0) {
+        list.innerHTML = `<div class="text-center text-xs text-slate-500 py-8">No messages yet. Say hi or ask for a 1v1!</div>`;
+        return;
+      }
+
+      list.innerHTML = visibleMsgs.map(m => {
+        const isMe = currentUser && m.uid === currentUser.uid;
+        const timeStr = new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const rewrittenTag = m.rewritten ? `<span class="text-[9px] opacity-75 italic ml-1">(rewritten)</span>` : '';
+        const safeTextAttr = escapeHtml(m.text).replace(/'/g, "&#39;");
+
+        const holdAttrs = `
+          onmousedown="startMsgHold(this, 'global_chat', '${m.id}', '${m.uid}', '${safeTextAttr}')"
+          onmouseup="cancelMsgHold(this)"
+          onmouseleave="cancelMsgHold(this)"
+          ontouchstart="startMsgHold(this, 'global_chat', '${m.id}', '${m.uid}', '${safeTextAttr}')"
+          ontouchend="cancelMsgHold(this)"
+          ontouchmove="cancelMsgHold(this)"
+          oncontextmenu="event.preventDefault(); openMsgActionMenu('global_chat', '${m.id}', '${m.uid}', '${safeTextAttr}')"
+        `;
+
+        if (isMe) {
+          return `
+            <div class="flex flex-col items-end">
+              <div ${holdAttrs} class="msg-bubble bg-cyan-600 text-white px-3 py-2 rounded-2xl rounded-br-sm max-w-[80%] text-xs shadow-sm cursor-pointer">
+                ${escapeHtml(m.text)}${rewrittenTag}
+              </div>
+              <span class="text-[9px] text-slate-500 mt-0.5">${timeStr}</span>
+            </div>
+          `;
+        } else {
+          return `
+            <div class="flex flex-col items-start">
+              <div class="flex items-center gap-1.5 mb-0.5">
+                <button onclick="openDmWithUser('${m.uid}', '${escapeHtml(m.ign)}')" class="text-[10px] font-bold text-cyan-400 hover:underline cursor-pointer">${escapeHtml(m.ign)}</button>
+                <span class="text-[9px] text-slate-500">${timeStr}</span>
+              </div>
+              <div ${holdAttrs} class="msg-bubble bg-slate-800 text-slate-200 border border-slate-700/80 px-3 py-2 rounded-2xl rounded-bl-sm max-w-[80%] text-xs shadow-sm cursor-pointer">
+                ${escapeHtml(m.text)}${rewrittenTag}
+              </div>
+            </div>
+          `;
+        }
+      }).join('');
+
+      list.scrollTop = list.scrollHeight;
+    }
 
     document.getElementById('globalChatForm').onsubmit = async (e) => {
       e.preventDefault();
@@ -1230,6 +1401,19 @@
       list.innerHTML = convo.map(m => {
         const isMe = m.senderUid === currentUser.uid;
         const timeStr = new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const rewrittenTag = m.rewritten ? `<span class="text-[9px] opacity-75 italic ml-1">(rewritten)</span>` : '';
+        const safeTextAttr = escapeHtml(m.text).replace(/'/g, "&#39;");
+
+        const holdAttrs = `
+          onmousedown="startMsgHold(this, 'direct_messages', '${m.id}', '${m.senderUid}', '${safeTextAttr}')"
+          onmouseup="cancelMsgHold(this)"
+          onmouseleave="cancelMsgHold(this)"
+          ontouchstart="startMsgHold(this, 'direct_messages', '${m.id}', '${m.senderUid}', '${safeTextAttr}')"
+          ontouchend="cancelMsgHold(this)"
+          ontouchmove="cancelMsgHold(this)"
+          oncontextmenu="event.preventDefault(); openMsgActionMenu('direct_messages', '${m.id}', '${m.senderUid}', '${safeTextAttr}')"
+        `;
+
         if (isMe) {
           const statusHtml = m.read
             ? `<span class="text-cyan-400 font-bold">Seen ✓✓</span>`
@@ -1240,8 +1424,8 @@
 
           return `
             <div class="flex flex-col items-end">
-              <div class="${bubbleStyle} px-3 py-2 rounded-2xl rounded-br-sm max-w-[80%] text-xs shadow-sm transition">
-                ${escapeHtml(m.text)}
+              <div ${holdAttrs} class="msg-bubble ${bubbleStyle} px-3 py-2 rounded-2xl rounded-br-sm max-w-[80%] text-xs shadow-sm cursor-pointer">
+                ${escapeHtml(m.text)}${rewrittenTag}
               </div>
               <span class="text-[9px] text-slate-400 mt-0.5 flex items-center gap-1">${timeStr} • ${statusHtml}</span>
             </div>
@@ -1249,8 +1433,8 @@
         } else {
           return `
             <div class="flex flex-col items-start">
-              <div class="bg-slate-800 text-slate-200 border border-slate-700 px-3 py-2 rounded-2xl rounded-bl-sm max-w-[80%] text-xs shadow-sm">
-                ${escapeHtml(m.text)}
+              <div ${holdAttrs} class="msg-bubble bg-slate-800 text-slate-200 border border-slate-700 px-3 py-2 rounded-2xl rounded-bl-sm max-w-[80%] text-xs shadow-sm cursor-pointer">
+                ${escapeHtml(m.text)}${rewrittenTag}
               </div>
               <span class="text-[9px] text-slate-500 mt-0.5">${timeStr}</span>
             </div>
@@ -1311,7 +1495,6 @@
         dot.classList.add('hidden');
       } else {
         dot.classList.remove('hidden');
-        // Send automatic notification once per new version
         const notifiedVer = localStorage.getItem('fc_whatsnew_notified');
         if (notifiedVer !== latest.version) {
           localStorage.setItem('fc_whatsnew_notified', latest.version);
