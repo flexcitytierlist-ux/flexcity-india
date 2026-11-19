@@ -22,7 +22,11 @@
     @keyframes ping-dot { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
     .animate-ping-dot { animation: ping-dot 1.5s infinite; }
     .ticker-fade { transition: opacity 0.4s ease-in-out; }
-  </style></head><body class="min-h-screen flex flex-col antialiased">
+    /* Custom thin scrollbar for chat */
+    .chat-scroll::-webkit-scrollbar { width: 4px; }
+    .chat-scroll::-webkit-scrollbar-track { background: #0f131d; }
+    .chat-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
+  </style></head><body class="min-h-screen flex flex-col antialiased pb-16">
 
   <!-- Instagram / In-App Browser Warning Banner -->
   <div id="inAppBanner" class="hidden bg-amber-500 text-slate-950 px-3 py-2 text-center text-xs font-bold">
@@ -62,16 +66,6 @@
     </div>
   </nav>
 
-  <!-- Global Popup Notification Banner -->
-  <div id="globalPopup" class="hidden max-w-4xl mx-auto w-full px-3 pt-3">
-    <div class="bg-cyan-500/15 border border-cyan-500/40 rounded-2xl px-4 py-3 flex items-center justify-between gap-3 text-xs text-cyan-200 shadow-lg">
-      <div id="globalPopupText" class="flex items-center gap-2 font-medium">
-        🔔 Notification message goes here...
-      </div>
-      <button onclick="dismissPopup()" class="text-slate-400 hover:text-white font-bold text-base">&times;</button>
-    </div>
-  </div>
-
   <!-- Main Content -->
   <main class="max-w-4xl w-full mx-auto px-3 py-5 flex-1 space-y-4">
 
@@ -93,7 +87,7 @@
         <ul id="rulesList" class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
           <li><strong>Chat Screenshot:</strong> Upload a clear chat screenshot where your opponent agrees to the 1v1 result & points.</li>
           <li><strong>Rank Swap:</strong> If you defeat a player ranked higher than you, you will take their rank on the leaderboard!</li>
-          <li><strong>Optional Recording:</strong> If you have any doubts or need dispute help, you can personally send your match recording to BoomCraze on Instagram.</li>
+          <li><strong>Direct Challenge:</strong> Tap on any player or use the bottom-right Chat icon to message opponents directly for 1v1s.</li>
         </ul>
       </div>
     </div>
@@ -119,27 +113,24 @@
       </div>
     </div>
 
-    <!-- 3 Main Section Tabs: Ranked, Contenders, 1v1 Lobby -->
-    <div class="grid grid-cols-3 gap-2 bg-slate-900/80 p-1.5 rounded-2xl border border-slate-800 shadow-md">
-      <button onclick="switchMainTab('ranked')" id="tabRanked" class="py-2.5 px-2 rounded-xl text-xs font-bold transition bg-cyan-500 text-slate-950 text-center shadow-sm">
+    <!-- 2 Clean Main Section Tabs: Ranked & Contenders -->
+    <div class="grid grid-cols-2 gap-2 bg-slate-900/80 p-1.5 rounded-2xl border border-slate-800 shadow-md">
+      <button onclick="switchMainTab('ranked')" id="tabRanked" class="py-2.5 px-2 rounded-xl text-xs font-bold transition bg-cyan-500 text-slate-950 text-center shadow-sm cursor-pointer">
         🏆 Ranked
       </button>
-      <button onclick="switchMainTab('contenders')" id="tabContenders" class="py-2.5 px-2 rounded-xl text-xs font-bold transition text-slate-400 hover:text-white text-center">
+      <button onclick="switchMainTab('contenders')" id="tabContenders" class="py-2.5 px-2 rounded-xl text-xs font-bold transition text-slate-400 hover:text-white text-center cursor-pointer">
         ⚔️ Contenders
-      </button>
-      <button onclick="switchMainTab('lobby')" id="tabLobby" class="py-2.5 px-2 rounded-xl text-xs font-bold transition text-slate-400 hover:text-white text-center relative">
-        🎯 1v1 Lobby <span id="lobbyTabBadge" class="hidden absolute top-2 right-2.5 w-2.5 h-2.5 rounded-full bg-cyan-400 animate-ping"></span>
       </button>
     </div>
 
     <!-- Category Filter (Only for Ranked) -->
     <div id="categoryFilters" class="flex items-center gap-2 overflow-x-auto pb-1.5">
-      <button onclick="setSort('total')" id="sort-total" class="sort-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-cyan-500 text-slate-950 whitespace-nowrap shadow-sm">Overall</button>
-      <button onclick="setSort('long')" id="sort-long" class="sort-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 whitespace-nowrap">Long Range Top</button>
-      <button onclick="setSort('short')" id="sort-short" class="sort-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 whitespace-nowrap">Short Range Top</button>
+      <button onclick="setSort('total')" id="sort-total" class="sort-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-cyan-500 text-slate-950 whitespace-nowrap shadow-sm cursor-pointer">Overall</button>
+      <button onclick="setSort('long')" id="sort-long" class="sort-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 whitespace-nowrap cursor-pointer">Long Range Top</button>
+      <button onclick="setSort('short')" id="sort-short" class="sort-btn px-3 py-1.5 rounded-xl text-xs font-semibold bg-slate-800 text-slate-300 whitespace-nowrap cursor-pointer">Short Range Top</button>
     </div>
 
-    <!-- Leaderboard Card Container (Ranked & Contenders) -->
+    <!-- Leaderboard Card Container -->
     <div id="leaderboardCard" class="card-bg rounded-2xl neon-border overflow-hidden shadow-lg">
       <div class="grid grid-cols-12 px-4 py-3 border-b border-slate-800/80 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
         <div id="colRank" class="col-span-2">Rank</div>
@@ -152,39 +143,6 @@
       </div>
     </div>
 
-    <!-- 1v1 Matchmaking Lobby Section -->
-    <div id="lobbySection" class="hidden space-y-3">
-      <!-- Post Looking For Match Form (Visible when Logged In) -->
-      <div id="lobbyPostBox" class="hidden card-bg rounded-2xl neon-border p-4 shadow-lg">
-        <div id="lobbyHeading" class="text-xs font-bold text-cyan-400 mb-2.5">🎯 Looking for a 1v1 Opponent? Post in Lobby!</div>
-        <form id="lobbyForm" class="flex flex-col sm:flex-row gap-2.5">
-          <select id="lobbyMode" class="bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white">
-            <option value="Long Range">Long Range 1v1</option>
-            <option value="Short Range">Short Range 1v1</option>
-            <option value="Any Range">Any Range 1v1</option>
-          </select>
-          <input type="text" id="lobbyNote" maxlength="60" placeholder="Note (e.g. Online now, DM on Insta @...)" class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white" />
-          <button type="submit" id="lobbyPostBtn" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-xs transition whitespace-nowrap shadow-sm">
-            + Post LFG
-          </button>
-        </form>
-      </div>
-
-      <div id="lobbyLoginPrompt" class="card-bg rounded-2xl neon-border p-4 text-center text-xs text-slate-400 shadow-md">
-        Login with Google to post your 1v1 challenge status in the lobby!
-      </div>
-
-      <div class="card-bg rounded-2xl neon-border overflow-hidden shadow-lg">
-        <div class="px-4 py-3 border-b border-slate-800/80 text-[11px] font-semibold text-slate-400 uppercase tracking-wider flex justify-between items-center">
-          <span id="lobbyListTitle">Active Challengers Looking to Play</span>
-          <span class="text-emerald-400 flex items-center gap-1.5 font-bold">● Live</span>
-        </div>
-        <div id="lobbyList" class="divide-y divide-slate-800/50">
-          <div class="p-8 text-center text-slate-400 text-xs">Loading active players...</div>
-        </div>
-      </div>
-    </div>
-
     <!-- Frequently Asked Questions (FAQ) Section -->
     <div class="card-bg rounded-2xl neon-border p-4 sm:p-6 space-y-4 shadow-lg">
       <div>
@@ -193,7 +151,6 @@
       </div>
 
       <div class="space-y-2.5">
-        <!-- FAQ Item 1 -->
         <div class="bg-slate-900/80 border border-slate-800 rounded-xl overflow-hidden transition">
           <button onclick="toggleFaq(1)" class="w-full px-4 py-3 text-left flex items-center justify-between text-xs font-bold text-white cursor-pointer">
             <span id="faq1Q">01. What is Flex City 1v1 Leaderboard?</span>
@@ -204,18 +161,16 @@
           </div>
         </div>
 
-        <!-- FAQ Item 2 -->
         <div class="bg-slate-900/80 border border-slate-800 rounded-xl overflow-hidden transition">
           <button onclick="toggleFaq(2)" class="w-full px-4 py-3 text-left flex items-center justify-between text-xs font-bold text-white cursor-pointer">
-            <span id="faq2Q">02. How do I submit match screenshot proofs?</span>
+            <span id="faq2Q">02. How do I challenge another player?</span>
             <span class="text-cyan-400 text-sm font-black">+</span>
           </button>
           <div id="faq2Ans" class="hidden px-4 pb-3 text-xs text-slate-300 leading-relaxed border-t border-slate-800/60 pt-2">
-            After winning a 1v1 match, click the "+ Submit Proof" button, enter your IGN and opponent's name, choose your category, and upload a clear chat screenshot where your opponent agrees to the result.
+            Click on any player's name on the leaderboard and hit "Send Direct Message", or open the Global Chat from the bottom-right message icon to find active opponents!
           </div>
         </div>
 
-        <!-- FAQ Item 3 -->
         <div class="bg-slate-900/80 border border-slate-800 rounded-xl overflow-hidden transition">
           <button onclick="toggleFaq(3)" class="w-full px-4 py-3 text-left flex items-center justify-between text-xs font-bold text-white cursor-pointer">
             <span id="faq3Q">03. What is Rank Swap and how does it work?</span>
@@ -226,7 +181,6 @@
           </div>
         </div>
 
-        <!-- FAQ Item 4 -->
         <div class="bg-slate-900/80 border border-slate-800 rounded-xl overflow-hidden transition">
           <button onclick="toggleFaq(4)" class="w-full px-4 py-3 text-left flex items-center justify-between text-xs font-bold text-white cursor-pointer">
             <span id="faq4Q">04. How are total points calculated?</span>
@@ -241,15 +195,91 @@
 
   </main>
 
+  <!-- Floating Instagram-Style Message Button (Bottom Right) -->
+  <button onclick="openChatDrawer()" id="floatingChatBtn" class="fixed bottom-5 right-5 z-40 w-13 h-13 p-3.5 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white shadow-xl shadow-cyan-500/25 flex items-center justify-center transition transform active:scale-95 cursor-pointer" title="Messages & Global Chat">
+    <!-- Paper Plane / DM SVG Icon -->
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+      <path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
+    </svg>
+    <!-- Unread Red Dot / Count Badge -->
+    <span id="unreadChatBadge" class="hidden absolute -top-1 -right-1 min-w-[20px] h-5 px-1 rounded-full bg-red-500 text-white text-[10px] font-black flex items-center justify-center border-2 border-[#0b0e14] animate-bounce">1</span>
+  </button>
+
+  <!-- Floating Chat & DM Drawer Modal -->
+  <div id="chatDrawerModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-end sm:items-center justify-center p-0 sm:p-4 z-50">
+    <div class="card-bg neon-border rounded-t-3xl sm:rounded-2xl max-w-md w-full h-[85vh] sm:h-[600px] flex flex-col overflow-hidden shadow-2xl">
+      
+      <!-- Drawer Header -->
+      <div class="px-4 py-3.5 border-b border-slate-800 flex items-center justify-between bg-[#0d111a]">
+        <div class="flex items-center gap-2">
+          <button id="chatBackBtn" onclick="backToChatList()" class="hidden text-cyan-400 hover:text-white text-sm font-bold pr-1 cursor-pointer">←</button>
+          <h2 id="chatDrawerTitle" class="text-sm font-bold text-white flex items-center gap-1.5">💬 Flex City Messages</h2>
+        </div>
+        <div class="flex items-center gap-2">
+          <button id="enableNotifBtn" onclick="requestBrowserNotifications()" class="hidden bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 px-2 py-1 rounded-lg text-[10px] font-semibold cursor-pointer">🔔 Alerts</button>
+          <button onclick="closeModal('chatDrawerModal')" class="text-slate-400 hover:text-white text-xl leading-none cursor-pointer">&times;</button>
+        </div>
+      </div>
+
+      <!-- Mode Switcher (All Chat vs Direct Messages) -->
+      <div id="chatModeTabs" class="grid grid-cols-2 gap-1.5 p-2 bg-slate-950/90 border-b border-slate-800">
+        <button onclick="switchChatTab('global')" id="tabChatGlobal" class="py-1.5 rounded-xl text-xs font-bold bg-cyan-500 text-slate-950 transition cursor-pointer">
+          🌍 All (Global Chat)
+        </button>
+        <button onclick="switchChatTab('dms')" id="tabChatDms" class="py-1.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition relative cursor-pointer">
+          📩 Personal DMs <span id="dmTabDot" class="hidden inline-block w-2 h-2 rounded-full bg-red-500 ml-1"></span>
+        </button>
+      </div>
+
+      <!-- Login Wall if not logged in -->
+      <div id="chatLoginWall" class="hidden flex-1 flex flex-col items-center justify-center p-6 text-center space-y-3">
+        <div class="text-3xl">🔒</div>
+        <p class="text-xs text-slate-300">Login with Google to chat with players and send 1v1 challenges!</p>
+        <button onclick="triggerLoginFromChat()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs cursor-pointer">Login with Google</button>
+      </div>
+
+      <!-- VIEW 1: Global Chat Room -->
+      <div id="globalChatView" class="flex-1 flex flex-col overflow-hidden">
+        <div id="globalMessagesList" class="flex-1 overflow-y-auto p-3.5 space-y-2.5 chat-scroll">
+          <div class="text-center text-xs text-slate-500 py-8">Loading global chat...</div>
+        </div>
+        <form id="globalChatForm" class="p-2.5 border-t border-slate-800 bg-[#0d111a] flex gap-2">
+          <input type="text" id="globalMsgInput" maxlength="120" placeholder="Message everyone (e.g. Anyone for Long Range 1v1?)" class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500" />
+          <button type="submit" id="sendGlobalBtn" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-3.5 py-2 rounded-xl text-xs transition cursor-pointer">Send</button>
+        </form>
+      </div>
+
+      <!-- VIEW 2: Personal DMs List (Search & Select Player) -->
+      <div id="dmListView" class="hidden flex-1 flex flex-col overflow-hidden">
+        <div class="p-2.5 border-b border-slate-800/80">
+          <input type="text" id="dmSearchInput" oninput="renderDmPlayerList()" placeholder="🔍 Search player IGN to message..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500" />
+        </div>
+        <div id="dmPlayersList" class="flex-1 overflow-y-auto divide-y divide-slate-800/50 chat-scroll">
+          <!-- Player list populated dynamically -->
+        </div>
+      </div>
+
+      <!-- VIEW 3: Active 1-on-1 Conversation -->
+      <div id="activeDmView" class="hidden flex-1 flex flex-col overflow-hidden">
+        <div id="dmMessagesList" class="flex-1 overflow-y-auto p-3.5 space-y-2.5 chat-scroll">
+          <!-- Direct messages populated dynamically -->
+        </div>
+        <form id="dmChatForm" class="p-2.5 border-t border-slate-800 bg-[#0d111a] flex gap-2">
+          <input type="text" id="dmMsgInput" maxlength="150" placeholder="Type a direct message..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500" />
+          <button type="submit" id="sendDmBtn" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-3.5 py-2 rounded-xl text-xs transition cursor-pointer">Send</button>
+        </form>
+      </div>
+
+    </div>
+  </div>
+
   <!-- What's New Modal -->
   <div id="whatsNewModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
     <div class="card-bg neon-border rounded-2xl max-w-md w-full p-5 relative space-y-3.5 shadow-2xl">
       <button onclick="closeModal('whatsNewModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg">&times;</button>
       <h2 id="whatsNewModalTitle" class="text-base font-bold text-cyan-400">✨ What's New in Flex City</h2>
-      <div id="whatsNewContentList" class="space-y-2.5 text-xs text-slate-300 max-h-64 overflow-y-auto pr-1">
-        <!-- Dynamic Features with Date & Time -->
-      </div>
-      <button onclick="closeModal('whatsNewModal')" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs transition shadow-md">
+      <div id="whatsNewContentList" class="space-y-2.5 text-xs text-slate-300 max-h-64 overflow-y-auto pr-1"></div>
+      <button onclick="closeModal('whatsNewModal')" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs transition shadow-md cursor-pointer">
         Close & Continue
       </button>
     </div>
@@ -261,20 +291,20 @@
       <div class="w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 border border-rose-500/40 flex items-center justify-center mx-auto text-xl font-bold">⚠️</div>
       <h2 id="logoutModalTitle" class="text-base font-bold text-white">Are You Sure You Want to Log Out?</h2>
       <p id="logoutModalSub" class="text-xs text-slate-400 leading-relaxed">
-        After logging out, you won't be able to submit match screenshot proofs, post in the 1v1 lobby, or reply to challenges until you log back in with Google.
+        After logging out, you won't be able to submit match screenshot proofs, send messages, or challenge players until you log back in with Google.
       </p>
       <div class="grid grid-cols-2 gap-2.5 pt-2">
-        <button onclick="closeModal('logoutConfirmModal')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold py-2.5 rounded-xl text-xs transition">
+        <button onclick="closeModal('logoutConfirmModal')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold py-2.5 rounded-xl text-xs transition cursor-pointer">
           Cancel
         </button>
-        <button onclick="executeLogout()" class="bg-rose-500 hover:bg-rose-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs transition shadow-md">
+        <button onclick="executeLogout()" class="bg-rose-500 hover:bg-rose-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs transition shadow-md cursor-pointer">
           Yes, Log Out
         </button>
       </div>
     </div>
   </div>
 
-  <!-- Footer with Professional Instagram Card & Contact Info -->
+  <!-- Footer -->
   <footer class="border-t border-slate-800/60 py-6 text-center text-xs text-slate-400 px-4 space-y-3 mt-6">
     <p id="footerContactText">If you have any issues or want to send 1v1 recordings, contact us:</p>
     <div class="max-w-xs mx-auto">
@@ -292,7 +322,7 @@
       <p id="modalSubText" class="text-xs text-slate-400 mb-4">Please enter your official In-Game Name (IGN) to continue.</p>
       <form id="forcedIgnForm" class="space-y-3">
         <input type="text" id="forcedIgnInput" required placeholder="e.g. BoomCraze" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500" />
-        <button type="submit" id="modalSubmitBtn" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs transition shadow-md">
+        <button type="submit" id="modalSubmitBtn" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs transition shadow-md cursor-pointer">
           Continue to Leaderboard
         </button>
       </form>
@@ -303,33 +333,31 @@
   <div id="playerModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
     <div class="card-bg neon-border rounded-2xl max-w-md w-full p-5 relative max-h-[85vh] overflow-y-auto shadow-2xl">
       <button onclick="closeModal('playerModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg">&times;</button>
-      <div class="flex items-center gap-3 mb-3">
-        <img id="modalAvatar" src="" class="w-11 h-11 rounded-full border border-cyan-500/40 object-cover" />
-        <div>
-          <div class="flex items-center gap-1.5">
-            <h2 id="modalName" class="text-base font-bold text-white">Player Name</h2>
-            <span id="modalStreakBadge"></span>
+      <div class="flex items-center justify-between gap-3 mb-3 pr-5">
+        <div class="flex items-center gap-3">
+          <img id="modalAvatar" src="" class="w-11 h-11 rounded-full border border-cyan-500/40 object-cover" />
+          <div>
+            <div class="flex items-center gap-1.5">
+              <h2 id="modalName" class="text-base font-bold text-white">Player Name</h2>
+              <span id="modalStreakBadge"></span>
+            </div>
+            <p id="modalSub" class="text-[11px] text-slate-400">Total 1v1s: 0 • Total Pts: 0</p>
           </div>
-          <p id="modalSub" class="text-[11px] text-slate-400">Total 1v1s: 0 • Total Pts: 0</p>
         </div>
       </div>
 
-      <!-- Quick Reply/Action to Challenge if viewing someone else -->
-      <div id="playerModalActionBox" class="mb-3 hidden">
-        <div class="bg-slate-900 border border-slate-800 p-3 rounded-xl space-y-2">
-          <div id="replyBoxTitle" class="text-xs font-semibold text-cyan-400">💬 Reply to this player's challenge:</div>
-          <div class="flex gap-2">
-            <input type="text" id="playerModalReplyInput" placeholder="Type reply (e.g. Let's play now!)" class="flex-1 bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white" />
-            <button onclick="sendPlayerReply()" id="sendReplyBtn" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-3 py-2 rounded-xl text-xs whitespace-nowrap shadow-sm">Send Reply</button>
-          </div>
-        </div>
+      <!-- Direct Message Button on Player Profile -->
+      <div id="playerDmTriggerBox" class="mb-3 hidden">
+        <button onclick="messageSelectedPlayer()" class="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold py-2 rounded-xl text-xs transition shadow-md flex items-center justify-center gap-1.5 cursor-pointer">
+          💬 Send Direct Message / Challenge
+        </button>
       </div>
 
       <div class="grid grid-cols-2 gap-2 bg-slate-900/90 p-1 rounded-xl mb-3 border border-slate-800">
-        <button id="tabLongBtn" onclick="switchPlayerTab('long')" class="py-1.5 rounded-lg text-xs font-semibold bg-cyan-500 text-slate-950">
+        <button id="tabLongBtn" onclick="switchPlayerTab('long')" class="py-1.5 rounded-lg text-xs font-semibold bg-cyan-500 text-slate-950 cursor-pointer">
           🎯 Long Range
         </button>
-        <button id="tabShortBtn" onclick="switchPlayerTab('short')" class="py-1.5 rounded-lg text-xs font-semibold text-slate-400">
+        <button id="tabShortBtn" onclick="switchPlayerTab('short')" class="py-1.5 rounded-lg text-xs font-semibold text-slate-400 cursor-pointer">
           ⚔️ Short Range
         </button>
       </div>
@@ -374,7 +402,7 @@
             <input type="number" id="editStreak" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-2 py-2 text-xs text-white text-center" />
           </div>
         </div>
-        <button type="submit" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs transition mt-2 shadow-md">
+        <button type="submit" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs transition mt-2 shadow-md cursor-pointer">
           Save Player Changes
         </button>
       </form>
@@ -389,7 +417,7 @@
       <p id="editIgnSub" class="text-xs text-slate-400 mb-3">Update your official Flex City In-Game Name.</p>
       <form id="ignForm" class="space-y-3">
         <input type="text" id="newIgnInput" required placeholder="e.g. BoomCraze" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500" />
-        <button type="submit" id="saveIgnBtn" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs transition shadow-md">
+        <button type="submit" id="saveIgnBtn" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs transition shadow-md cursor-pointer">
           Save IGN
         </button>
       </form>
@@ -426,7 +454,7 @@
           <label id="labelScreenshotFile" class="text-[11px] text-slate-300 block mb-1">Upload Chat Screenshot</label>
           <input type="file" id="screenshotFileInput" accept="image/*" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-cyan-500 file:text-slate-950 hover:file:bg-cyan-400 cursor-pointer" />
         </div>
-        <button type="submit" id="submitProofBtn" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-3 rounded-xl text-xs transition mt-2 shadow-md">
+        <button type="submit" id="submitProofBtn" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-3 rounded-xl text-xs transition mt-2 shadow-md cursor-pointer">
           Send Screenshot for Verification
         </button>
       </form>
@@ -447,7 +475,7 @@
   <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-app.js";
     import { getAuth, GoogleAuthProvider, signInWithPopup, signOut, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-auth.js";
-    import { getFirestore, collection, doc, setDoc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, query, where } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
+    import { getFirestore, collection, doc, setDoc, getDoc, getDocs, addDoc, updateDoc, deleteDoc, query, where, orderBy, limit, onSnapshot } from "https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore.js";
 
     const ua = navigator.userAgent || navigator.vendor || window.opera;
     if (ua.indexOf("Instagram") > -1 || ua.indexOf("FBAN") > -1 || ua.indexOf("FBAV") > -1) {
@@ -480,25 +508,47 @@
     let currentLang = 'en';
     let isAdmin = false;
 
-    // What's New Feature List with Date & Time
+    // Chat & Notification States
+    let activeChatTab = 'global';
+    let activeDmPartner = null;
+    let lastMsgSentTime = 0;
+    let unsubscribeGlobalChat = null;
+    let unsubscribeDmListener = null;
+    let unsubscribeUnreadListener = null;
+    let allUserDms = [];
+    let isFirstDmSnapshot = true;
+
+    // Notification Sound Generator (Clean Web Audio Ping)
+    function playPingSound() {
+      try {
+        const ctx = new (window.AudioContext || window.webkitAudioContext)();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'sine';
+        osc.frequency.setValueAtTime(880, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.15);
+        gain.gain.setValueAtTime(0.15, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + 0.15);
+      } catch (e) {}
+    }
+
+    // What's New Feature List
     const whatsNewData = [
+      {
+        version: "v2.0",
+        date: "Nov 19, 2026 • 12:20 PM",
+        en: "💬 Instagram-Style Messaging & Alerts: Replaced the 1v1 Lobby with a floating Direct Message & Global Chat system! Tap any player to DM them directly with sound & browser notifications.",
+        hi: "💬 इंस्टाग्राम जैसा मैसेजिंग और अलर्ट: 1v1 लॉबी की जगह अब फ्लोटिंग पर्सनल DM और ग्लोबल चैट आ गया है! किसी भी खिलाड़ी पर क्लिक करके सीधे मैसेज करें।"
+      },
       {
         version: "v1.3",
         date: "Nov 18, 2026 • 10:00 AM",
-        en: "🔥 Real-Time Seen & Reply Tracking: See who viewed your 1v1 lobby challenge and get instant pop-up notifications when someone replies!",
-        hi: "🔥 रियल-टाइम सीन और रिप्लाई ट्रैकिंग: देखें कि आपके 1v1 लॉबी चैलेंज को किसने देखा और रिप्लाई मिलने पर तुरंत पॉप-अप नोटिफिकेशन पाएं!"
-      },
-      {
-        version: "v1.2",
-        date: "Nov 17, 2026 • 04:30 PM",
-        en: "⚡ Live Activity Ticker & FAQ: Faster 5-second ticker updates showcasing top recent active players + Added Frequently Asked Questions section.",
-        hi: "⚡ लाइव एक्टिविटी टिकर और FAQ: हाल ही में खेलने वाले टॉप 3 खिलाड़ियों को दिखाने वाला तेज 5-सेकंड टिकर + अक्सर पूछे जाने वाले सवाल (FAQ) जोड़े गए।"
-      },
-      {
-        version: "v1.1",
-        date: "Nov 16, 2026 • 02:15 PM",
-        en: "🛡️ Admin Screenshot Deletion & Safe Logout: Admins can now individually remove specific screenshots with auto point recalculation + Secure logout confirmation popup.",
-        hi: "🛡️ एडमिन स्क्रीनशॉट डिलीट और सुरक्षित लॉगआउट: एडमिन अब पॉइंट्स री-कैलकुलेशन के साथ विशिष्ट स्क्रीनशॉट हटा सकते हैं + सुरक्षित लॉगआउट कन्फर्मेशन पॉप-अप।"
+        en: "🔥 Accurate Streak & FAQ: Fixed streak count to match verified match proofs + Added Frequently Asked Questions section.",
+        hi: "🔥 सटीक स्ट्रीक और FAQ: वेरीफाइड प्रूफ्स के अनुसार स्ट्रीक काउंट को सही किया गया + अक्सर पूछे जाने वाले सवाल (FAQ) जोड़े गए।"
       }
     ];
 
@@ -517,12 +567,11 @@
         rulesHtml: `
           <li><strong>Chat Screenshot:</strong> Upload a clear chat screenshot where your opponent agrees to the 1v1 result & points.</li>
           <li><strong>Rank Swap:</strong> If you defeat a player ranked higher than you, you will take their rank on the leaderboard!</li>
-          <li><strong>Optional Recording:</strong> If you have any doubts or need dispute help, you can personally send your match recording to BoomCraze on Instagram.</li>
+          <li><strong>Direct Challenge:</strong> Tap on any player or use the bottom-right Chat icon to message opponents directly for 1v1s.</li>
         `,
         modalRuleNote: "💡 <strong>Rule:</strong> Upload the chat screenshot where your opponent agrees to the match result. Defeating a higher-ranked player swaps your rank with theirs!",
         tabRanked: "🏆 Ranked",
         tabContenders: "⚔️ Contenders",
-        tabLobby: "🎯 1v1 Lobby",
         sortTotal: "Overall",
         sortLong: "Long Range Top",
         sortShort: "Short Range Top",
@@ -531,10 +580,6 @@
         colRange: "Range Pts",
         colTotal: "Total",
         loadingText: "Loading fresh leaderboard data...",
-        lobbyHeading: "🎯 Looking for a 1v1 Opponent? Post in Lobby!",
-        lobbyPostBtn: "+ Post LFG",
-        lobbyLoginPrompt: "Login with Google to post your 1v1 challenge status in the lobby!",
-        lobbyListTitle: "Active Challengers Looking to Play",
         footerContactText: "If you have any issues or want to send 1v1 recordings, contact us:",
         footerText1: "Flex City India Community Leaderboard • Unofficial fan-made platform.",
         openSubmitBtn: "+ Submit Proof",
@@ -554,7 +599,7 @@
         faqTitle: "Frequently Asked Questions",
         faqSub: "Quick answers about tiers, tier tests, points and the Flex City server.",
         logoutModalTitle: "Are You Sure You Want to Log Out?",
-        logoutModalSub: "After logging out, you won't be able to submit match screenshot proofs, post in the 1v1 lobby, or reply to challenges until you log back in with Google."
+        logoutModalSub: "After logging out, you won't be able to submit match screenshot proofs, send messages, or challenge players until you log back in with Google."
       },
       hi: {
         navSub: "ऑफिशियल 1v1 कम्युनिटी लीडरबोर्ड",
@@ -567,12 +612,11 @@
         rulesHtml: `
           <li><strong>चैट स्क्रीनशॉट:</strong> गेम की चैट का एक साफ़ स्क्रीनशॉट अपलोड करें जिसमें आपका Opponent 1v1 के रिजल्ट और पॉइंट्स पर राज़ी हो।</li>
           <li><strong>रैंक स्वैप (Rank Swap):</strong> अगर आप अपने से ऊपर की रैंक वाले खिलाड़ी को हराते हैं, तो आपको उसकी रैंक मिल जाएगी!</li>
-          <li><strong>पर्सनल रिकॉर्डिंग:</strong> अगर मैच में कोई डाउट हो, तो आप इंस्टाग्राम पर BoomCraze को अपनी रिकॉर्डिंग भेज सकते हैं।</li>
+          <li><strong>डायरेक्ट चैलेंज:</strong> किसी भी खिलाड़ी पर टैप करें या नीचे दाएं कोने में चैट आइकन से सीधे मैसेज करें।</li>
         `,
         modalRuleNote: "💡 <strong>नियम:</strong> चैट का ऐसा स्क्रीनशॉट डालें जिसमें Opponent रिजल्ट पर राज़ी हो। ऊपर वाले खिलाड़ी को हराने पर रैंक स्वैप हो जाएगी!",
         tabRanked: "🏆 रैंकड",
         tabContenders: "⚔️ कंटेंडर्स",
-        tabLobby: "🎯 1v1 लॉबी",
         sortTotal: "कुल पॉइंट्स (Overall)",
         sortLong: "लॉन्ग रेंज टॉप",
         sortShort: "शॉर्ट रेंज टॉप",
@@ -581,10 +625,6 @@
         colRange: "रेंज पॉइंट्स",
         colTotal: "कुल",
         loadingText: "लीडरबोर्ड डाटा लोड हो रहा है...",
-        lobbyHeading: "🎯 1v1 खेलने के लिए खिलाड़ी ढूंढ रहे हैं? लॉबी में पोस्ट करें!",
-        lobbyPostBtn: "+ पोस्ट करें",
-        lobbyLoginPrompt: "लॉबी में अपना 1v1 स्टेटस पोस्ट करने के लिए गूगल से लॉगिन करें!",
-        lobbyListTitle: "खेलने के लिए तैयार खिलाड़ी (Active Challengers)",
         footerContactText: "यदि आपको कोई समस्या है या 1v1 रिकॉर्डिंग भेजनी है, तो संपर्क करें:",
         footerText1: "Flex City इंडिया कम्युनिटी लीडरबोर्ड • अनौपचारिक फैन-मेड प्लेटफॉर्म।",
         openSubmitBtn: "+ प्रूफ सबमिट करें",
@@ -604,7 +644,7 @@
         faqTitle: "अक्सर पूछे जाने वाले सवाल (FAQ)",
         faqSub: "टीयर्स, पॉइंट्स और फ्लेक्स सिटी सर्वर के बारे में त्वरित उत्तर।",
         logoutModalTitle: "क्या आप वाकई लॉग आउट करना चाहते हैं?",
-        logoutModalSub: "लॉग आउट करने के बाद, आप Google से दोबारा लॉगिन करने तक मैच स्क्रीनशॉट प्रूफ सबमिट नहीं कर पाएंगे, 1v1 लॉबी में पोस्ट नहीं कर पाएंगे, या चैलेंज का जवाब नहीं दे पाएंगे।"
+        logoutModalSub: "लॉग आउट करने के बाद, आप Google से दोबारा लॉगिन करने तक मैच स्क्रीनशॉट प्रूफ सबमिट नहीं कर पाएंगे या मैसेज नहीं भेज पाएंगे।"
       }
     };
 
@@ -633,7 +673,6 @@
 
       setSafeText('tabRanked', t.tabRanked);
       setSafeText('tabContenders', t.tabContenders);
-      setSafeText('tabLobby', t.tabLobby);
       setSafeText('sort-total', t.sortTotal);
       setSafeText('sort-long', t.sortLong);
       setSafeText('sort-short', t.sortShort);
@@ -642,10 +681,6 @@
       setSafeText('colRange', t.colRange);
       setSafeText('colTotal', t.colTotal);
       setSafeText('loadingText', t.loadingText);
-      setSafeText('lobbyHeading', t.lobbyHeading);
-      setSafeText('lobbyPostBtn', t.lobbyPostBtn);
-      setSafeText('lobbyLoginPrompt', t.lobbyLoginPrompt);
-      setSafeText('lobbyListTitle', t.lobbyListTitle);
       setSafeText('footerContactText', t.footerContactText);
       setSafeText('footerText1', t.footerText1);
       setSafeText('openSubmitBtn', t.openSubmitBtn);
@@ -670,7 +705,6 @@
       renderWhatsNewContent();
       buildLiveTicker();
       renderLeaderboard();
-      renderLobby();
     };
 
     loadLeaderboard();
@@ -740,8 +774,6 @@
       const authArea = document.getElementById('authArea');
       const submitBtn = document.getElementById('openSubmitBtn');
       const adminBtn = document.getElementById('openAdminBtn');
-      const lobbyPostBox = document.getElementById('lobbyPostBox');
-      const lobbyLoginPrompt = document.getElementById('lobbyLoginPrompt');
 
       if (user) {
         isAdmin = (user.email === ADMIN_EMAIL);
@@ -763,8 +795,6 @@
           </div>
         `;
         submitBtn.classList.remove('hidden');
-        lobbyPostBox.classList.remove('hidden');
-        lobbyLoginPrompt.classList.add('hidden');
         document.getElementById('ignInput').value = userIgn;
 
         if (isAdmin) {
@@ -772,17 +802,18 @@
           loadPendingSubmissions();
         }
 
-        checkUserNotifications(user.uid);
         checkWhatsNewStatus(user.uid);
+        startRealtimeDmListener(user.uid);
+        checkNotificationPermissionBtn();
       } else {
         isAdmin = false;
         authArea.innerHTML = `<button id="loginBtn" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold px-3.5 py-1.5 rounded-xl text-xs transition cursor-pointer">${translations[currentLang].loginBtn}</button>`;
         document.getElementById('loginBtn').onclick = () => signInWithPopup(auth, provider);
         submitBtn.classList.add('hidden');
         adminBtn.classList.add('hidden');
-        lobbyPostBox.classList.add('hidden');
-        lobbyLoginPrompt.classList.remove('hidden');
         document.getElementById('whatsNewDot').classList.add('hidden');
+        document.getElementById('unreadChatBadge').classList.add('hidden');
+        if (unsubscribeDmListener) unsubscribeDmListener();
       }
       loadLeaderboard();
     });
@@ -806,7 +837,6 @@
         streak: 0,
         joinedAt: Date.now(),
         proofs: [],
-        replies: [],
         whatsNewSeenVersion: ""
       }, { merge: true });
 
@@ -821,10 +851,6 @@
         snap.forEach(d => allPlayers.push({ id: d.id, ...d.data() }));
         buildLiveTicker();
         renderLeaderboard();
-        renderLobby();
-        if (currentUser) {
-          checkUserNotifications(currentUser.uid);
-        }
         if (selectedPlayer) {
           const updated = allPlayers.find(p => p.id === selectedPlayer.id);
           if (updated) {
@@ -837,34 +863,390 @@
       }
     }
 
-    function checkUserNotifications(uid) {
-      const me = allPlayers.find(p => p.id === uid);
-      if (!me) return;
+    // ==================== MESSAGING & NOTIFICATION ENGINE ====================
 
-      const twelveHoursAgo = Date.now() - (12 * 60 * 60 * 1000);
-      const activeLfg = allPlayers.some(p => p.lfgActive && p.id !== uid && (p.lfgTime || 0) > twelveHoursAgo);
-      const hasReplies = me.replies && me.replies.length > 0;
-
-      const popup = document.getElementById('globalPopup');
-      const popupText = document.getElementById('globalPopupText');
-      const lobbyTabBadge = document.getElementById('lobbyTabBadge');
-
-      if (hasReplies) {
-        popupText.innerHTML = `💬 Someone replied to your 1v1 challenge! <button onclick="switchMainTab('lobby')" class="underline font-bold text-cyan-300 ml-1">Click to view</button>`;
-        popup.classList.remove('hidden');
-        if (lobbyTabBadge) lobbyTabBadge.classList.remove('hidden');
-      } else if (activeLfg) {
-        popupText.innerHTML = `🎯 Someone Challenged for 1v1 in Lobby! <button onclick="switchMainTab('lobby')" class="underline font-bold text-cyan-300 ml-1">Click to view</button>`;
-        popup.classList.remove('hidden');
-        if (lobbyTabBadge) lobbyTabBadge.classList.remove('hidden');
+    function checkNotificationPermissionBtn() {
+      const btn = document.getElementById('enableNotifBtn');
+      if (!btn) return;
+      if ("Notification" in window && Notification.permission === "default") {
+        btn.classList.remove('hidden');
+      } else {
+        btn.classList.add('hidden');
       }
     }
 
-    window.dismissPopup = () => {
-      document.getElementById('globalPopup').classList.add('hidden');
+    window.requestBrowserNotifications = () => {
+      if ("Notification" in window) {
+        Notification.requestPermission().then(perm => {
+          checkNotificationPermissionBtn();
+          if (perm === "granted") {
+            new Notification("Flex City Alerts Enabled!", {
+              body: "You will now receive alerts when someone sends you a 1v1 message.",
+              icon: "https://api.dicebear.com/7.x/avataaars/svg?seed=FlexCity"
+            });
+          }
+        });
+      }
     };
 
-    // Firebase-synced What's New Red Dot Check
+    function triggerBrowserNotification(title, body) {
+      if ("Notification" in window && Notification.permission === "granted" && document.hidden) {
+        new Notification(title, {
+          body: body,
+          icon: "https://api.dicebear.com/7.x/avataaars/svg?seed=FlexCity"
+        });
+      }
+    }
+
+    // Real-time listener for incoming & outgoing DMs
+    function startRealtimeDmListener(uid) {
+      if (unsubscribeDmListener) unsubscribeDmListener();
+      isFirstDmSnapshot = true;
+
+      const q = query(collection(db, "direct_messages"), where("participants", "array-contains", uid));
+      unsubscribeDmListener = onSnapshot(q, (snapshot) => {
+        allUserDms = [];
+        let unreadCount = 0;
+
+        snapshot.forEach(d => {
+          const msg = { id: d.id, ...d.data() };
+          allUserDms.push(msg);
+          if (msg.receiverUid === uid && !msg.read) {
+            unreadCount++;
+          }
+        });
+
+        allUserDms.sort((a, b) => a.timestamp - b.timestamp);
+
+        // Check for newly arrived message to play ping & show browser alert
+        if (!isFirstDmSnapshot) {
+          snapshot.docChanges().forEach(change => {
+            if (change.type === "added") {
+              const newMsg = change.doc.data();
+              if (newMsg.receiverUid === uid && !newMsg.read) {
+                playPingSound();
+                triggerBrowserNotification(`New 1v1 Message from ${newMsg.senderIgn}`, newMsg.text);
+              }
+            }
+          });
+        }
+        isFirstDmSnapshot = false;
+
+        // Update floating badge & DM tab dot
+        const badge = document.getElementById('unreadChatBadge');
+        const dmDot = document.getElementById('dmTabDot');
+        if (unreadCount > 0) {
+          badge.innerText = unreadCount > 9 ? '9+' : unreadCount;
+          badge.classList.remove('hidden');
+          if (dmDot) dmDot.classList.remove('hidden');
+        } else {
+          badge.classList.add('hidden');
+          if (dmDot) dmDot.classList.add('hidden');
+        }
+
+        // Refresh active chat view if open
+        if (!document.getElementById('chatDrawerModal').classList.contains('hidden')) {
+          if (activeDmPartner) {
+            renderActiveDmConversation();
+          } else if (activeChatTab === 'dms') {
+            renderDmPlayerList();
+          }
+        }
+      });
+    }
+
+    window.openChatDrawer = () => {
+      document.getElementById('chatDrawerModal').classList.remove('hidden');
+      document.getElementById('chatDrawerModal').classList.add('flex');
+
+      if (!currentUser) {
+        document.getElementById('chatLoginWall').classList.remove('hidden');
+        document.getElementById('globalChatView').classList.add('hidden');
+        document.getElementById('dmListView').classList.add('hidden');
+        document.getElementById('activeDmView').classList.add('hidden');
+        document.getElementById('chatModeTabs').classList.add('hidden');
+        return;
+      }
+
+      document.getElementById('chatLoginWall').classList.add('hidden');
+      document.getElementById('chatModeTabs').classList.remove('hidden');
+      
+      // Auto-switch to DMs if there are unread personal messages
+      const hasUnread = allUserDms.some(m => m.receiverUid === currentUser.uid && !m.read);
+      if (hasUnread && !activeDmPartner) {
+        switchChatTab('dms');
+      } else if (!activeDmPartner) {
+        switchChatTab(activeChatTab);
+      }
+    };
+
+    window.triggerLoginFromChat = () => {
+      closeModal('chatDrawerModal');
+      signInWithPopup(auth, provider);
+    };
+
+    window.switchChatTab = (tab) => {
+      activeChatTab = tab;
+      activeDmPartner = null;
+      document.getElementById('chatBackBtn').classList.add('hidden');
+      document.getElementById('chatDrawerTitle').innerText = "💬 Flex City Messages";
+      document.getElementById('chatModeTabs').classList.remove('hidden');
+
+      const gBtn = document.getElementById('tabChatGlobal');
+      const dBtn = document.getElementById('tabChatDms');
+
+      if (tab === 'global') {
+        gBtn.className = "py-1.5 rounded-xl text-xs font-bold bg-cyan-500 text-slate-950 transition cursor-pointer";
+        dBtn.className = "py-1.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition relative cursor-pointer";
+        document.getElementById('globalChatView').classList.remove('hidden');
+        document.getElementById('dmListView').classList.add('hidden');
+        document.getElementById('activeDmView').classList.add('hidden');
+        listenToGlobalChat();
+      } else {
+        dBtn.className = "py-1.5 rounded-xl text-xs font-bold bg-cyan-500 text-slate-950 transition relative cursor-pointer";
+        gBtn.className = "py-1.5 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition cursor-pointer";
+        document.getElementById('globalChatView').classList.add('hidden');
+        document.getElementById('dmListView').classList.remove('hidden');
+        document.getElementById('activeDmView').classList.add('hidden');
+        renderDmPlayerList();
+      }
+    };
+
+    // Global Chat Real-Time Listener (Limited to last 35 messages to protect Firebase quota)
+    function listenToGlobalChat() {
+      if (unsubscribeGlobalChat) return; // Already listening
+      const q = query(collection(db, "global_chat"), orderBy("timestamp", "desc"), limit(35));
+      unsubscribeGlobalChat = onSnapshot(q, (snapshot) => {
+        const msgs = [];
+        snapshot.forEach(d => msgs.push({ id: d.id, ...d.data() }));
+        msgs.reverse();
+
+        const list = document.getElementById('globalMessagesList');
+        if (!list) return;
+
+        if (msgs.length === 0) {
+          list.innerHTML = `<div class="text-center text-xs text-slate-500 py-8">No messages yet. Say hi or ask for a 1v1!</div>`;
+          return;
+        }
+
+        list.innerHTML = msgs.map(m => {
+          const isMe = currentUser && m.uid === currentUser.uid;
+          const timeStr = new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+          const deleteHtml = isAdmin ? `<button onclick="deleteGlobalMsg('${m.id}')" class="text-rose-400 hover:text-rose-300 ml-1.5 text-[10px] cursor-pointer" title="Delete message">🗑️</button>` : '';
+
+          if (isMe) {
+            return `
+              <div class="flex flex-col items-end">
+                <div class="bg-cyan-600 text-white px-3 py-2 rounded-2xl rounded-br-sm max-w-[80%] text-xs shadow-sm">
+                  ${escapeHtml(m.text)}
+                </div>
+                <span class="text-[9px] text-slate-500 mt-0.5">${timeStr}</span>
+              </div>
+            `;
+          } else {
+            return `
+              <div class="flex flex-col items-start">
+                <div class="flex items-center gap-1.5 mb-0.5">
+                  <button onclick="openDmWithUser('${m.uid}', '${escapeHtml(m.ign)}')" class="text-[10px] font-bold text-cyan-400 hover:underline cursor-pointer">${escapeHtml(m.ign)}</button>
+                  <span class="text-[9px] text-slate-500">${timeStr}</span>
+                  ${deleteHtml}
+                </div>
+                <div class="bg-slate-800 text-slate-200 border border-slate-700/80 px-3 py-2 rounded-2xl rounded-bl-sm max-w-[80%] text-xs shadow-sm">
+                  ${escapeHtml(m.text)}
+                </div>
+              </div>
+            `;
+          }
+        }).join('');
+
+        list.scrollTop = list.scrollHeight;
+      });
+    }
+
+    window.deleteGlobalMsg = async (msgId) => {
+      if (!isAdmin) return;
+      await deleteDoc(doc(db, "global_chat", msgId));
+    };
+
+    document.getElementById('globalChatForm').onsubmit = async (e) => {
+      e.preventDefault();
+      if (!currentUser) return;
+      const input = document.getElementById('globalMsgInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      // 3-second spam cooldown
+      if (Date.now() - lastMsgSentTime < 3000) {
+        return alert("Please wait 3 seconds before sending another message.");
+      }
+
+      lastMsgSentTime = Date.now();
+      input.value = "";
+
+      await addDoc(collection(db, "global_chat"), {
+        uid: currentUser.uid,
+        ign: userIgn,
+        text: text,
+        timestamp: Date.now()
+      });
+    };
+
+    // Render list of players for Personal DMs (Unread chats at top)
+    window.renderDmPlayerList = () => {
+      const container = document.getElementById('dmPlayersList');
+      if (!container || !currentUser) return;
+
+      const searchTerm = (document.getElementById('dmSearchInput').value || "").toLowerCase();
+      const otherPlayers = allPlayers.filter(p => p.id !== currentUser.uid && (p.ign || p.name || "").toLowerCase().includes(searchTerm));
+
+      // Sort by unread messages first, then recent activity
+      otherPlayers.sort((a, b) => {
+        const aUnread = allUserDms.filter(m => m.senderUid === a.id && m.receiverUid === currentUser.uid && !m.read).length;
+        const bUnread = allUserDms.filter(m => m.senderUid === b.id && m.receiverUid === currentUser.uid && !m.read).length;
+        if (bUnread !== aUnread) return bUnread - aUnread;
+
+        const aLast = allUserDms.filter(m => m.participants.includes(a.id)).pop();
+        const bLast = allUserDms.filter(m => m.participants.includes(b.id)).pop();
+        return (bLast?.timestamp || 0) - (aLast?.timestamp || 0);
+      });
+
+      if (otherPlayers.length === 0) {
+        container.innerHTML = `<div class="p-6 text-center text-xs text-slate-500">No players found.</div>`;
+        return;
+      }
+
+      container.innerHTML = otherPlayers.map(p => {
+        const convo = allUserDms.filter(m => m.participants.includes(p.id));
+        const lastMsg = convo[convo.length - 1];
+        const unread = convo.filter(m => m.senderUid === p.id && !m.read).length;
+
+        return `
+          <div onclick="openDmWithUser('${p.id}', '${escapeHtml(p.ign || p.name)}')" class="p-3.5 flex items-center justify-between hover:bg-slate-800/50 cursor-pointer transition">
+            <div class="flex items-center gap-3 truncate">
+              <img src="${p.photo}" class="w-9 h-9 rounded-full border border-slate-700 object-cover flex-shrink-0" />
+              <div class="truncate">
+                <div class="font-bold text-xs text-white truncate">${escapeHtml(p.ign || p.name)}</div>
+                <div class="text-[11px] ${unread > 0 ? 'text-cyan-300 font-semibold' : 'text-slate-400'} truncate">
+                  ${lastMsg ? (lastMsg.senderUid === currentUser.uid ? 'You: ' : '') + escapeHtml(lastMsg.text) : 'Tap to send 1v1 challenge...'}
+                </div>
+              </div>
+            </div>
+            ${unread > 0 ? `<span class="bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full">${unread}</span>` : `<span class="text-slate-500 text-xs">›</span>`}
+          </div>
+        `;
+      }).join('');
+    };
+
+    window.openDmWithUser = (targetUid, targetIgn) => {
+      if (!currentUser) {
+        openChatDrawer();
+        return;
+      }
+      activeDmPartner = { uid: targetUid, ign: targetIgn };
+      
+      document.getElementById('chatDrawerModal').classList.remove('hidden');
+      document.getElementById('chatDrawerModal').classList.add('flex');
+      document.getElementById('chatLoginWall').classList.add('hidden');
+      document.getElementById('chatModeTabs').classList.add('hidden');
+      document.getElementById('globalChatView').classList.add('hidden');
+      document.getElementById('dmListView').classList.add('hidden');
+      document.getElementById('activeDmView').classList.remove('hidden');
+
+      document.getElementById('chatBackBtn').classList.remove('hidden');
+      document.getElementById('chatDrawerTitle').innerText = `💬 ${targetIgn}`;
+
+      renderActiveDmConversation();
+    };
+
+    window.backToChatList = () => {
+      activeDmPartner = null;
+      switchChatTab('dms');
+    };
+
+    async function renderActiveDmConversation() {
+      if (!currentUser || !activeDmPartner) return;
+      const list = document.getElementById('dmMessagesList');
+      const convo = allUserDms.filter(m => m.participants.includes(activeDmPartner.uid));
+
+      // Mark unread messages from this partner as read
+      convo.forEach(async (m) => {
+        if (m.receiverUid === currentUser.uid && !m.read) {
+          await updateDoc(doc(db, "direct_messages", m.id), { read: true });
+        }
+      });
+
+      if (convo.length === 0) {
+        list.innerHTML = `<div class="text-center text-xs text-slate-500 py-8">Start a conversation with <span class="text-cyan-400 font-bold">${escapeHtml(activeDmPartner.ign)}</span>!</div>`;
+        return;
+      }
+
+      list.innerHTML = convo.map(m => {
+        const isMe = m.senderUid === currentUser.uid;
+        const timeStr = new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        if (isMe) {
+          return `
+            <div class="flex flex-col items-end">
+              <div class="bg-emerald-600 text-white px-3 py-2 rounded-2xl rounded-br-sm max-w-[80%] text-xs shadow-sm">
+                ${escapeHtml(m.text)}
+              </div>
+              <span class="text-[9px] text-slate-500 mt-0.5">${timeStr} ${m.read ? '✓✓' : '✓'}</span>
+            </div>
+          `;
+        } else {
+          return `
+            <div class="flex flex-col items-start">
+              <div class="bg-slate-800 text-slate-200 border border-slate-700 px-3 py-2 rounded-2xl rounded-bl-sm max-w-[80%] text-xs shadow-sm">
+                ${escapeHtml(m.text)}
+              </div>
+              <span class="text-[9px] text-slate-500 mt-0.5">${timeStr}</span>
+            </div>
+          `;
+        }
+      }).join('');
+
+      list.scrollTop = list.scrollHeight;
+    }
+
+    document.getElementById('dmChatForm').onsubmit = async (e) => {
+      e.preventDefault();
+      if (!currentUser || !activeDmPartner) return;
+      const input = document.getElementById('dmMsgInput');
+      const text = input.value.trim();
+      if (!text) return;
+
+      if (Date.now() - lastMsgSentTime < 2000) {
+        return alert("Please wait 2 seconds between messages.");
+      }
+
+      lastMsgSentTime = Date.now();
+      input.value = "";
+
+      await addDoc(collection(db, "direct_messages"), {
+        participants: [currentUser.uid, activeDmPartner.uid],
+        senderUid: currentUser.uid,
+        senderIgn: userIgn,
+        receiverUid: activeDmPartner.uid,
+        text: text,
+        read: false,
+        timestamp: Date.now()
+      });
+    };
+
+    window.messageSelectedPlayer = () => {
+      if (!selectedPlayer) return;
+      const targetUid = selectedPlayer.id;
+      const targetIgn = selectedPlayer.ign || selectedPlayer.name;
+      closeModal('playerModal');
+      openDmWithUser(targetUid, targetIgn);
+    };
+
+    function escapeHtml(str) {
+      if (!str) return '';
+      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+    }
+
+    // ==================== EXISTING LEADERBOARD & ADMIN LOGIC ====================
+
     async function checkWhatsNewStatus(uid) {
       const me = allPlayers.find(p => p.id === uid);
       const dot = document.getElementById('whatsNewDot');
@@ -927,46 +1309,21 @@
       }
     };
 
-    window.switchMainTab = async (tab) => {
+    window.switchMainTab = (tab) => {
       currentMainTab = tab;
       const rankedBtn = document.getElementById('tabRanked');
       const contendersBtn = document.getElementById('tabContenders');
-      const lobbyBtn = document.getElementById('tabLobby');
       const filters = document.getElementById('categoryFilters');
-      const lbCard = document.getElementById('leaderboardCard');
-      const lobbySec = document.getElementById('lobbySection');
 
-      const activeClass = "py-2.5 px-2 rounded-xl text-xs font-bold transition bg-cyan-500 text-slate-950 text-center shadow-sm";
-      const inactiveClass = "py-2.5 px-2 rounded-xl text-xs font-bold transition text-slate-400 hover:text-white text-center";
+      const activeClass = "py-2.5 px-2 rounded-xl text-xs font-bold transition bg-cyan-500 text-slate-950 text-center shadow-sm cursor-pointer";
+      const inactiveClass = "py-2.5 px-2 rounded-xl text-xs font-bold transition text-slate-400 hover:text-white text-center cursor-pointer";
 
       rankedBtn.className = tab === 'ranked' ? activeClass : inactiveClass;
       contendersBtn.className = tab === 'contenders' ? activeClass : inactiveClass;
-      lobbyBtn.className = tab === 'lobby' ? activeClass : inactiveClass;
 
-      if (tab === 'lobby') {
-        filters.classList.add('hidden');
-        lbCard.classList.add('hidden');
-        lobbySec.classList.remove('hidden');
-        const badge = document.getElementById('lobbyTabBadge');
-        if (badge) badge.classList.add('hidden');
-        document.getElementById('globalPopup').classList.add('hidden');
-
-        // Clear user replies notification on entering lobby tab
-        if (currentUser) {
-          const me = allPlayers.find(p => p.id === currentUser.uid);
-          if (me && me.replies && me.replies.length > 0) {
-            await updateDoc(doc(db, "players", currentUser.uid), { replies: [] });
-            me.replies = [];
-          }
-        }
-        renderLobby();
-      } else {
-        lbCard.classList.remove('hidden');
-        lobbySec.classList.add('hidden');
-        if (tab === 'ranked') filters.classList.remove('hidden');
-        else filters.classList.add('hidden');
-        renderLeaderboard();
-      }
+      if (tab === 'ranked') filters.classList.remove('hidden');
+      else filters.classList.add('hidden');
+      renderLeaderboard();
     };
 
     window.setSort = (type) => {
@@ -1001,7 +1358,7 @@
       const sorted = filtered.sort((a, b) => {
         if (currentMainTab === 'contenders') return (b.joinedAt || 0) - (a.joinedAt || 0);
         if (currentSort === 'long') return (b.longPoints || 0) - (a.longPoints || 0);
-        if (currentSort === 'short') return (b.shortPoints || 0) - (b.shortPoints || 0);
+        if (currentSort === 'short') return (b.shortPoints || 0) - (a.shortPoints || 0);
         return ((b.longPoints || 0) + (b.shortPoints || 0)) - ((a.longPoints || 0) + (a.shortPoints || 0));
       });
 
@@ -1045,88 +1402,6 @@
         `;
       }).join('');
     }
-
-    // 1v1 Matchmaking Lobby Logic
-    document.getElementById('lobbyForm').onsubmit = async (e) => {
-      e.preventDefault();
-      if (!currentUser) return;
-      const mode = document.getElementById('lobbyMode').value;
-      const note = document.getElementById('lobbyNote').value.trim() || "Ready for 1v1 challenge!";
-
-      await updateDoc(doc(db, "players", currentUser.uid), {
-        lfgActive: true,
-        lfgMode: mode,
-        lfgNote: note,
-        lfgTime: Date.now(),
-        seenBy: []
-      });
-
-      document.getElementById('lobbyNote').value = "";
-      loadLeaderboard();
-    };
-
-    window.removeMyLobbyPost = async () => {
-      if (!currentUser) return;
-      await updateDoc(doc(db, "players", currentUser.uid), { lfgActive: false, seenBy: [] });
-      loadLeaderboard();
-    };
-
-    function renderLobby() {
-      const lobbyList = document.getElementById('lobbyList');
-      if (!lobbyList) return;
-
-      const twelveHoursAgo = Date.now() - (12 * 60 * 60 * 1000);
-      const activePlayers = allPlayers
-        .filter(p => p.lfgActive && (p.lfgTime || 0) > twelveHoursAgo)
-        .sort((a, b) => (b.lfgTime || 0) - (a.lfgTime || 0));
-
-      if (activePlayers.length === 0) {
-        lobbyList.innerHTML = `<div class="p-8 text-center text-slate-400 text-xs">${currentLang === 'hi' ? 'अभी कोई खिलाड़ी लॉबी में नहीं है। सबसे पहले पोस्ट करें!' : 'No active challengers in lobby right now. Be the first to post!'}</div>`;
-        return;
-      }
-
-      lobbyList.innerHTML = activePlayers.map(p => {
-        const isMe = currentUser && p.id === currentUser.uid;
-        const seenList = p.seenBy || [];
-        let seenHtml = "";
-        if (seenList.length > 0) {
-          const displayNames = seenList.slice(0, 3).map(s => s.ign).join(', ');
-          const extraCount = seenList.length > 3 ? ` +${seenList.length - 3}` : '';
-          seenHtml = `<div class="text-[10px] text-cyan-400 mt-1.5 font-medium">👀 Seen by: ${displayNames}${extraCount}</div>`;
-        }
-
-        return `
-          <div class="p-4 flex items-center justify-between gap-3 hover:bg-slate-800/30 transition">
-            <div class="flex items-center gap-3 truncate">
-              <img src="${p.photo}" class="w-9 h-9 rounded-full border border-emerald-500/40 object-cover flex-shrink-0 shadow-sm" />
-              <div class="truncate">
-                <div class="flex items-center gap-2">
-                  <span class="font-bold text-xs sm:text-sm text-white">${p.ign || p.name}</span>
-                  <span class="bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 px-2 py-0.5 rounded-md text-[10px] font-semibold">${p.lfgMode || '1v1'}</span>
-                </div>
-                <p class="text-xs text-slate-300 truncate mt-1">"${p.lfgNote || ''}"</p>
-                ${seenHtml}
-              </div>
-            </div>
-            ${isMe ? `<button onclick="removeMyLobbyPost()" class="bg-rose-500/20 hover:bg-rose-500/30 text-rose-400 border border-rose-500/30 px-3 py-1.5 rounded-xl text-xs font-semibold flex-shrink-0 transition cursor-pointer">Remove</button>` : `<button onclick="openPlayerWithSeen('${p.id}')" class="bg-slate-800 hover:bg-slate-700 text-cyan-300 border border-slate-700 px-3 py-1.5 rounded-xl text-xs font-semibold flex-shrink-0 transition shadow-sm cursor-pointer">Stats & Reply</button>`}
-          </div>
-        `;
-      }).join('');
-    }
-
-    window.openPlayerWithSeen = async (id) => {
-      openPlayer(id);
-      if (currentUser && currentUser.uid !== id) {
-        const targetPlayer = allPlayers.find(p => p.id === id);
-        if (targetPlayer && targetPlayer.lfgActive) {
-          let seenBy = targetPlayer.seenBy || [];
-          if (!seenBy.some(s => s.uid === currentUser.uid)) {
-            seenBy.push({ uid: currentUser.uid, ign: userIgn });
-            await updateDoc(doc(db, "players", id), { seenBy });
-          }
-        }
-      }
-    };
 
     window.openAdminEditPlayer = (playerId) => {
       const p = allPlayers.find(x => x.id === playerId);
@@ -1189,31 +1464,16 @@
       document.getElementById('modalName').innerText = selectedPlayer.ign || selectedPlayer.name;
       document.getElementById('modalStreakBadge').innerHTML = getStreakBadgeHtml(selectedPlayer.streak);
       
-      const actionBox = document.getElementById('playerModalActionBox');
-      if (currentUser && currentUser.uid !== id && selectedPlayer.lfgActive) {
-        actionBox.classList.remove('hidden');
+      const dmBox = document.getElementById('playerDmTriggerBox');
+      if (currentUser && currentUser.uid !== id) {
+        dmBox.classList.remove('hidden');
       } else {
-        actionBox.classList.add('hidden');
+        dmBox.classList.add('hidden');
       }
 
       updatePlayerModalView();
       document.getElementById('playerModal').classList.remove('hidden');
       document.getElementById('playerModal').classList.add('flex');
-    };
-
-    window.sendPlayerReply = async () => {
-      if (!currentUser || !selectedPlayer) return;
-      const replyText = document.getElementById('playerModalReplyInput').value.trim();
-      if (!replyText) return alert("Please type a reply message!");
-
-      let replies = selectedPlayer.replies || [];
-      replies.push({ fromIgn: userIgn, text: replyText, timestamp: Date.now() });
-
-      await updateDoc(doc(db, "players", selectedPlayer.id), { replies });
-      document.getElementById('playerModalReplyInput').value = "";
-      alert("Reply sent successfully to " + (selectedPlayer.ign || "Player") + "!");
-      closeModal('playerModal');
-      loadLeaderboard();
     };
 
     function updatePlayerModalView() {
@@ -1253,11 +1513,11 @@
       const longBtn = document.getElementById('tabLongBtn');
       const shortBtn = document.getElementById('tabShortBtn');
       if (tab === 'long') {
-        longBtn.className = "py-1.5 rounded-lg text-xs font-semibold bg-cyan-500 text-slate-950";
-        shortBtn.className = "py-1.5 rounded-lg text-xs font-semibold text-slate-400";
+        longBtn.className = "py-1.5 rounded-lg text-xs font-semibold bg-cyan-500 text-slate-950 cursor-pointer";
+        shortBtn.className = "py-1.5 rounded-lg text-xs font-semibold text-slate-400 cursor-pointer";
       } else {
-        shortBtn.className = "py-1.5 rounded-lg text-xs font-semibold bg-cyan-500 text-slate-950";
-        longBtn.className = "py-1.5 rounded-lg text-xs font-semibold text-slate-400";
+        shortBtn.className = "py-1.5 rounded-lg text-xs font-semibold bg-cyan-500 text-slate-950 cursor-pointer";
+        longBtn.className = "py-1.5 rounded-lg text-xs font-semibold text-slate-400 cursor-pointer";
       }
 
       if (!selectedPlayer) return;
@@ -1308,9 +1568,11 @@
         proofs.splice(proofIndex, 1);
         const isLong = targetProof.category === 'long';
         const ptsToRemove = targetProof.pointsAdded || 0;
+        const newStreak = Math.max(0, proofs.length);
 
         const updateData = {
           proofs: proofs,
+          streak: newStreak,
           longPoints: isLong ? Math.max(0, (data.longPoints || 0) - ptsToRemove) : (data.longPoints || 0),
           shortPoints: !isLong ? Math.max(0, (data.shortPoints || 0) - ptsToRemove) : (data.shortPoints || 0),
           longMatches: isLong ? Math.max(0, (data.longMatches || 0) - 1) : (data.longMatches || 0),
@@ -1345,7 +1607,6 @@
       reader.readAsDataURL(file);
     }
 
-    // Explicit Proof Modal triggers
     window.openSubmitProofModal = () => {
       document.getElementById('ignInput').value = userIgn;
       document.getElementById('submitModal').classList.remove('hidden');
@@ -1491,9 +1752,11 @@
           });
           if (proofs.length > 15) proofs = proofs.slice(0, 15);
 
+          const newStreak = proofs.length;
+
           const updateData = { 
             proofs,
-            streak: (data.streak || 0) + 1
+            streak: newStreak
           };
           if (s.category === 'long') {
             updateData.longPoints = (data.longPoints || 0) + pts;
