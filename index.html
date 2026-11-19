@@ -22,7 +22,6 @@
     @keyframes ping-dot { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
     .animate-ping-dot { animation: ping-dot 1.5s infinite; }
     .ticker-fade { transition: opacity 0.4s ease-in-out; }
-    /* Custom thin scrollbar for chat */
     .chat-scroll::-webkit-scrollbar { width: 4px; }
     .chat-scroll::-webkit-scrollbar-track { background: #0f131d; }
     .chat-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
@@ -195,13 +194,11 @@
 
   </main>
 
-  <!-- Floating Instagram-Style Message Button (Bottom Right) -->
+  <!-- Floating Message Button (Bottom Right) -->
   <button onclick="openChatDrawer()" id="floatingChatBtn" class="fixed bottom-5 right-5 z-40 w-13 h-13 p-3.5 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white shadow-xl shadow-cyan-500/25 flex items-center justify-center transition transform active:scale-95 cursor-pointer" title="Messages & Global Chat">
-    <!-- Paper Plane / DM SVG Icon -->
     <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
       <path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
     </svg>
-    <!-- Unread Red Dot / Count Badge -->
     <span id="unreadChatBadge" class="hidden absolute -top-1 -right-1 min-w-[20px] h-5 px-1 rounded-full bg-red-500 text-white text-[10px] font-black flex items-center justify-center border-2 border-[#0b0e14] animate-bounce">1</span>
   </button>
 
@@ -249,21 +246,17 @@
         </form>
       </div>
 
-      <!-- VIEW 2: Personal DMs List (Search & Select Player) -->
+      <!-- VIEW 2: Personal DMs List -->
       <div id="dmListView" class="hidden flex-1 flex flex-col overflow-hidden">
         <div class="p-2.5 border-b border-slate-800/80">
           <input type="text" id="dmSearchInput" oninput="renderDmPlayerList()" placeholder="🔍 Search player IGN to message..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500" />
         </div>
-        <div id="dmPlayersList" class="flex-1 overflow-y-auto divide-y divide-slate-800/50 chat-scroll">
-          <!-- Player list populated dynamically -->
-        </div>
+        <div id="dmPlayersList" class="flex-1 overflow-y-auto divide-y divide-slate-800/50 chat-scroll"></div>
       </div>
 
       <!-- VIEW 3: Active 1-on-1 Conversation -->
       <div id="activeDmView" class="hidden flex-1 flex flex-col overflow-hidden">
-        <div id="dmMessagesList" class="flex-1 overflow-y-auto p-3.5 space-y-2.5 chat-scroll">
-          <!-- Direct messages populated dynamically -->
-        </div>
+        <div id="dmMessagesList" class="flex-1 overflow-y-auto p-3.5 space-y-2.5 chat-scroll"></div>
         <form id="dmChatForm" class="p-2.5 border-t border-slate-800 bg-[#0d111a] flex gap-2">
           <input type="text" id="dmMsgInput" maxlength="150" placeholder="Type a direct message..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500" />
           <button type="submit" id="sendDmBtn" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-3.5 py-2 rounded-xl text-xs transition cursor-pointer">Send</button>
@@ -346,7 +339,6 @@
         </div>
       </div>
 
-      <!-- Direct Message Button on Player Profile -->
       <div id="playerDmTriggerBox" class="mb-3 hidden">
         <button onclick="messageSelectedPlayer()" class="w-full bg-gradient-to-r from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white font-bold py-2 rounded-xl text-xs transition shadow-md flex items-center justify-center gap-1.5 cursor-pointer">
           💬 Send Direct Message / Challenge
@@ -364,7 +356,6 @@
 
       <div id="modalStats" class="grid grid-cols-2 gap-2.5 mb-3"></div>
 
-      <!-- Head-to-Head Rivalry Section -->
       <div id="rivalrySection" class="mb-3 hidden">
         <h3 id="rivalryTitle" class="text-[11px] font-semibold uppercase text-amber-400 mb-1.5 tracking-wider">⚔️ Head-to-Head Victories</h3>
         <div id="rivalryList" class="flex flex-wrap gap-1.5"></div>
@@ -514,11 +505,9 @@
     let lastMsgSentTime = 0;
     let unsubscribeGlobalChat = null;
     let unsubscribeDmListener = null;
-    let unsubscribeUnreadListener = null;
     let allUserDms = [];
     let isFirstDmSnapshot = true;
 
-    // Notification Sound Generator (Clean Web Audio Ping)
     function playPingSound() {
       try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
@@ -527,7 +516,7 @@
         osc.type = 'sine';
         osc.frequency.setValueAtTime(880, ctx.currentTime);
         osc.frequency.exponentialRampToValueAtTime(440, ctx.currentTime + 0.15);
-        gain.gain.setValueAtTime(0.15, ctx.currentTime);
+        gain.gain.setValueAtTime(0.18, ctx.currentTime);
         gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + 0.15);
         osc.connect(gain);
         gain.connect(ctx.destination);
@@ -536,19 +525,19 @@
       } catch (e) {}
     }
 
-    // What's New Feature List
+    // What's New Items (Ideas + Bug Fixes only)
     const whatsNewData = [
+      {
+        version: "v2.1",
+        date: "Nov 19, 2026 • 03:20 PM",
+        en: "✨ Idea: Seen indicator highlight in Personal DMs when opponent reads your message + instant alert on incoming messages. 🛠️ Bug Fix: Cleaned up What's New update notes and fixed duplicate message listener refresh.",
+        hi: "✨ आइडिया: पर्सनल DM में सामने वाला मैसेज पढ़े तो Seen इंडिकेटर कलर हाइलाइट होगा + नया मैसेज आते ही तुरंत अलर्ट। 🛠️ बग फिक्स: What's New नोट्स को साफ किया और मैसेज लिसनर रिफ्रेश बग फिक्स किया।"
+      },
       {
         version: "v2.0",
         date: "Nov 19, 2026 • 12:20 PM",
-        en: "💬 Instagram-Style Messaging & Alerts: Replaced the 1v1 Lobby with a floating Direct Message & Global Chat system! Tap any player to DM them directly with sound & browser notifications.",
-        hi: "💬 इंस्टाग्राम जैसा मैसेजिंग और अलर्ट: 1v1 लॉबी की जगह अब फ्लोटिंग पर्सनल DM और ग्लोबल चैट आ गया है! किसी भी खिलाड़ी पर क्लिक करके सीधे मैसेज करें।"
-      },
-      {
-        version: "v1.3",
-        date: "Nov 18, 2026 • 10:00 AM",
-        en: "🔥 Accurate Streak & FAQ: Fixed streak count to match verified match proofs + Added Frequently Asked Questions section.",
-        hi: "🔥 सटीक स्ट्रीक और FAQ: वेरीफाइड प्रूफ्स के अनुसार स्ट्रीक काउंट को सही किया गया + अक्सर पूछे जाने वाले सवाल (FAQ) जोड़े गए।"
+        en: "✨ Idea: Floating Direct Message & Global Chat system to challenge players directly and chat in All room. 🛠️ Bug Fix: Removed clutter from top navigation for cleaner mobile view.",
+        hi: "✨ आइडिया: खिलाड़ियों को सीधे चैलेंज करने और All चैट रूम में बात करने के लिए फ्लोटिंग DM और ग्लोबल चैट। 🛠️ बग फिक्स: मोबाइल व्यू को साफ रखने के लिए टॉप नेविगेशन को सरल किया।"
       }
     ];
 
@@ -881,7 +870,7 @@
           checkNotificationPermissionBtn();
           if (perm === "granted") {
             new Notification("Flex City Alerts Enabled!", {
-              body: "You will now receive alerts when someone sends you a 1v1 message.",
+              body: "You will now receive instant alerts when someone sends you a 1v1 message.",
               icon: "https://api.dicebear.com/7.x/avataaars/svg?seed=FlexCity"
             });
           }
@@ -890,15 +879,16 @@
     };
 
     function triggerBrowserNotification(title, body) {
-      if ("Notification" in window && Notification.permission === "granted" && document.hidden) {
-        new Notification(title, {
-          body: body,
-          icon: "https://api.dicebear.com/7.x/avataaars/svg?seed=FlexCity"
-        });
+      if ("Notification" in window && Notification.permission === "granted") {
+        try {
+          new Notification(title, {
+            body: body,
+            icon: "https://api.dicebear.com/7.x/avataaars/svg?seed=FlexCity"
+          });
+        } catch (e) {}
       }
     }
 
-    // Real-time listener for incoming & outgoing DMs
     function startRealtimeDmListener(uid) {
       if (unsubscribeDmListener) unsubscribeDmListener();
       isFirstDmSnapshot = true;
@@ -918,7 +908,6 @@
 
         allUserDms.sort((a, b) => a.timestamp - b.timestamp);
 
-        // Check for newly arrived message to play ping & show browser alert
         if (!isFirstDmSnapshot) {
           snapshot.docChanges().forEach(change => {
             if (change.type === "added") {
@@ -932,7 +921,6 @@
         }
         isFirstDmSnapshot = false;
 
-        // Update floating badge & DM tab dot
         const badge = document.getElementById('unreadChatBadge');
         const dmDot = document.getElementById('dmTabDot');
         if (unreadCount > 0) {
@@ -944,7 +932,6 @@
           if (dmDot) dmDot.classList.add('hidden');
         }
 
-        // Refresh active chat view if open
         if (!document.getElementById('chatDrawerModal').classList.contains('hidden')) {
           if (activeDmPartner) {
             renderActiveDmConversation();
@@ -971,7 +958,6 @@
       document.getElementById('chatLoginWall').classList.add('hidden');
       document.getElementById('chatModeTabs').classList.remove('hidden');
       
-      // Auto-switch to DMs if there are unread personal messages
       const hasUnread = allUserDms.some(m => m.receiverUid === currentUser.uid && !m.read);
       if (hasUnread && !activeDmPartner) {
         switchChatTab('dms');
@@ -1012,9 +998,8 @@
       }
     };
 
-    // Global Chat Real-Time Listener (Limited to last 35 messages to protect Firebase quota)
     function listenToGlobalChat() {
-      if (unsubscribeGlobalChat) return; // Already listening
+      if (unsubscribeGlobalChat) return;
       const q = query(collection(db, "global_chat"), orderBy("timestamp", "desc"), limit(35));
       unsubscribeGlobalChat = onSnapshot(q, (snapshot) => {
         const msgs = [];
@@ -1075,7 +1060,6 @@
       const text = input.value.trim();
       if (!text) return;
 
-      // 3-second spam cooldown
       if (Date.now() - lastMsgSentTime < 3000) {
         return alert("Please wait 3 seconds before sending another message.");
       }
@@ -1091,7 +1075,6 @@
       });
     };
 
-    // Render list of players for Personal DMs (Unread chats at top)
     window.renderDmPlayerList = () => {
       const container = document.getElementById('dmPlayersList');
       if (!container || !currentUser) return;
@@ -1099,7 +1082,6 @@
       const searchTerm = (document.getElementById('dmSearchInput').value || "").toLowerCase();
       const otherPlayers = allPlayers.filter(p => p.id !== currentUser.uid && (p.ign || p.name || "").toLowerCase().includes(searchTerm));
 
-      // Sort by unread messages first, then recent activity
       otherPlayers.sort((a, b) => {
         const aUnread = allUserDms.filter(m => m.senderUid === a.id && m.receiverUid === currentUser.uid && !m.read).length;
         const bUnread = allUserDms.filter(m => m.senderUid === b.id && m.receiverUid === currentUser.uid && !m.read).length;
@@ -1168,7 +1150,6 @@
       const list = document.getElementById('dmMessagesList');
       const convo = allUserDms.filter(m => m.participants.includes(activeDmPartner.uid));
 
-      // Mark unread messages from this partner as read
       convo.forEach(async (m) => {
         if (m.receiverUid === currentUser.uid && !m.read) {
           await updateDoc(doc(db, "direct_messages", m.id), { read: true });
@@ -1184,12 +1165,20 @@
         const isMe = m.senderUid === currentUser.uid;
         const timeStr = new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         if (isMe) {
+          // Seen colour highlight: cyan-400 when seen, slate-500 when delivered/unseen
+          const statusHtml = m.read
+            ? `<span class="text-cyan-400 font-bold">Seen ✓✓</span>`
+            : `<span class="text-slate-500">Sent ✓</span>`;
+          const bubbleStyle = m.read
+            ? "bg-emerald-600/95 border border-cyan-400/50 text-white"
+            : "bg-emerald-600 text-white";
+
           return `
             <div class="flex flex-col items-end">
-              <div class="bg-emerald-600 text-white px-3 py-2 rounded-2xl rounded-br-sm max-w-[80%] text-xs shadow-sm">
+              <div class="${bubbleStyle} px-3 py-2 rounded-2xl rounded-br-sm max-w-[80%] text-xs shadow-sm transition">
                 ${escapeHtml(m.text)}
               </div>
-              <span class="text-[9px] text-slate-500 mt-0.5">${timeStr} ${m.read ? '✓✓' : '✓'}</span>
+              <span class="text-[9px] text-slate-400 mt-0.5 flex items-center gap-1">${timeStr} • ${statusHtml}</span>
             </div>
           `;
         } else {
