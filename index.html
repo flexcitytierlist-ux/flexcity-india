@@ -32,6 +32,18 @@
     ⚠️ Instagram Browser Detected! Tap <span class="underline">⋮ (3 dots)</span> at top right & select <span class="underline">"Open in Chrome / Browser"</span> to Login.
   </div>
 
+  <!-- Auto Allow Notification Prompt Banner (Appears on Entry if not allowed yet) -->
+  <div id="notifPromptBanner" class="hidden bg-gradient-to-r from-cyan-600 to-blue-700 text-white px-3 py-2.5 text-xs flex items-center justify-between gap-2 shadow-md">
+    <div class="flex items-center gap-2 font-medium">
+      <span>🔔</span>
+      <span>Allow notifications to get instant DM alerts & What's New updates!</span>
+    </div>
+    <div class="flex items-center gap-1.5 flex-shrink-0">
+      <button onclick="requestBrowserNotifications()" class="bg-white text-slate-950 font-bold px-3 py-1 rounded-lg text-xs hover:bg-slate-100 transition cursor-pointer">Allow</button>
+      <button onclick="dismissNotifBanner()" class="text-white/80 hover:text-white px-1.5 text-base font-bold cursor-pointer">&times;</button>
+    </div>
+  </div>
+
   <!-- Live 5-Second Rotating Activity Ticker -->
   <div class="bg-gradient-to-r from-cyan-950/90 via-slate-900 to-cyan-950/90 border-b border-cyan-500/25 px-3 py-2 text-center flex items-center justify-center gap-2">
     <div id="liveTickerText" class="ticker-fade text-xs font-semibold text-cyan-300 tracking-wide">
@@ -489,6 +501,11 @@
     const db = getFirestore(app);
     const provider = new GoogleAuthProvider();
 
+    // Register Service Worker for Push Notifications
+    if ('serviceWorker' in navigator) {
+      navigator.serviceWorker.register('/firebase-messaging-sw.js').catch(() => {});
+    }
+
     let currentUser = null;
     let allPlayers = [];
     let currentSort = 'total';
@@ -525,19 +542,19 @@
       } catch (e) {}
     }
 
-    // What's New Items (Ideas + Bug Fixes only)
+    // What's New Items (Ideas + Bug Fixes only — adding a new top entry triggers automatic alert!)
     const whatsNewData = [
+      {
+        version: "v2.2",
+        date: "Nov 19, 2026 • 03:50 PM",
+        en: "✨ Idea: Auto notification permission prompt on site entry + instant DM sender & message preview in notifications + auto alerts when What's New updates. 🛠️ Bug Fix: Added Service Worker support for reliable notifications.",
+        hi: "✨ आइडिया: वेबसाइट खोलते ही Allow Notification प्रॉम्प्ट + नोटिफिकेशन में भेजने वाले का नाम और पूरा मैसेज + What's New अपडेट होने पर ऑटो अलर्ट। 🛠️ बग फिक्स: नोटिफिकेशन के लिए सर्विस वर्कर जोड़ा गया।"
+      },
       {
         version: "v2.1",
         date: "Nov 19, 2026 • 03:20 PM",
-        en: "✨ Idea: Seen indicator highlight in Personal DMs when opponent reads your message + instant alert on incoming messages. 🛠️ Bug Fix: Cleaned up What's New update notes and fixed duplicate message listener refresh.",
-        hi: "✨ आइडिया: पर्सनल DM में सामने वाला मैसेज पढ़े तो Seen इंडिकेटर कलर हाइलाइट होगा + नया मैसेज आते ही तुरंत अलर्ट। 🛠️ बग फिक्स: What's New नोट्स को साफ किया और मैसेज लिसनर रिफ्रेश बग फिक्स किया।"
-      },
-      {
-        version: "v2.0",
-        date: "Nov 19, 2026 • 12:20 PM",
-        en: "✨ Idea: Floating Direct Message & Global Chat system to challenge players directly and chat in All room. 🛠️ Bug Fix: Removed clutter from top navigation for cleaner mobile view.",
-        hi: "✨ आइडिया: खिलाड़ियों को सीधे चैलेंज करने और All चैट रूम में बात करने के लिए फ्लोटिंग DM और ग्लोबल चैट। 🛠️ बग फिक्स: मोबाइल व्यू को साफ रखने के लिए टॉप नेविगेशन को सरल किया।"
+        en: "✨ Idea: Seen indicator highlight in Personal DMs when opponent reads your message. 🛠️ Bug Fix: Cleaned up What's New notes and fixed duplicate message listener refresh.",
+        hi: "✨ आइडिया: पर्सनल DM में सामने वाला मैसेज पढ़े तो Seen कलर हाइलाइट होगा। 🛠️ बग फिक्स: What's New नोट्स साफ किए और मैसेज रिफ्रेश बग फिक्स किया।"
       }
     ];
 
@@ -696,7 +713,44 @@
       renderLeaderboard();
     };
 
+    // Trigger Notification Prompt on Site Entry
+    initNotificationPromptOnEntry();
     loadLeaderboard();
+
+    function initNotificationPromptOnEntry() {
+      if (!("Notification" in window)) return;
+      if (Notification.permission === "default") {
+        // Attempt direct browser request first, and show banner as reliable fallback
+        try {
+          Notification.requestPermission().then(perm => {
+            if (perm === "granted") {
+              document.getElementById('notifPromptBanner').classList.add('hidden');
+              checkWhatsNewGuestAlert();
+            } else if (perm === "default") {
+              document.getElementById('notifPromptBanner').classList.remove('hidden');
+            }
+          });
+        } catch (e) {
+          document.getElementById('notifPromptBanner').classList.remove('hidden');
+        }
+      } else if (Notification.permission === "granted") {
+        checkWhatsNewGuestAlert();
+      }
+    }
+
+    window.dismissNotifBanner = () => {
+      document.getElementById('notifPromptBanner').classList.add('hidden');
+    };
+
+    // Automatic What's New Notification for visitors & logged-in users
+    function checkWhatsNewGuestAlert() {
+      const latest = whatsNewData[0];
+      const seenLocal = localStorage.getItem('fc_whatsnew_notified');
+      if (seenLocal !== latest.version) {
+        localStorage.setItem('fc_whatsnew_notified', latest.version);
+        triggerSystemNotification(`✨ What's New in Flex City (${latest.version})`, latest.en);
+      }
+    }
 
     setInterval(() => {
       if (tickerMessages.length > 1) {
@@ -847,6 +901,7 @@
             updatePlayerModalView();
           }
         }
+        if (currentUser) checkWhatsNewStatus(currentUser.uid);
       } catch (err) {
         console.error("Error loading leaderboard:", err);
       }
@@ -856,11 +911,13 @@
 
     function checkNotificationPermissionBtn() {
       const btn = document.getElementById('enableNotifBtn');
-      if (!btn) return;
+      const banner = document.getElementById('notifPromptBanner');
       if ("Notification" in window && Notification.permission === "default") {
-        btn.classList.remove('hidden');
+        if (btn) btn.classList.remove('hidden');
+        if (banner) banner.classList.remove('hidden');
       } else {
-        btn.classList.add('hidden');
+        if (btn) btn.classList.add('hidden');
+        if (banner) banner.classList.add('hidden');
       }
     }
 
@@ -869,24 +926,29 @@
         Notification.requestPermission().then(perm => {
           checkNotificationPermissionBtn();
           if (perm === "granted") {
-            new Notification("Flex City Alerts Enabled!", {
-              body: "You will now receive instant alerts when someone sends you a 1v1 message.",
-              icon: "https://api.dicebear.com/7.x/avataaars/svg?seed=FlexCity"
-            });
+            triggerSystemNotification("Flex City Notifications Active!", "You will now receive instant DM messages & What's New updates.");
           }
         });
       }
     };
 
-    function triggerBrowserNotification(title, body) {
-      if ("Notification" in window && Notification.permission === "granted") {
-        try {
+    function triggerSystemNotification(title, body) {
+      if (!("Notification" in window) || Notification.permission !== "granted") return;
+      try {
+        if (navigator.serviceWorker && navigator.serviceWorker.controller) {
+          navigator.serviceWorker.ready.then(reg => {
+            reg.showNotification(title, {
+              body: body,
+              icon: "https://api.dicebear.com/7.x/avataaars/svg?seed=FlexCity"
+            });
+          });
+        } else {
           new Notification(title, {
             body: body,
             icon: "https://api.dicebear.com/7.x/avataaars/svg?seed=FlexCity"
           });
-        } catch (e) {}
-      }
+        }
+      } catch (e) {}
     }
 
     function startRealtimeDmListener(uid) {
@@ -914,7 +976,11 @@
               const newMsg = change.doc.data();
               if (newMsg.receiverUid === uid && !newMsg.read) {
                 playPingSound();
-                triggerBrowserNotification(`New 1v1 Message from ${newMsg.senderIgn}`, newMsg.text);
+                // Show exact sender name + actual message inside notification
+                triggerSystemNotification(
+                  `💬 ${newMsg.senderIgn} sent you a message`,
+                  newMsg.text
+                );
               }
             }
           });
@@ -1165,7 +1231,6 @@
         const isMe = m.senderUid === currentUser.uid;
         const timeStr = new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
         if (isMe) {
-          // Seen colour highlight: cyan-400 when seen, slate-500 when delivered/unseen
           const statusHtml = m.read
             ? `<span class="text-cyan-400 font-bold">Seen ✓✓</span>`
             : `<span class="text-slate-500">Sent ✓</span>`;
@@ -1241,11 +1306,17 @@
       const dot = document.getElementById('whatsNewDot');
       if (!dot) return;
 
-      const latestVersion = whatsNewData[0].version;
-      if (me && me.whatsNewSeenVersion === latestVersion) {
+      const latest = whatsNewData[0];
+      if (me && me.whatsNewSeenVersion === latest.version) {
         dot.classList.add('hidden');
       } else {
         dot.classList.remove('hidden');
+        // Send automatic notification once per new version
+        const notifiedVer = localStorage.getItem('fc_whatsnew_notified');
+        if (notifiedVer !== latest.version) {
+          localStorage.setItem('fc_whatsnew_notified', latest.version);
+          triggerSystemNotification(`✨ What's New in Flex City (${latest.version})`, latest.en);
+        }
       }
     }
 
