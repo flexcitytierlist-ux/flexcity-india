@@ -1,11 +1,15 @@
 <!DOCTYPE html><html lang="en"><head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
+  
   <!-- SEO Title, Site Identity & Description -->
   <title>Flex City Leaderboard — Official Community 1v1 Tiers & Top Players</title>
   <meta name="description" content="Official Flex City India community leaderboard featuring top player rankings, 1v1 PvP tiers, verified match proofs, and live rank swaps." />
   <meta name="google-site-verification" content="zuMmJx8wSnGZGju9FlPyZUGX5pKBlj47MJNoj90Sg9Y" />
+
+  <!-- PWA Manifest & Theme Color -->
+  <link rel="manifest" href="/manifest.json" />
+  <meta name="theme-color" content="#06b6d4" />
 
   <!-- OpenGraph & Self-Contained FC SVG Favicon -->
   <meta property="og:site_name" content="Flex City Leaderboard" />
@@ -61,6 +65,29 @@
     }
     .animate-pop-menu {
       animation: popInMenu 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    /* Smooth Slide & Scale Animation for Chat Drawer */
+    @keyframes chatBackdropIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @keyframes chatSheetIn {
+      0% { opacity: 0; transform: translateY(45px) scale(0.94); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes chatSheetOut {
+      0% { opacity: 1; transform: translateY(0) scale(1); }
+      100% { opacity: 0; transform: translateY(35px) scale(0.95); }
+    }
+    .chat-backdrop-enter {
+      animation: chatBackdropIn 0.24s ease-out forwards;
+    }
+    .chat-sheet-enter {
+      animation: chatSheetIn 0.32s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+    }
+    .chat-sheet-exit {
+      animation: chatSheetOut 0.2s ease-in forwards;
     }
   </style></head><body class="min-h-screen flex flex-col antialiased pb-16">
 
@@ -139,15 +166,25 @@
       </div>
     </div>
 
-    <!-- Region & Action Bar -->
+    <!-- Region, Optional Subtle Install Pill & Action Bar -->
     <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-      <div class="flex items-center gap-2 bg-slate-900/90 p-1.5 rounded-xl border border-slate-800 self-start">
-        <button class="px-3.5 py-1.5 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-semibold text-xs flex items-center gap-1.5">
-          🇮🇳 India
-        </button>
-        <button disabled class="px-3.5 py-1.5 rounded-lg text-slate-500 text-xs cursor-not-allowed">
-          🌍 Global (Soon)
-        </button>
+      <div class="flex items-center flex-wrap gap-2">
+        <div class="flex items-center gap-2 bg-slate-900/90 p-1.5 rounded-xl border border-slate-800">
+          <button class="px-3.5 py-1.5 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-semibold text-xs flex items-center gap-1.5">
+            🇮🇳 India
+          </button>
+          <button disabled class="px-3.5 py-1.5 rounded-lg text-slate-500 text-xs cursor-not-allowed">
+            🌍 Global (Soon)
+          </button>
+        </div>
+
+        <!-- Subtle Optional Install App Pill (Only shows when browser supports install & user hasn't dismissed it) -->
+        <div id="pwaInstallPill" class="hidden items-center gap-1 bg-slate-900/95 border border-cyan-500/35 rounded-xl px-2.5 py-1.5 shadow-sm">
+          <button onclick="triggerPwaInstall()" class="text-[11px] font-semibold text-cyan-300 hover:text-cyan-200 flex items-center gap-1 cursor-pointer">
+            <span>📲</span> <span id="installPillText">Install App</span>
+          </button>
+          <button onclick="dismissPwaInstall()" class="text-slate-500 hover:text-slate-300 text-xs font-bold pl-1 cursor-pointer" title="Dismiss">&times;</button>
+        </div>
       </div>
 
       <div class="flex items-center gap-2.5">
@@ -243,16 +280,16 @@
   </main>
 
   <!-- Floating Message Button (Bottom Right) -->
-  <button onclick="openChatDrawer()" id="floatingChatBtn" class="fixed bottom-5 right-5 z-40 w-13 h-13 p-3.5 rounded-full bg-gradient-to-tr from-blue-500 to-purple-600 hover:from-blue-400 hover:to-purple-500 text-white shadow-xl shadow-cyan-500/25 flex items-center justify-center transition transform active:scale-95 cursor-pointer" title="Messages & Global Chat">
+  <button onclick="openChatDrawer()" id="floatingChatBtn" class="fixed bottom-5 right-5 z-40 w-13 h-13 p-3.5 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white shadow-xl shadow-cyan-500/25 flex items-center justify-center transition transform hover:scale-105 active:scale-90 cursor-pointer" title="Messages & Global Chat">
     <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
       <path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
     </svg>
     <span id="unreadChatBadge" class="hidden absolute -top-1 -right-1 min-w-[20px] h-5 px-1 rounded-full bg-red-500 text-white text-[10px] font-black flex items-center justify-center border-2 border-[#0b0e14] animate-bounce">1</span>
   </button>
 
-  <!-- Floating Chat & DM Drawer Modal -->
-  <div id="chatDrawerModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-end sm:items-center justify-center p-0 sm:p-4 z-50">
-    <div class="card-bg neon-border rounded-t-3xl sm:rounded-2xl max-w-md w-full h-[85vh] sm:h-[600px] flex flex-col overflow-hidden shadow-2xl relative">
+  <!-- Floating Chat & DM Drawer Modal (With Animated Open/Close) -->
+  <div id="chatDrawerModal" onclick="closeChatDrawerAnimated()" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-end sm:items-center justify-center p-0 sm:p-4 z-50">
+    <div id="chatDrawerCard" onclick="event.stopPropagation()" class="card-bg neon-border rounded-t-3xl sm:rounded-2xl max-w-md w-full h-[85vh] sm:h-[600px] flex flex-col overflow-hidden shadow-2xl relative">
       
       <!-- Drawer Header -->
       <div class="px-4 py-3.5 border-b border-slate-800 flex items-center justify-between bg-[#0d111a]">
@@ -262,7 +299,7 @@
         </div>
         <div class="flex items-center gap-2">
           <button id="enableNotifBtn" onclick="requestBrowserNotifications()" class="hidden bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 px-2 py-1 rounded-lg text-[10px] font-semibold cursor-pointer">🔔 Alerts</button>
-          <button onclick="closeModal('chatDrawerModal')" class="text-slate-400 hover:text-white text-xl leading-none cursor-pointer">&times;</button>
+          <button onclick="closeChatDrawerAnimated()" class="text-slate-400 hover:text-white text-xl leading-none cursor-pointer">&times;</button>
         </div>
       </div>
 
@@ -317,7 +354,7 @@
         </form>
       </div>
 
-      <!-- Long-Press Message Action Menu Overlay (Unique Controls) -->
+      <!-- Long-Press Message Action Menu Overlay -->
       <div id="msgActionOverlay" onclick="closeMsgActionMenu()" class="hidden absolute inset-0 bg-black/70 backdrop-blur-[2px] z-50 flex items-center justify-center p-4">
         <div onclick="event.stopPropagation()" class="bg-[#131926] border border-cyan-500/40 rounded-2xl p-4 w-full max-w-[260px] shadow-2xl space-y-2 animate-pop-menu">
           <div class="text-[11px] font-bold text-slate-400 uppercase tracking-wider text-center pb-1 border-b border-slate-800">Message Controls</div>
@@ -583,6 +620,50 @@
       navigator.serviceWorker.register('/firebase-messaging-sw.js').catch(() => {});
     }
 
+    // ==================== OPTIONAL PWA HOME SCREEN INSTALL PILL ====================
+    let deferredInstallPrompt = null;
+
+    window.addEventListener('beforeinstallprompt', (e) => {
+      e.preventDefault();
+      deferredInstallPrompt = e;
+      if (localStorage.getItem('fc_pwa_dismissed') !== '1') {
+        const pill = document.getElementById('pwaInstallPill');
+        if (pill) {
+          pill.classList.remove('hidden');
+          pill.classList.add('flex');
+        }
+      }
+    });
+
+    window.triggerPwaInstall = async () => {
+      if (!deferredInstallPrompt) return;
+      deferredInstallPrompt.prompt();
+      const { outcome } = await deferredInstallPrompt.userChoice;
+      deferredInstallPrompt = null;
+      const pill = document.getElementById('pwaInstallPill');
+      if (pill && outcome === 'accepted') {
+        pill.classList.add('hidden');
+        pill.classList.remove('flex');
+      }
+    };
+
+    window.dismissPwaInstall = () => {
+      localStorage.setItem('fc_pwa_dismissed', '1');
+      const pill = document.getElementById('pwaInstallPill');
+      if (pill) {
+        pill.classList.add('hidden');
+        pill.classList.remove('flex');
+      }
+    };
+
+    window.addEventListener('appinstalled', () => {
+      const pill = document.getElementById('pwaInstallPill');
+      if (pill) {
+        pill.classList.add('hidden');
+        pill.classList.remove('flex');
+      }
+    });
+
     let currentUser = null;
     let allPlayers = [];
     let currentSort = 'total';
@@ -623,19 +704,19 @@
       } catch (e) {}
     }
 
-    // What's New Items (Ideas + Bug Fixes)
+    // What's New Items (Accurate Real Timestamps)
     const whatsNewData = [
       {
-        version: "v2.3",
-        date: "Nov 19, 2026 • 09:20 PM",
-        en: "✨ Idea: Press & hold any chat message for animated controls — Rewrite your message, Hide for Me, or Erase Globally + added custom FC site icon & top player rankings info. 🛠️ Bug Fix: Improved search visibility and message bubble touch responsiveness.",
-        hi: "✨ आइडिया: किसी भी चैट मैसेज को दबाकर रखें (Hold) और एनिमेटेड कंट्रोल पाएं — Rewrite, Hide for Me, या Erase Globally + नया FC आइकन जोड़ा गया। 🛠️ बग फिक्स: सर्च विजिबिलिटी और टच रिस्पॉन्स बेहतर किया गया।"
+        version: "v2.4",
+        date: "Nov 20, 2026 • 11:36 AM IST",
+        en: "✨ Idea: Optional one-tap Home Screen App installer pill + smooth spring open/close animation for the messaging drawer. 🛠️ Bug Fix: Fixed inaccurate timestamps in What's New updates.",
+        hi: "✨ आइडिया: होम स्क्रीन ऐप इंस्टॉल करने के लिए वैकल्पिक बटन + मैसेजिंग ड्रॉअर के लिए स्मूथ ओपन/क्लोज एनिमेशन। 🛠️ बग फिक्स: What's New में गलत टाइमिंग को सही किया गया।"
       },
       {
-        version: "v2.2",
-        date: "Nov 19, 2026 • 03:50 PM",
-        en: "✨ Idea: Auto notification prompt on entry + sender name & message preview inside notifications + auto alerts when What's New updates. 🛠️ Bug Fix: Added Service Worker support for reliable notifications.",
-        hi: "✨ आइडिया: वेबसाइट खोलते ही Allow Notification प्रॉम्प्ट + नोटिफिकेशन में भेजने वाले का नाम और पूरा मैसेज + What's New अपडेट होने पर ऑटो अलर्ट। 🛠️ बग फिक्स: नोटिफिकेशन के लिए सर्विस वर्कर जोड़ा गया।"
+        version: "v2.3",
+        date: "Nov 19, 2026 • 09:20 PM IST",
+        en: "✨ Idea: Press & hold any chat message for animated controls — Rewrite your message, Hide for Me, or Erase Globally + added custom FC site icon & top player rankings info. 🛠️ Bug Fix: Improved search visibility and message bubble touch responsiveness.",
+        hi: "✨ आइडिया: किसी भी चैट मैसेज को दबाकर रखें (Hold) और एनिमेटेड कंट्रोल पाएं — Rewrite, Hide for Me, या Erase Globally + नया FC आइकन जोड़ा गया। 🛠️ बग फिक्स: सर्च विजिबिलिटी और टच रिस्पॉन्स बेहतर किया गया।"
       }
     ];
 
@@ -647,6 +728,7 @@
         navSub: "Official 1v1 Community Tiers",
         loginBtn: "Login with Google",
         whatsNewBtn: "What's New",
+        installPillText: "Install App",
         descTitle: "What is this?",
         langBtnText: "See in Hindi (हिंदी में पढ़ें)",
         descText: "Welcome to the official community hub tracking every Flex City top player across India. Compete in Long Range and Short Range 1v1 PvP duels, climb the live rankings, swap positions with higher-tiered rivals, and prove your skill on the Flex City India top player board.",
@@ -692,6 +774,7 @@
         navSub: "ऑफिशियल 1v1 कम्युनिटी लीडरबोर्ड",
         loginBtn: "गूगल से लॉगिन करें",
         whatsNewBtn: "नया क्या है",
+        installPillText: "ऐप इंस्टॉल करें",
         descTitle: "यह क्या है? (What is this?)",
         langBtnText: "See in English (अंग्रेजी में देखें)",
         descText: "यह भारत के हर Flex City टॉप प्लेयर की लाइव रैंकिंग दिखाने वाला ऑफिशियल कम्युनिटी लीडरबोर्ड है। लॉन्ग रेंज और शॉर्ट रेंज 1v1 मैच खेलें, ऊपर के खिलाड़ियों को हराकर रैंक स्वैप करें और Flex City India टॉप प्लेयर लिस्ट में अपनी जगह बनाएं।",
@@ -747,6 +830,7 @@
       setSafeText('navSub', t.navSub);
       setSafeText('loginBtn', t.loginBtn);
       setSafeText('whatsNewBtnText', t.whatsNewBtn);
+      setSafeText('installPillText', t.installPillText);
       setSafeText('descTitle', t.descTitle);
       setSafeText('langBtnText', t.langBtnText);
       setSafeText('descText', t.descText);
@@ -985,7 +1069,7 @@
       }
     }
 
-    // ==================== MESSAGING, HOLD CONTROLS & NOTIFICATIONS ====================
+    // ==================== MESSAGING, ANIMATED DRAWER & HOLD CONTROLS ====================
 
     function checkNotificationPermissionBtn() {
       const btn = document.getElementById('enableNotifBtn');
@@ -1029,7 +1113,6 @@
       } catch (e) {}
     }
 
-    // Press & Hold Handlers for Message Bubbles
     window.startMsgHold = (el, collectionName, msgId, senderUid, currentText) => {
       clearTimeout(holdTimer);
       el.classList.add('msg-holding');
@@ -1122,7 +1205,6 @@
 
         snapshot.forEach(d => {
           const msg = { id: d.id, ...d.data() };
-          // Skip messages hidden locally by current user
           if (msg.hiddenFor && msg.hiddenFor.includes(uid)) return;
           allUserDms.push(msg);
           if (msg.receiverUid === uid && !msg.read) {
@@ -1169,9 +1251,29 @@
       });
     }
 
+    function showChatDrawerWithAnimation() {
+      const modal = document.getElementById('chatDrawerModal');
+      const card = document.getElementById('chatDrawerCard');
+      modal.classList.remove('hidden');
+      modal.classList.add('flex', 'chat-backdrop-enter');
+      card.classList.remove('chat-sheet-exit');
+      card.classList.add('chat-sheet-enter');
+    }
+
+    window.closeChatDrawerAnimated = () => {
+      const modal = document.getElementById('chatDrawerModal');
+      const card = document.getElementById('chatDrawerCard');
+      card.classList.remove('chat-sheet-enter');
+      card.classList.add('chat-sheet-exit');
+      setTimeout(() => {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex', 'chat-backdrop-enter');
+        card.classList.remove('chat-sheet-exit');
+      }, 190);
+    };
+
     window.openChatDrawer = () => {
-      document.getElementById('chatDrawerModal').classList.remove('hidden');
-      document.getElementById('chatDrawerModal').classList.add('flex');
+      showChatDrawerWithAnimation();
 
       if (!currentUser) {
         document.getElementById('chatLoginWall').classList.remove('hidden');
@@ -1194,7 +1296,7 @@
     };
 
     window.triggerLoginFromChat = () => {
-      closeModal('chatDrawerModal');
+      closeChatDrawerAnimated();
       signInWithPopup(auth, provider);
     };
 
@@ -1363,8 +1465,7 @@
       }
       activeDmPartner = { uid: targetUid, ign: targetIgn };
       
-      document.getElementById('chatDrawerModal').classList.remove('hidden');
-      document.getElementById('chatDrawerModal').classList.add('flex');
+      showChatDrawerWithAnimation();
       document.getElementById('chatLoginWall').classList.add('hidden');
       document.getElementById('chatModeTabs').classList.add('hidden');
       document.getElementById('globalChatView').classList.add('hidden');
@@ -1525,7 +1626,10 @@
 
       container.innerHTML = whatsNewData.map(item => `
         <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-800 space-y-1">
-          <div class="text-[10px] text-cyan-400 font-bold">📅 ${item.date}</div>
+          <div class="flex items-center justify-between text-[10px]">
+            <span class="text-cyan-400 font-bold">📅 ${item.date}</span>
+            <span class="bg-cyan-500/15 text-cyan-300 px-1.5 py-0.5 rounded font-bold">${item.version}</span>
+          </div>
           <div class="text-xs text-slate-300 leading-relaxed">${currentLang === 'hi' ? item.hi : item.en}</div>
         </div>
       `).join('');
