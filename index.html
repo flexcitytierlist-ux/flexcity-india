@@ -3,8 +3,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   
   <!-- SEO Title, Site Identity & Description -->
-  <title>Flex City Leaderboard — Official Community 1v1 Tiers & Top Players</title>
-  <meta name="description" content="Official Flex City India community leaderboard featuring top player rankings, 1v1 PvP tiers, verified match proofs, and live rank swaps." />
+  <title>Flex City Leaderboard — Global & Regional 1v1 Tiers</title>
+  <meta name="description" content="Official Flex City community leaderboard featuring global and country-wise top player rankings, 1v1 PvP tiers, verified match proofs, and live rank swaps." />
   <meta name="google-site-verification" content="zuMmJx8wSnGZGju9FlPyZUGX5pKBlj47MJNoj90Sg9Y" />
 
   <!-- PWA Manifest & Theme Color -->
@@ -13,8 +13,8 @@
 
   <!-- OpenGraph & Self-Contained FC SVG Favicon -->
   <meta property="og:site_name" content="Flex City Leaderboard" />
-  <meta property="og:title" content="Flex City Leaderboard — Official Community 1v1 Tiers" />
-  <meta property="og:description" content="Discover every Flex City top player in India, compare 1v1 PvP rankings, and challenge contenders directly." />
+  <meta property="og:title" content="Flex City Leaderboard — Global & Regional 1v1 Tiers" />
+  <meta property="og:description" content="Compete in your country and climb the Global Flex City 1v1 PvP rankings." />
   <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2306b6d4'/%3E%3Ctext x='50%25' y='56%25' dominant-baseline='middle' text-anchor='middle' fill='%230b0e14' font-family='Arial,sans-serif' font-size='30' font-weight='900'%3EFC%3C/text%3E%3C/svg%3E" />
 
   <!-- Structured Data for Google Search Site Name -->
@@ -23,7 +23,7 @@
     "@context": "https://schema.org",
     "@type": "WebSite",
     "name": "Flex City Leaderboard",
-    "alternateName": ["Flex City India Top Players", "Flex City 1v1 Leaderboard"],
+    "alternateName": ["Flex City Global Top Players", "Flex City 1v1 Leaderboard"],
     "url": "https://flexcity-india.vercel.app/"
   }
   </script>
@@ -122,7 +122,7 @@
         <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center font-black text-white text-sm shadow-md">FC</div>
         <div>
           <h1 class="font-bold text-sm sm:text-base tracking-wide text-white">FLEX CITY <span class="text-cyan-400">LEADERBOARD</span></h1>
-          <p id="navSub" class="text-[10px] text-slate-400 -mt-0.5">Official 1v1 Community Tiers</p>
+          <p id="navSub" class="text-[10px] text-slate-400 -mt-0.5">Global & Regional 1v1 Tiers</p>
         </div>
       </div>
 
@@ -147,12 +147,12 @@
     <div class="card-bg rounded-2xl neon-border p-4 sm:p-5 relative space-y-3 shadow-lg">
       <div class="flex items-center justify-between gap-2">
         <h2 id="descTitle" class="text-xs font-bold text-cyan-400 uppercase tracking-wider">What is this?</h2>
-        <button type="button" onclick="toggleLanguage()" class="bg-slate-800/90 hover:bg-slate-700 active:scale-95 text-slate-200 border border-slate-700 px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 cursor-pointer">
-          <span id="langFlag">🇮🇳</span> <span id="langBtnText">See in Hindi (हिंदी में पढ़ें)</span>
+        <button type="button" id="langToggleBtn" onclick="toggleLanguage()" class="hidden bg-slate-800/90 hover:bg-slate-700 active:scale-95 text-slate-200 border border-slate-700 px-3 py-1.5 rounded-xl text-xs font-semibold transition items-center gap-1.5 cursor-pointer">
+          <span id="langFlag">🌐</span> <span id="langBtnText">Local Language</span>
         </button>
       </div>
       <p id="descText" class="text-xs sm:text-sm text-slate-300 leading-relaxed">
-        Welcome to the official community hub tracking every Flex City top player across India. Compete in Long Range and Short Range 1v1 PvP duels, climb the live rankings, swap positions with higher-tiered rivals, and prove your skill on the Flex City India top player board.
+        Welcome to the official community hub tracking every Flex City top player worldwide. Compete in Long Range and Short Range 1v1 PvP duels, climb your country's local ladder, and challenge top contenders on the Global Flex City leaderboard.
       </p>
 
       <!-- Rules Box -->
@@ -160,25 +160,25 @@
         <div id="rulesHeading" class="text-xs font-bold text-amber-400 mb-1">📜 How to Submit Proof & Challenge Rules:</div>
         <ul id="rulesList" class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
           <li><strong>Chat Screenshot:</strong> Upload a clear chat screenshot where your opponent agrees to the 1v1 result & points.</li>
-          <li><strong>Rank Swap:</strong> Defeat a higher-ranked Flex City player to take their exact spot on the leaderboard!</li>
+          <li><strong>Dual Ranking:</strong> Winning a match puts you on both your Country Leaderboard and the Global Leaderboard!</li>
           <li><strong>Direct Challenge:</strong> Tap on any player or use the bottom-right Chat icon to message opponents directly for 1v1s.</li>
         </ul>
       </div>
     </div>
 
-    <!-- Region, Optional Subtle Install Pill & Action Bar -->
+    <!-- Auto-Detected Country + Global Switcher, Optional Install Pill & Action Bar -->
     <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
       <div class="flex items-center flex-wrap gap-2">
-        <div class="flex items-center gap-2 bg-slate-900/90 p-1.5 rounded-xl border border-slate-800">
-          <button class="px-3.5 py-1.5 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-semibold text-xs flex items-center gap-1.5">
-            🇮🇳 India
+        <div class="flex items-center gap-1.5 bg-slate-900/90 p-1.5 rounded-xl border border-slate-800">
+          <button onclick="setRegionFilter('global')" id="region-global" class="px-3.5 py-1.5 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-semibold text-xs flex items-center gap-1.5 cursor-pointer transition">
+            🌍 <span id="globalTabLabel">Global</span>
           </button>
-          <button disabled class="px-3.5 py-1.5 rounded-lg text-slate-500 text-xs cursor-not-allowed">
-            🌍 Global (Soon)
+          <button onclick="setRegionFilter('local')" id="region-local" class="px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition">
+            <span id="detectedCountryFlag">📍</span> <span id="detectedCountryName">Detecting...</span>
           </button>
         </div>
 
-        <!-- Subtle Optional Install App Pill (Only shows when browser supports install & user hasn't dismissed it) -->
+        <!-- Subtle Optional Install App Pill -->
         <div id="pwaInstallPill" class="hidden items-center gap-1 bg-slate-900/95 border border-cyan-500/35 rounded-xl px-2.5 py-1.5 shadow-sm">
           <button onclick="triggerPwaInstall()" class="text-[11px] font-semibold text-cyan-300 hover:text-cyan-200 flex items-center gap-1 cursor-pointer">
             <span>📲</span> <span id="installPillText">Install App</span>
@@ -237,11 +237,11 @@
       <div class="space-y-2.5">
         <div class="bg-slate-900/80 border border-slate-800 rounded-xl overflow-hidden transition">
           <button onclick="toggleFaq(1)" class="w-full px-4 py-3 text-left flex items-center justify-between text-xs font-bold text-white cursor-pointer">
-            <span id="faq1Q">01. How are Flex City top player rankings decided?</span>
+            <span id="faq1Q">01. How do Global & Country rankings work?</span>
             <span class="text-cyan-400 text-sm font-black">+</span>
           </button>
           <div id="faq1Ans" class="hidden px-4 pb-3 text-xs text-slate-300 leading-relaxed border-t border-slate-800/60 pt-2">
-            Every Flex City India top player earns points through verified Long Range and Short Range 1v1 matches. Winning streaks and rank swaps keep the live standings competitive and accurate.
+            Your country is automatically detected when you join or submit a match proof. Your points count toward both your national leaderboard and the Global leaderboard simultaneously!
           </div>
         </div>
 
@@ -432,7 +432,7 @@
         <span class="text-base">📸</span> <span>Instagram: <span class="underline">@boomcrraze</span></span>
       </a>
     </div>
-    <p id="footerText1" class="text-[10px] text-slate-500 pt-1">Flex City India Community Leaderboard • Unofficial fan-made platform.</p>
+    <p id="footerText1" class="text-[10px] text-slate-500 pt-1">Flex City Community Leaderboard • Unofficial fan-made platform.</p>
   </footer>
 
   <!-- Forced IGN Setup Modal -->
@@ -457,8 +457,9 @@
         <div class="flex items-center gap-3">
           <img id="modalAvatar" src="" class="w-11 h-11 rounded-full border border-cyan-500/40 object-cover" />
           <div>
-            <div class="flex items-center gap-1.5">
+            <div class="flex items-center gap-1.5 flex-wrap">
               <h2 id="modalName" class="text-base font-bold text-white">Player Name</h2>
+              <span id="modalCountryBadge"></span>
               <span id="modalStreakBadge"></span>
             </div>
             <p id="modalSub" class="text-[11px] text-slate-400">Total 1v1s: 0 • Total Pts: 0</p>
@@ -549,7 +550,7 @@
       <h2 id="submitProofTitle" class="text-base font-bold text-white mb-1">Submit Match Screenshot</h2>
       
       <div id="modalRuleNote" class="bg-cyan-500/10 border border-cyan-500/30 rounded-xl p-3 mb-3 text-xs text-cyan-300 leading-relaxed">
-        💡 <strong>Rule:</strong> Upload the chat screenshot where your opponent agrees to the match result. Defeating a higher-ranked player swaps your rank with theirs!
+        💡 <strong>Rule:</strong> Upload the chat screenshot where your opponent agrees to the match result. Your country (<span id="submitDetectedCountry" class="font-bold">Global</span>) will be tagged automatically so you rank both locally and globally!
       </div>
 
       <form id="proofForm" class="space-y-3">
@@ -584,7 +585,7 @@
     <div class="card-bg neon-border rounded-2xl max-w-xl w-full p-5 relative max-h-[85vh] overflow-y-auto shadow-2xl">
       <button onclick="closeModal('adminModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg">&times;</button>
       <h2 class="text-base font-bold text-amber-400 mb-1">🛡️ Admin Verification Queue</h2>
-      <p class="text-xs text-slate-400 mb-3">Approving verifies chat proof, updates points & streak, and posts to live ticker. Rejecting permanently deletes screenshot.</p>
+      <p class="text-xs text-slate-400 mb-3">Approving verifies chat proof, updates points, country rank & streak, and posts to live ticker. Rejecting permanently deletes screenshot.</p>
       <div id="pendingList" class="space-y-3"></div>
     </div>
   </div>
@@ -618,6 +619,523 @@
 
     if ('serviceWorker' in navigator) {
       navigator.serviceWorker.register('/firebase-messaging-sw.js').catch(() => {});
+    }
+
+    // ==================== COUNTRY CODE TO FLAG EMOJI HELPER ====================
+    function countryCodeToFlag(code) {
+      if (!code || code.length !== 2) return '🌍';
+      const upper = code.toUpperCase();
+      return String.fromCodePoint(...[...upper].map(c => 127397 + c.charCodeAt(0)));
+    }
+
+    // ==================== VISITOR IP GEO & LOCAL LANGUAGE DETECTION ====================
+    let visitorCountry = {
+      code: 'IN',
+      name: 'India',
+      flag: '🇮🇳'
+    };
+
+    const countryLangMap = {
+      IN: 'hi',
+      BR: 'pt', PT: 'pt',
+      RU: 'ru', BY: 'ru', KZ: 'ru',
+      ES: 'es', MX: 'es', AR: 'es', CO: 'es', CL: 'es', PE: 'es',
+      SA: 'ar', AE: 'ar', EG: 'ar', IQ: 'ar', MA: 'ar',
+      ID: 'id',
+      TR: 'tr',
+      FR: 'fr'
+    };
+
+    let detectedLocalLangCode = null; // e.g., 'hi', 'pt', 'ru', 'es', 'ar', 'id', 'tr', 'fr' or null (English-only country)
+    let isLocalLangActive = false;
+
+    const translations = {
+      en: {
+        toggleLabel: "See in English",
+        navSub: "Global & Regional 1v1 Tiers",
+        loginBtn: "Login with Google",
+        whatsNewBtn: "What's New",
+        installPillText: "Install App",
+        descTitle: "What is this?",
+        descText: "Welcome to the official community hub tracking every Flex City top player worldwide. Compete in Long Range and Short Range 1v1 PvP duels, climb your country's local ladder, and challenge top contenders on the Global Flex City leaderboard.",
+        rulesHeading: "📜 How to Submit Proof & Challenge Rules:",
+        rulesHtml: `
+          <li><strong>Chat Screenshot:</strong> Upload a clear chat screenshot where your opponent agrees to the 1v1 result & points.</li>
+          <li><strong>Dual Ranking:</strong> Winning a match puts you on both your Country Leaderboard and the Global Leaderboard!</li>
+          <li><strong>Direct Challenge:</strong> Tap on any player or use the bottom-right Chat icon to message opponents directly for 1v1s.</li>
+        `,
+        tabRanked: "🏆 Ranked",
+        tabContenders: "⚔️ Contenders",
+        sortTotal: "Overall",
+        sortLong: "Long Range Top",
+        sortShort: "Short Range Top",
+        colRank: "Rank",
+        colPlayer: "Player",
+        colRange: "Range Pts",
+        colTotal: "Total",
+        loadingText: "Loading fresh leaderboard data...",
+        footerContactText: "If you have any issues or want to send 1v1 recordings, contact us:",
+        footerText1: "Flex City Community Leaderboard • Unofficial fan-made platform.",
+        openSubmitBtn: "+ Submit Proof",
+        modalTitle: "Welcome to Flex City Leaderboard!",
+        modalSubText: "Please enter your official In-Game Name (IGN) to continue.",
+        modalSubmitBtn: "Continue to Leaderboard",
+        editIgnTitle: "Edit Your IGN",
+        editIgnSub: "Update your official Flex City In-Game Name.",
+        saveIgnBtn: "Save IGN",
+        submitProofTitle: "Submit Match Screenshot",
+        labelIgn: "Your IGN (Flex City)",
+        labelOpponent: "Opponent Name",
+        labelCategory: "Category",
+        labelScreenshotFile: "Upload Chat Screenshot",
+        submitProofBtn: "Send Screenshot for Verification",
+        whatsNewModalTitle: "✨ What's New in Flex City",
+        faqTitle: "Frequently Asked Questions",
+        faqSub: "Quick answers about Flex City PvP tiers, top player rankings, and points.",
+        logoutModalTitle: "Are You Sure You Want to Log Out?",
+        logoutModalSub: "After logging out, you won't be able to submit match screenshot proofs, send messages, or challenge players until you log back in with Google."
+      },
+      hi: {
+        toggleLabel: "हिंदी में पढ़ें",
+        navSub: "ग्लोबल और रीजनल 1v1 कम्युनिटी लीडरबोर्ड",
+        loginBtn: "गूगल से लॉगिन करें",
+        whatsNewBtn: "नया क्या है",
+        installPillText: "ऐप इंस्टॉल करें",
+        descTitle: "यह क्या है? (What is this?)",
+        descText: "यह दुनिया भर के हर Flex City टॉप प्लेयर की लाइव रैंकिंग दिखाने वाला ऑफिशियल कम्युनिटी लीडरबोर्ड है। अपने देश की रैंकिंग में ऊपर चढ़ें और ग्लोबल Flex City लीडरबोर्ड पर टॉप खिलाड़ियों को चुनौती दें।",
+        rulesHeading: "📜 प्रूफ सबमिट करने के नियम:",
+        rulesHtml: `
+          <li><strong>चैट स्क्रीनशॉट:</strong> गेम की चैट का एक साफ़ स्क्रीनशॉट अपलोड करें जिसमें आपका Opponent 1v1 के रिजल्ट और पॉइंट्स पर राज़ी हो।</li>
+          <li><strong>डबल रैंकिंग:</strong> मैच जीतने पर आपका नाम आपके देश के लीडरबोर्ड और ग्लोबल लीडरबोर्ड दोनों में दिखेगा!</li>
+          <li><strong>डायरेक्ट चैलेंज:</strong> किसी भी खिलाड़ी पर टैप करें या नीचे दाएं कोने में चैट आइकन से सीधे मैसेज करें।</li>
+        `,
+        tabRanked: "🏆 रैंकड",
+        tabContenders: "⚔️ कंटेंडर्स",
+        sortTotal: "कुल पॉइंट्स (Overall)",
+        sortLong: "लॉन्ग रेंज टॉप",
+        sortShort: "शॉर्ट रेंज टॉप",
+        colRank: "रैंक",
+        colPlayer: "प्लेयर",
+        colRange: "रेंज पॉइंट्स",
+        colTotal: "कुल",
+        loadingText: "लीडरबोर्ड डाटा लोड हो रहा है...",
+        footerContactText: "यदि आपको कोई समस्या है या 1v1 रिकॉर्डिंग भेजनी है, तो संपर्क करें:",
+        footerText1: "Flex City कम्युनिटी लीडरबोर्ड • अनौपचारिक फैन-मेड प्लेटफॉर्म।",
+        openSubmitBtn: "+ प्रूफ सबमिट करें",
+        modalTitle: "Flex City लीडरबोर्ड में आपका स्वागत है!",
+        modalSubText: "कृपया आगे बढ़ने के लिए अपना ऑफिशियल इन-गेम नाम (IGN) दर्ज करें।",
+        modalSubmitBtn: "लीडरबोर्ड पर जाएं",
+        editIgnTitle: "अपना IGN बदलें",
+        editIgnSub: "अपना ऑफिशियल Flex City इन-गेम नाम अपडेट करें।",
+        saveIgnBtn: "IGN सेव करें",
+        submitProofTitle: "मैच स्क्रीनशॉट सबमिट करें",
+        labelIgn: "आपका इन-गेम नाम (IGN)",
+        labelOpponent: "सामने वाले खिलाड़ी का नाम (Opponent)",
+        labelCategory: "श्रेणी (Category)",
+        labelScreenshotFile: "चैट स्क्रीनशॉट अपलोड करें",
+        submitProofBtn: "वेरिफिकेशन के लिए भेजें",
+        whatsNewModalTitle: "✨ फ्लेक्स सिटी में नया क्या है",
+        faqTitle: "अक्सर पूछे जाने वाले सवाल (FAQ)",
+        faqSub: "टीयर्स, टॉप प्लेयर रैंकिंग और फ्लेक्स सिटी के बारे में त्वरित उत्तर।",
+        logoutModalTitle: "क्या आप वाकई लॉग आउट करना चाहते हैं?",
+        logoutModalSub: "लॉग आउट करने के बाद, आप Google से दोबारा लॉगिन करने तक मैच स्क्रीनशॉट प्रूफ सबमिट नहीं कर पाएंगे या मैसेज नहीं भेज पाएंगे।"
+      },
+      pt: {
+        toggleLabel: "Ler em Português",
+        navSub: "Tiers 1v1 Globais e Regionais",
+        loginBtn: "Entrar com Google",
+        whatsNewBtn: "Novidades",
+        installPillText: "Instalar App",
+        descTitle: "O que é isso?",
+        descText: "Bem-vindo ao hub oficial da comunidade que acompanha os melhores jogadores de Flex City do mundo todo. Suba no ranking do seu país e desafie os melhores no placar Global!",
+        rulesHeading: "📜 Regras de Envio e Desafios:",
+        rulesHtml: `
+          <li><strong>Print do Chat:</strong> Envie um print claro onde seu oponente concorda com o resultado e pontos do 1v1.</li>
+          <li><strong>Ranking Duplo:</strong> Vencer uma partida coloca seu nome tanto no ranking do seu país quanto no Global!</li>
+          <li><strong>Desafio Direto:</strong> Toque em qualquer jogador ou use o ícone de Chat no canto inferior direito para desafiar.</li>
+        `,
+        tabRanked: "🏆 Ranqueados",
+        tabContenders: "⚔️ Desafiantes",
+        sortTotal: "Geral",
+        sortLong: "Top Longa Distância",
+        sortShort: "Top Curta Distância",
+        colRank: "Rank",
+        colPlayer: "Jogador",
+        colRange: "Pts Alcance",
+        colTotal: "Total",
+        loadingText: "Carregando placar...",
+        footerContactText: "Se tiver algum problema ou quiser enviar gravações de 1v1, fale conosco:",
+        footerText1: "Flex City Community Leaderboard • Plataforma feita por fãs.",
+        openSubmitBtn: "+ Enviar Prova",
+        modalTitle: "Bem-vindo ao Flex City Leaderboard!",
+        modalSubText: "Digite seu nome oficial no jogo (IGN) para continuar.",
+        modalSubmitBtn: "Continuar para o Placar",
+        editIgnTitle: "Editar seu IGN",
+        editIgnSub: "Atualize seu nome oficial no Flex City.",
+        saveIgnBtn: "Salvar IGN",
+        submitProofTitle: "Enviar Print da Partida",
+        labelIgn: "Seu IGN (Flex City)",
+        labelOpponent: "Nome do Oponente",
+        labelCategory: "Categoria",
+        labelScreenshotFile: "Enviar Print do Chat",
+        submitProofBtn: "Enviar para Verificação",
+        whatsNewModalTitle: "✨ Novidades no Flex City",
+        faqTitle: "Perguntas Frequentes",
+        faqSub: "Respostas rápidas sobre rankings, tiers e pontos no Flex City.",
+        logoutModalTitle: "Tem certeza que deseja sair?",
+        logoutModalSub: "Após sair, você não poderá enviar provas ou mensagens até entrar novamente com o Google."
+      },
+      ru: {
+        toggleLabel: "Читать на русском",
+        navSub: "Глобальные и региональные 1v1 ранги",
+        loginBtn: "Войти через Google",
+        whatsNewBtn: "Что нового",
+        installPillText: "Установить",
+        descTitle: "Что это?",
+        descText: "Официальный рейтинг лучших игроков Flex City со всего мира. Побеждайте в 1v1 дуэлях на дальней и ближней дистанции, поднимайтесь в рейтинге своей страны и сражайтесь за топ в Global!",
+        rulesHeading: "📜 Правила отправки скриншотов:",
+        rulesHtml: `
+          <li><strong>Скриншот чата:</strong> Загрузите четкий скриншот чата, где соперник подтверждает счет и очки 1v1.</li>
+          <li><strong>Двойной рейтинг:</strong> Победа засчитывается сразу в рейтинг вашей страны и в общий Global рейтинг!</li>
+          <li><strong>Прямой вызов:</strong> Нажмите на любого игрока или откройте чат в правом нижнем углу для вызова на 1v1.</li>
+        `,
+        tabRanked: "🏆 Рейтинг",
+        tabContenders: "⚔️ Претенденты",
+        sortTotal: "Общий",
+        sortLong: "Дальний бой",
+        sortShort: "Ближний бой",
+        colRank: "Ранг",
+        colPlayer: "Игрок",
+        colRange: "Очки",
+        colTotal: "Всего",
+        loadingText: "Загрузка таблицы лидеров...",
+        footerContactText: "Если есть вопросы или записи 1v1 матчей, напишите нам:",
+        footerText1: "Flex City Community Leaderboard • Фанатская платформа.",
+        openSubmitBtn: "+ Отправить пруф",
+        modalTitle: "Добро пожаловать в Flex City Leaderboard!",
+        modalSubText: "Введите ваш игровой никнейм (IGN), чтобы продолжить.",
+        modalSubmitBtn: "Перейти к рейтингу",
+        editIgnTitle: "Изменить IGN",
+        editIgnSub: "Обновите ваш игровой никнейм в Flex City.",
+        saveIgnBtn: "Сохранить IGN",
+        submitProofTitle: "Отправить скриншот матча",
+        labelIgn: "Ваш IGN (Flex City)",
+        labelOpponent: "Ник соперника",
+        labelCategory: "Категория",
+        labelScreenshotFile: "Загрузить скриншот чата",
+        submitProofBtn: "Отправить на проверку",
+        whatsNewModalTitle: "✨ Что нового в Flex City",
+        faqTitle: "Частые вопросы (FAQ)",
+        faqSub: "Быстрые ответы о рангах, очках и правилах дуэлей Flex City.",
+        logoutModalTitle: "Вы уверены, что хотите выйти?",
+        logoutModalSub: "После выхода вы не сможете отправлять скриншоты и сообщения до повторного входа."
+      },
+      es: {
+        toggleLabel: "Leer en Español",
+        navSub: "Clasificación 1v1 Global y Regional",
+        loginBtn: "Iniciar con Google",
+        whatsNewBtn: "Novedades",
+        installPillText: "Instalar App",
+        descTitle: "¿Qué es esto?",
+        descText: "Bienvenido al centro oficial de la comunidad con los mejores jugadores de Flex City del mundo. Compite en duelos 1v1, sube en el ranking de tu país y desafía a los mejores en la tabla Global.",
+        rulesHeading: "📜 Reglas para enviar pruebas y retar:",
+        rulesHtml: `
+          <li><strong>Captura del Chat:</strong> Sube una captura clara donde tu rival acepte el resultado y puntos del 1v1.</li>
+          <li><strong>Ranking Doble:</strong> ¡Ganar una partida te posiciona tanto en la tabla de tu país como en la Global!</li>
+          <li><strong>Reto Directo:</strong> Toca cualquier jugador o usa el icono de Chat abajo a la derecha para enviar mensajes.</li>
+        `,
+        tabRanked: "🏆 Clasificados",
+        tabContenders: "⚔️ Contendientes",
+        sortTotal: "General",
+        sortLong: "Top Larga Distancia",
+        sortShort: "Top Corta Distancia",
+        colRank: "Rango",
+        colPlayer: "Jugador",
+        colRange: "Pts Rango",
+        colTotal: "Total",
+        loadingText: "Cargando clasificación...",
+        footerContactText: "Si tienes problemas o quieres enviar grabaciones 1v1, contáctanos:",
+        footerText1: "Flex City Community Leaderboard • Plataforma hecha por fans.",
+        openSubmitBtn: "+ Enviar Prueba",
+        modalTitle: "¡Bienvenido a Flex City Leaderboard!",
+        modalSubText: "Ingresa tu nombre oficial en el juego (IGN) para continuar.",
+        modalSubmitBtn: "Continuar al Ranking",
+        editIgnTitle: "Editar tu IGN",
+        editIgnSub: "Actualiza tu nombre oficial en Flex City.",
+        saveIgnBtn: "Guardar IGN",
+        submitProofTitle: "Enviar Captura de Partida",
+        labelIgn: "Tu IGN (Flex City)",
+        labelOpponent: "Nombre del Rival",
+        labelCategory: "Categoría",
+        labelScreenshotFile: "Subir Captura del Chat",
+        submitProofBtn: "Enviar para Verificación",
+        whatsNewModalTitle: "✨ Novedades en Flex City",
+        faqTitle: "Preguntas Frecuentes",
+        faqSub: "Respuestas rápidas sobre rangos, puntos y duelos en Flex City.",
+        logoutModalTitle: "¿Seguro que quieres cerrar sesión?",
+        logoutModalSub: "Al salir no podrás enviar pruebas ni mensajes hasta volver a iniciar sesión con Google."
+      },
+      ar: {
+        toggleLabel: "اقرأ بالعربية",
+        navSub: "تصنيفات 1v1 العالمية والمحلية",
+        loginBtn: "تسجيل الدخول عبر Google",
+        whatsNewBtn: "ما الجديد",
+        installPillText: "تثبيت التطبيق",
+        descTitle: "ما هذا الموقع؟",
+        descText: "مرحبًا بك في لوحة المتصدرين الرسمية لأفضل لاعبي Flex City حول العالم. تنافس في مواجهات 1v1، وتصدر ترتيب بلدك، وتحدَّ الأقوياء في التصنيف العالمي!",
+        rulesHeading: "📜 شروط إرسال الإثبات والتحدي:",
+        rulesHtml: `
+          <li><strong>لقطة شاشة الدردشة:</strong> ارفع صورة واضحة للدردشة يوافق فيها خصمك على نتيجة 1v1 والنقاط.</li>
+          <li><strong>تصنيف مزدوج:</strong> الفوز يضع اسمك في تصنيف بلدك والتصنيف العالمي معًا!</li>
+          <li><strong>تحدي مباشر:</strong> اضغط على أي لاعب أو استخدم أيقونة الدردشة أسفل اليمين لمراسلة الخصوم.</li>
+        `,
+        tabRanked: "🏆 المصنفون",
+        tabContenders: "⚔️ المتنافسون",
+        sortTotal: "الإجمالي",
+        sortLong: "أفضل مدى بعيد",
+        sortShort: "أفضل مدى قريب",
+        colRank: "المركز",
+        colPlayer: "اللاعب",
+        colRange: "نقاط المدى",
+        colTotal: "المجموع",
+        loadingText: "جاري تحميل لوحة المتصدرين...",
+        footerContactText: "إذا واجهت أي مشكلة أو أردت إرسال مقاطع 1v1، تواصل معنا:",
+        footerText1: "Flex City Community Leaderboard • منصة مجتمعية غير رسمية.",
+        openSubmitBtn: "+ إرسال إثبات",
+        modalTitle: "مرحبًا بك في Flex City Leaderboard!",
+        modalSubText: "يرجى إدخال اسمك الرسمي داخل اللعبة (IGN) للمتابعة.",
+        modalSubmitBtn: "المتابعة إلى التصنيف",
+        editIgnTitle: "تعديل اسم IGN",
+        editIgnSub: "حدّث اسمك الرسمي داخل لعبة Flex City.",
+        saveIgnBtn: "حفظ IGN",
+        submitProofTitle: "إرسال لقطة شاشة المباراة",
+        labelIgn: "اسمك داخل اللعبة (IGN)",
+        labelOpponent: "اسم الخصم",
+        labelCategory: "الفئة",
+        labelScreenshotFile: "رفع صورة الدردشة",
+        submitProofBtn: "إرسال للمراجعة",
+        whatsNewModalTitle: "✨ ما الجديد في Flex City",
+        faqTitle: "الأسئلة الشائعة",
+        faqSub: "إجابات سريعة حول التصنيفات والنقاط في Flex City.",
+        logoutModalTitle: "هل أنت متأكد من تسجيل الخروج؟",
+        logoutModalSub: "بعد تسجيل الخروج لن تتمكن من إرسال الإثباتات أو الرسائل حتى تسجل الدخول مجددًا."
+      },
+      id: {
+        toggleLabel: "Baca dalam Bahasa Indonesia",
+        navSub: "Peringkat 1v1 Global & Regional",
+        loginBtn: "Masuk dengan Google",
+        whatsNewBtn: "Yang Baru",
+        installPillText: "Pasang Aplikasi",
+        descTitle: "Apa ini?",
+        descText: "Selamat datang di papan peringkat komunitas resmi pemain top Flex City di seluruh dunia. Menangkan duel 1v1, naiki peringkat negaramu, dan tantang pemain terbaik di papan peringkat Global!",
+        rulesHeading: "📜 Aturan Kirim Bukti & Tantangan:",
+        rulesHtml: `
+          <li><strong>Screenshot Chat:</strong> Unggah screenshot chat yang jelas saat lawan menyetujui hasil & poin 1v1.</li>
+          <li><strong>Peringkat Ganda:</strong> Menang pertandingan akan menampilkan namamu di Peringkat Negaramu sekaligus Global!</li>
+          <li><strong>Tantang Langsung:</strong> Ketuk pemain mana saja atau gunakan ikon Chat di kanan bawah untuk mengirim pesan.</li>
+        `,
+        tabRanked: "🏆 Peringkat",
+        tabContenders: "⚔️ Penantang",
+        sortTotal: "Keseluruhan",
+        sortLong: "Top Jarak Jauh",
+        sortShort: "Top Jarak Dekat",
+        colRank: "Rank",
+        colPlayer: "Pemain",
+        colRange: "Poin Jarak",
+        colTotal: "Total",
+        loadingText: "Memuat data papan peringkat...",
+        footerContactText: "Jika ada kendala atau ingin mengirim rekaman 1v1, hubungi kami:",
+        footerText1: "Flex City Community Leaderboard • Platform buatan komunitas.",
+        openSubmitBtn: "+ Kirim Bukti",
+        modalTitle: "Selamat Datang di Flex City Leaderboard!",
+        modalSubText: "Masukkan In-Game Name (IGN) resmimu untuk melanjutkan.",
+        modalSubmitBtn: "Lanjut ke Leaderboard",
+        editIgnTitle: "Ubah IGN",
+        editIgnSub: "Perbarui nama resmi Flex City kamu.",
+        saveIgnBtn: "Simpan IGN",
+        submitProofTitle: "Kirim Screenshot Pertandingan",
+        labelIgn: "IGN Kamu (Flex City)",
+        labelOpponent: "Nama Lawan",
+        labelCategory: "Kategori",
+        labelScreenshotFile: "Unggah Screenshot Chat",
+        submitProofBtn: "Kirim untuk Verifikasi",
+        whatsNewModalTitle: "✨ Yang Baru di Flex City",
+        faqTitle: "Pertanyaan Umum (FAQ)",
+        faqSub: "Jawaban cepat seputar peringkat, tier, dan poin Flex City.",
+        logoutModalTitle: "Yakin ingin keluar?",
+        logoutModalSub: "Setelah keluar, kamu tidak bisa mengirim bukti pertandingan atau pesan sampai masuk kembali."
+      },
+      tr: {
+        toggleLabel: "Türkçe Oku",
+        navSub: "Küresel ve Bölgesel 1v1 Sıralaması",
+        loginBtn: "Google ile Giriş Yap",
+        whatsNewBtn: "Yenilikler",
+        installPillText: "Uygulamayı Yükle",
+        descTitle: "Bu nedir?",
+        descText: "Dünya genelindeki en iyi Flex City oyuncularını takip eden resmi topluluk merkezine hoş geldiniz. Ülke sıralamanızda yükselin ve Küresel Flex City liderlik tablosunda rakiplere meydan okuyun!",
+        rulesHeading: "📜 Kanıt Gönderme ve Meydan Okuma Kuralları:",
+        rulesHtml: `
+          <li><strong>Sohbet Ekran Görüntüsü:</strong> Rakibinizin 1v1 sonucunu ve puanları kabul ettiği net bir sohbet ekran görüntüsü yükleyin.</li>
+          <li><strong>Çift Sıralama:</strong> Maç kazanmak sizi hem Ülke Sıralamasına hem de Küresel Sıralamaya yerleştirir!</li>
+          <li><strong>Doğrudan Meydan Okuma:</strong> 1v1 için herhangi bir oyuncuya dokunun veya sağ alttaki Sohbet simgesini kullanın.</li>
+        `,
+        tabRanked: "🏆 Sıralamalı",
+        tabContenders: "⚔️ Adaylar",
+        sortTotal: "Genel",
+        sortLong: "Uzak Mesafe En İyileri",
+        sortShort: "Yakın Mesafe En İyileri",
+        colRank: "Sıra",
+        colPlayer: "Oyuncu",
+        colRange: "Mesafe Puanı",
+        colTotal: "Toplam",
+        loadingText: "Liderlik tablosu yükleniyor...",
+        footerContactText: "Sorun yaşarsanız veya 1v1 kayıtları göndermek isterseniz bize ulaşın:",
+        footerText1: "Flex City Community Leaderboard • Hayran yapımı topluluk platformu.",
+        openSubmitBtn: "+ Kanıt Gönder",
+        modalTitle: "Flex City Liderlik Tablosuna Hoş Geldiniz!",
+        modalSubText: "Devam etmek için resmi Oyun İçi Adınızı (IGN) girin.",
+        modalSubmitBtn: "Liderlik Tablosuna Git",
+        editIgnTitle: "IGN Düzenle",
+        editIgnSub: "Resmi Flex City oyun içi adınızı güncelleyin.",
+        saveIgnBtn: "IGN Kaydet",
+        submitProofTitle: "Maç Ekran Görüntüsü Gönder",
+        labelIgn: "IGN Adınız (Flex City)",
+        labelOpponent: "Rakip Adı",
+        labelCategory: "Kategori",
+        labelScreenshotFile: "Sohbet Ekran Görüntüsü Yükle",
+        submitProofBtn: "Doğrulama İçin Gönder",
+        whatsNewModalTitle: "✨ Flex City Yenilikleri",
+        faqTitle: "Sıkça Sorulan Sorular",
+        faqSub: "Flex City PvP sıralamaları ve puanları hakkında hızlı cevaplar.",
+        logoutModalTitle: "Çıkış yapmak istediğinize emin misiniz?",
+        logoutModalSub: "Çıkış yaptıktan sonra tekrar giriş yapana kadar kanıt veya mesaj gönderemezsiniz."
+      },
+      fr: {
+        toggleLabel: "Lire en Français",
+        navSub: "Classement 1v1 Mondial et Régional",
+        loginBtn: "Connexion avec Google",
+        whatsNewBtn: "Nouveautés",
+        installPillText: "Installer l'App",
+        descTitle: "Qu'est-ce que c'est ?",
+        descText: "Bienvenue sur le hub officiel de la communauté suivant les meilleurs joueurs de Flex City dans le monde. Grimpez dans le classement de votre pays et défiez l'élite sur le classement Mondial !",
+        rulesHeading: "📜 Règles d'envoi et de défi :",
+        rulesHtml: `
+          <li><strong>Capture du Chat :</strong> Envoyez une capture claire où votre adversaire confirme le résultat et les points du 1v1.</li>
+          <li><strong>Double Classement :</strong> Gagner un match vous classe à la fois dans votre pays et dans le classement Mondial !</li>
+          <li><strong>Défi Direct :</strong> Appuyez sur un joueur ou utilisez l'icône Chat en bas à droite pour envoyer un message.</li>
+        `,
+        tabRanked: "🏆 Classés",
+        tabContenders: "⚔️ Prétendants",
+        sortTotal: "Général",
+        sortLong: "Top Longue Portée",
+        sortShort: "Top Courte Portée",
+        colRank: "Rang",
+        colPlayer: "Joueur",
+        colRange: "Pts Portée",
+        colTotal: "Total",
+        loadingText: "Chargement du classement...",
+        footerContactText: "Un problème ou une vidéo 1v1 à envoyer ? Contactez-nous :",
+        footerText1: "Flex City Community Leaderboard • Plateforme communautaire.",
+        openSubmitBtn: "+ Envoyer Preuve",
+        modalTitle: "Bienvenue sur Flex City Leaderboard !",
+        modalSubText: "Entrez votre pseudo officiel en jeu (IGN) pour continuer.",
+        modalSubmitBtn: "Continuer vers le classement",
+        editIgnTitle: "Modifier votre IGN",
+        editIgnSub: "Mettez à jour votre pseudo officiel Flex City.",
+        saveIgnBtn: "Enregistrer IGN",
+        submitProofTitle: "Envoyer une Capture de Match",
+        labelIgn: "Votre IGN (Flex City)",
+        labelOpponent: "Nom de l'Adversaire",
+        labelCategory: "Catégorie",
+        labelScreenshotFile: "Télécharger la Capture du Chat",
+        submitProofBtn: "Envoyer pour Vérification",
+        whatsNewModalTitle: "✨ Nouveautés sur Flex City",
+        faqTitle: "Questions Fréquentes",
+        faqSub: "Réponses rapides sur les classements et points Flex City.",
+        logoutModalTitle: "Voulez-vous vraiment vous déconnecter ?",
+        logoutModalSub: "Vous ne pourrez plus envoyer de preuves ni de messages avant de vous reconnecter."
+      }
+    };
+
+    async function detectVisitorCountryByIP() {
+      const apis = [
+        async () => {
+          const r = await fetch('https://ipwho.is/');
+          const d = await r.json();
+          if (d && d.success && d.country_code) return { code: d.country_code.toUpperCase(), name: d.country };
+          throw new Error('ipwho failed');
+        },
+        async () => {
+          const r = await fetch('https://ipapi.co/json/');
+          const d = await r.json();
+          if (d && d.country_code) return { code: d.country_code.toUpperCase(), name: d.country_name || d.country_code };
+          throw new Error('ipapi failed');
+        },
+        async () => {
+          const r = await fetch('https://api.country.is/');
+          const d = await r.json();
+          if (d && d.country) {
+            const regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
+            return { code: d.country.toUpperCase(), name: regionNames.of(d.country.toUpperCase()) || d.country };
+          }
+          throw new Error('country.is failed');
+        }
+      ];
+
+      for (const fetcher of apis) {
+        try {
+          const res = await fetcher();
+          if (res && res.code) {
+            visitorCountry = {
+              code: res.code,
+              name: res.name,
+              flag: countryCodeToFlag(res.code)
+            };
+            break;
+          }
+        } catch (e) {}
+      }
+
+      // Update Country Tab UI immediately
+      const flagEl = document.getElementById('detectedCountryFlag');
+      const nameEl = document.getElementById('detectedCountryName');
+      const subCountryEl = document.getElementById('submitDetectedCountry');
+      if (flagEl) flagEl.innerText = visitorCountry.flag;
+      if (nameEl) nameEl.innerText = visitorCountry.name;
+      if (subCountryEl) subCountryEl.innerText = `${visitorCountry.flag} ${visitorCountry.name}`;
+
+      // Configure Country-Specific Local Language Button
+      const mappedLang = countryLangMap[visitorCountry.code];
+      const langBtn = document.getElementById('langToggleBtn');
+      if (mappedLang && translations[mappedLang] && langBtn) {
+        detectedLocalLangCode = mappedLang;
+        document.getElementById('langFlag').innerText = visitorCountry.flag;
+        document.getElementById('langBtnText').innerText = translations[mappedLang].toggleLabel;
+        langBtn.classList.remove('hidden');
+        langBtn.classList.add('flex');
+      } else if (langBtn) {
+        // English-speaking / unmapped country: keep clean English without forced Hindi button
+        detectedLocalLangCode = null;
+        langBtn.classList.add('hidden');
+        langBtn.classList.remove('flex');
+      }
+
+      // Sync current user's country in Firestore automatically (works seamlessly with VPN too!)
+      if (currentUser) {
+        try {
+          await updateDoc(doc(db, "players", currentUser.uid), {
+            countryCode: visitorCountry.code,
+            countryName: visitorCountry.name
+          });
+          const me = allPlayers.find(p => p.id === currentUser.uid);
+          if (me) {
+            me.countryCode = visitorCountry.code;
+            me.countryName = visitorCountry.name;
+          }
+        } catch (e) {}
+      }
+
+      renderLeaderboard();
     }
 
     // ==================== OPTIONAL PWA HOME SCREEN INSTALL PILL ====================
@@ -666,6 +1184,7 @@
 
     let currentUser = null;
     let allPlayers = [];
+    let currentRegion = 'global';
     let currentSort = 'total';
     let currentMainTab = 'ranked';
     let selectedPlayer = null;
@@ -704,143 +1223,69 @@
       } catch (e) {}
     }
 
-    // What's New Items (Accurate Real Timestamps)
+    // What's New Items
     const whatsNewData = [
       {
-        version: "v2.4",
-        date: "Nov 20, 2026 • 11:36 AM IST",
-        en: "✨ Idea: Optional one-tap Home Screen App installer pill + smooth spring open/close animation for the messaging drawer. 🛠️ Bug Fix: Fixed inaccurate timestamps in What's New updates.",
-        hi: "✨ आइडिया: होम स्क्रीन ऐप इंस्टॉल करने के लिए वैकल्पिक बटन + मैसेजिंग ड्रॉअर के लिए स्मूथ ओपन/क्लोज एनिमेशन। 🛠️ बग फिक्स: What's New में गलत टाइमिंग को सही किया गया।"
+        version: "v2.6",
+        date: "Nov 20, 2026 • 11:57 AM IST",
+        en: "✨ Idea: Live IP Country Detection — automatically detects your country (or VPN region) next to Global! Winning matches ranks you on both your Country board and Global board, plus auto-switches local language options by country.",
+        local: "✨ Idea: Live IP Country Detection — automatically detects your country (or VPN region) next to Global! Winning matches ranks you on both your Country board and Global board."
       },
       {
-        version: "v2.3",
-        date: "Nov 19, 2026 • 09:20 PM IST",
-        en: "✨ Idea: Press & hold any chat message for animated controls — Rewrite your message, Hide for Me, or Erase Globally + added custom FC site icon & top player rankings info. 🛠️ Bug Fix: Improved search visibility and message bubble touch responsiveness.",
-        hi: "✨ आइडिया: किसी भी चैट मैसेज को दबाकर रखें (Hold) और एनिमेटेड कंट्रोल पाएं — Rewrite, Hide for Me, या Erase Globally + नया FC आइकन जोड़ा गया। 🛠️ बग फिक्स: सर्च विजिबिलिटी और टच रिस्पॉन्स बेहतर किया गया।"
+        version: "v2.5",
+        date: "Nov 20, 2026 • 11:49 AM IST",
+        en: "✨ Idea: Optional one-tap Home Screen App installer pill + smooth spring open/close animation for the messaging drawer. 🛠️ Bug Fix: Fixed inaccurate timestamps in What's New updates.",
+        local: "✨ Idea: Optional one-tap Home Screen App installer pill + smooth spring open/close animation for the messaging drawer."
       }
     ];
 
     let tickerMessages = [];
     let tickerIndex = 0;
 
-    const translations = {
-      en: {
-        navSub: "Official 1v1 Community Tiers",
-        loginBtn: "Login with Google",
-        whatsNewBtn: "What's New",
-        installPillText: "Install App",
-        descTitle: "What is this?",
-        langBtnText: "See in Hindi (हिंदी में पढ़ें)",
-        descText: "Welcome to the official community hub tracking every Flex City top player across India. Compete in Long Range and Short Range 1v1 PvP duels, climb the live rankings, swap positions with higher-tiered rivals, and prove your skill on the Flex City India top player board.",
-        rulesHeading: "📜 How to Submit Proof & Challenge Rules:",
-        rulesHtml: `
-          <li><strong>Chat Screenshot:</strong> Upload a clear chat screenshot where your opponent agrees to the 1v1 result & points.</li>
-          <li><strong>Rank Swap:</strong> Defeat a higher-ranked Flex City player to take their exact spot on the leaderboard!</li>
-          <li><strong>Direct Challenge:</strong> Tap on any player or use the bottom-right Chat icon to message opponents directly for 1v1s.</li>
-        `,
-        modalRuleNote: "💡 <strong>Rule:</strong> Upload the chat screenshot where your opponent agrees to the match result. Defeating a higher-ranked player swaps your rank with theirs!",
-        tabRanked: "🏆 Ranked",
-        tabContenders: "⚔️ Contenders",
-        sortTotal: "Overall",
-        sortLong: "Long Range Top",
-        sortShort: "Short Range Top",
-        colRank: "Rank",
-        colPlayer: "Player",
-        colRange: "Range Pts",
-        colTotal: "Total",
-        loadingText: "Loading fresh leaderboard data...",
-        footerContactText: "If you have any issues or want to send 1v1 recordings, contact us:",
-        footerText1: "Flex City India Community Leaderboard • Unofficial fan-made platform.",
-        openSubmitBtn: "+ Submit Proof",
-        modalTitle: "Welcome to Flex City Leaderboard!",
-        modalSubText: "Please enter your official In-Game Name (IGN) to continue.",
-        modalSubmitBtn: "Continue to Leaderboard",
-        editIgnTitle: "Edit Your IGN",
-        editIgnSub: "Update your official Flex City In-Game Name.",
-        saveIgnBtn: "Save IGN",
-        submitProofTitle: "Submit Match Screenshot",
-        labelIgn: "Your IGN (Flex City)",
-        labelOpponent: "Opponent Name",
-        labelCategory: "Category",
-        labelScreenshotFile: "Upload Chat Screenshot",
-        submitProofBtn: "Send Screenshot for Verification",
-        whatsNewModalTitle: "✨ What's New in Flex City",
-        faqTitle: "Frequently Asked Questions",
-        faqSub: "Quick answers about Flex City PvP tiers, top player rankings, and points.",
-        logoutModalTitle: "Are You Sure You Want to Log Out?",
-        logoutModalSub: "After logging out, you won't be able to submit match screenshot proofs, send messages, or challenge players until you log back in with Google."
-      },
-      hi: {
-        navSub: "ऑफिशियल 1v1 कम्युनिटी लीडरबोर्ड",
-        loginBtn: "गूगल से लॉगिन करें",
-        whatsNewBtn: "नया क्या है",
-        installPillText: "ऐप इंस्टॉल करें",
-        descTitle: "यह क्या है? (What is this?)",
-        langBtnText: "See in English (अंग्रेजी में देखें)",
-        descText: "यह भारत के हर Flex City टॉप प्लेयर की लाइव रैंकिंग दिखाने वाला ऑफिशियल कम्युनिटी लीडरबोर्ड है। लॉन्ग रेंज और शॉर्ट रेंज 1v1 मैच खेलें, ऊपर के खिलाड़ियों को हराकर रैंक स्वैप करें और Flex City India टॉप प्लेयर लिस्ट में अपनी जगह बनाएं।",
-        rulesHeading: "📜 प्रूफ सबमिट करने के नियम:",
-        rulesHtml: `
-          <li><strong>चैट स्क्रीनशॉट:</strong> गेम की चैट का एक साफ़ स्क्रीनशॉट अपलोड करें जिसमें आपका Opponent 1v1 के रिजल्ट और पॉइंट्स पर राज़ी हो।</li>
-          <li><strong>रैंक स्वैप (Rank Swap):</strong> अपने से ऊपर की रैंक वाले Flex City खिलाड़ी को हराएं और उसकी जगह लें!</li>
-          <li><strong>डायरेक्ट चैलेंज:</strong> किसी भी खिलाड़ी पर टैप करें या नीचे दाएं कोने में चैट आइकन से सीधे मैसेज करें।</li>
-        `,
-        modalRuleNote: "💡 <strong>नियम:</strong> चैट का ऐसा स्क्रीनशॉट डालें जिसमें Opponent रिजल्ट पर राज़ी हो। ऊपर वाले खिलाड़ी को हराने पर रैंक स्वैप हो जाएगी!",
-        tabRanked: "🏆 रैंकड",
-        tabContenders: "⚔️ कंटेंडर्स",
-        sortTotal: "कुल पॉइंट्स (Overall)",
-        sortLong: "लॉन्ग रेंज टॉप",
-        sortShort: "शॉर्ट रेंज टॉप",
-        colRank: "रैंक",
-        colPlayer: "प्लेयर",
-        colRange: "रेंज पॉइंट्स",
-        colTotal: "कुल",
-        loadingText: "लीडरबोर्ड डाटा लोड हो रहा है...",
-        footerContactText: "यदि आपको कोई समस्या है या 1v1 रिकॉर्डिंग भेजनी है, तो संपर्क करें:",
-        footerText1: "Flex City इंडिया कम्युनिटी लीडरबोर्ड • अनौपचारिक फैन-मेड प्लेटफॉर्म।",
-        openSubmitBtn: "+ प्रूफ सबमिट करें",
-        modalTitle: "Flex City लीडरबोर्ड में आपका स्वागत है!",
-        modalSubText: "कृपया आगे बढ़ने के लिए अपना ऑफिशियल इन-गेम नाम (IGN) दर्ज करें।",
-        modalSubmitBtn: "लीडरबोर्ड पर जाएं",
-        editIgnTitle: "अपना IGN बदलें",
-        editIgnSub: "अपना ऑफिशियल Flex City इन-गेम नाम अपडेट करें।",
-        saveIgnBtn: "IGN सेव करें",
-        submitProofTitle: "मैच स्क्रीनशॉट सबमिट करें",
-        labelIgn: "आपका इन-गेम नाम (IGN)",
-        labelOpponent: "सामने वाले खिलाड़ी का नाम (Opponent)",
-        labelCategory: "श्रेणी (Category)",
-        labelScreenshotFile: "चैट स्क्रीनशॉट अपलोड करें",
-        submitProofBtn: "वेरिफिकेशन के लिए भेजें",
-        whatsNewModalTitle: "✨ फ्लेक्स सिटी में नया क्या है",
-        faqTitle: "अक्सर पूछे जाने वाले सवाल (FAQ)",
-        faqSub: "टीयर्स, टॉप प्लेयर रैंकिंग और फ्लेक्स सिटी के बारे में त्वरित उत्तर।",
-        logoutModalTitle: "क्या आप वाकई लॉग आउट करना चाहते हैं?",
-        logoutModalSub: "लॉग आउट करने के बाद, आप Google से दोबारा लॉगिन करने तक मैच स्क्रीनशॉट प्रूफ सबमिट नहीं कर पाएंगे या मैसेज नहीं भेज पाएंगे।"
-      }
-    };
-
     function setSafeText(id, text) {
       const el = document.getElementById(id);
       if (el) el.innerText = text;
     }
 
+    window.setRegionFilter = (region) => {
+      currentRegion = region;
+      const gBtn = document.getElementById('region-global');
+      const lBtn = document.getElementById('region-local');
+      const activeCls = "px-3.5 py-1.5 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-semibold text-xs flex items-center gap-1.5 cursor-pointer transition";
+      const idleCls = "px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition";
+
+      if (gBtn && lBtn) {
+        gBtn.className = region === 'global' ? activeCls : idleCls;
+        lBtn.className = region === 'local' ? activeCls : idleCls;
+      }
+      renderLeaderboard();
+    };
+
     window.toggleLanguage = () => {
-      currentLang = currentLang === 'en' ? 'hi' : 'en';
-      const t = translations[currentLang];
+      if (!detectedLocalLangCode) return;
+      isLocalLangActive = !isLocalLangActive;
+      currentLang = isLocalLangActive ? detectedLocalLangCode : 'en';
+      const t = translations[currentLang] || translations.en;
       
       setSafeText('navSub', t.navSub);
       setSafeText('loginBtn', t.loginBtn);
       setSafeText('whatsNewBtnText', t.whatsNewBtn);
       setSafeText('installPillText', t.installPillText);
       setSafeText('descTitle', t.descTitle);
-      setSafeText('langBtnText', t.langBtnText);
+      
+      if (isLocalLangActive) {
+        document.getElementById('langFlag').innerText = '🌐';
+        setSafeText('langBtnText', translations.en.toggleLabel);
+      } else {
+        document.getElementById('langFlag').innerText = visitorCountry.flag;
+        setSafeText('langBtnText', translations[detectedLocalLangCode].toggleLabel);
+      }
+
       setSafeText('descText', t.descText);
       setSafeText('rulesHeading', t.rulesHeading);
       
       const rulesListEl = document.getElementById('rulesList');
       if (rulesListEl) rulesListEl.innerHTML = t.rulesHtml;
-
-      const modalRuleEl = document.getElementById('modalRuleNote');
-      if (modalRuleEl) modalRuleEl.innerHTML = t.modalRuleNote;
 
       setSafeText('tabRanked', t.tabRanked);
       setSafeText('tabContenders', t.tabContenders);
@@ -878,6 +1323,7 @@
       renderLeaderboard();
     };
 
+    detectVisitorCountryByIP();
     initNotificationPromptOnEntry();
     loadLeaderboard();
 
@@ -931,14 +1377,14 @@
       let events = [];
       allPlayers.forEach(p => {
         const ign = p.ign || p.name || "Player";
+        const flag = p.countryCode ? countryCodeToFlag(p.countryCode) : '🌍';
         const pts = (p.longPoints || 0) + (p.shortPoints || 0);
         const tabName = pts > 0 ? "Ranked Leaderboard" : "Contenders Queue";
         
         if (p.joinedAt) {
           events.push({
             time: p.joinedAt,
-            textEn: `⚔️ Latest: ${ign} joined ${tabName}!`,
-            textHi: `⚔️ नया अपडेट: ${ign} ने ${tabName} ज्वाइन किया!`
+            text: `⚔️ Latest: ${flag} ${ign} joined ${tabName}!`
           });
         }
 
@@ -948,8 +1394,7 @@
               const catName = pr.category === 'long' ? 'Long Range' : 'Short Range';
               events.push({
                 time: pr.timestamp,
-                textEn: `🔥 Latest: ${ign} defeated ${pr.opponent} in ${catName}!`,
-                textHi: `🔥 नया मैच: ${ign} ने ${pr.opponent} को ${catName} में हराया!`
+                text: `🔥 Latest: ${flag} ${ign} defeated ${pr.opponent} in ${catName}!`
               });
             }
           });
@@ -960,13 +1405,9 @@
       const topThree = events.slice(0, 3);
 
       if (topThree.length === 0) {
-        tickerMessages = [
-          currentLang === 'hi' 
-            ? "⚡ नया अपडेट: Flex City 1v1 लीडरबोर्ड लाइव है!" 
-            : "⚡ Latest: Flex City 1v1 Leaderboard is LIVE!"
-        ];
+        tickerMessages = ["⚡ Latest: Flex City Global 1v1 Leaderboard is LIVE!"];
       } else {
-        tickerMessages = topThree.map(ev => currentLang === 'hi' ? ev.textHi : ev.textEn);
+        tickerMessages = topThree.map(ev => ev.text);
       }
 
       tickerIndex = 0;
@@ -990,6 +1431,11 @@
           document.getElementById('forcedIgnModal').classList.add('flex');
         } else {
           userIgn = snap.data().ign || user.displayName || "Player";
+          // Auto-update player's detected country on visit (supports VPN region switching too)
+          await updateDoc(playerRef, {
+            countryCode: visitorCountry.code,
+            countryName: visitorCountry.name
+          }).catch(() => {});
         }
 
         authArea.innerHTML = `
@@ -1012,7 +1458,8 @@
         checkNotificationPermissionBtn();
       } else {
         isAdmin = false;
-        authArea.innerHTML = `<button id="loginBtn" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold px-3.5 py-1.5 rounded-xl text-xs transition cursor-pointer">${translations[currentLang].loginBtn}</button>`;
+        const loginLabel = (translations[currentLang] || translations.en).loginBtn;
+        authArea.innerHTML = `<button id="loginBtn" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold px-3.5 py-1.5 rounded-xl text-xs transition cursor-pointer">${loginLabel}</button>`;
         document.getElementById('loginBtn').onclick = () => signInWithPopup(auth, provider);
         submitBtn.classList.add('hidden');
         adminBtn.classList.add('hidden');
@@ -1034,6 +1481,8 @@
         uid: currentUser.uid,
         name: currentUser.displayName || "Player",
         ign: userIgn,
+        countryCode: visitorCountry.code,
+        countryName: visitorCountry.name,
         photo: currentUser.photoURL || "https://api.dicebear.com/7.x/avataaars/svg?seed=" + currentUser.uid,
         longPoints: 0,
         shortPoints: 0,
@@ -1440,13 +1889,14 @@
         const convo = allUserDms.filter(m => m.participants.includes(p.id));
         const lastMsg = convo[convo.length - 1];
         const unread = convo.filter(m => m.senderUid === p.id && !m.read).length;
+        const flag = p.countryCode ? countryCodeToFlag(p.countryCode) : '🌍';
 
         return `
           <div onclick="openDmWithUser('${p.id}', '${escapeHtml(p.ign || p.name)}')" class="p-3.5 flex items-center justify-between hover:bg-slate-800/50 cursor-pointer transition">
             <div class="flex items-center gap-3 truncate">
               <img src="${p.photo}" class="w-9 h-9 rounded-full border border-slate-700 object-cover flex-shrink-0" />
               <div class="truncate">
-                <div class="font-bold text-xs text-white truncate">${escapeHtml(p.ign || p.name)}</div>
+                <div class="font-bold text-xs text-white truncate">${flag} ${escapeHtml(p.ign || p.name)}</div>
                 <div class="text-[11px] ${unread > 0 ? 'text-cyan-300 font-semibold' : 'text-slate-400'} truncate">
                   ${lastMsg ? (lastMsg.senderUid === currentUser.uid ? 'You: ' : '') + escapeHtml(lastMsg.text) : 'Tap to send 1v1 challenge...'}
                 </div>
@@ -1630,7 +2080,7 @@
             <span class="text-cyan-400 font-bold">📅 ${item.date}</span>
             <span class="bg-cyan-500/15 text-cyan-300 px-1.5 py-0.5 rounded font-bold">${item.version}</span>
           </div>
-          <div class="text-xs text-slate-300 leading-relaxed">${currentLang === 'hi' ? item.hi : item.en}</div>
+          <div class="text-xs text-slate-300 leading-relaxed">${item.en}</div>
         </div>
       `).join('');
     }
@@ -1699,7 +2149,16 @@
       
       const filtered = allPlayers.filter(p => {
         const pts = (p.longPoints || 0) + (p.shortPoints || 0);
-        return currentMainTab === 'ranked' ? pts > 0 : pts === 0;
+        const matchesTab = currentMainTab === 'ranked' ? pts > 0 : pts === 0;
+        if (!matchesTab) return false;
+
+        if (currentRegion === 'local') {
+          const pCode = (p.countryCode || '').toUpperCase();
+          // Legacy players without a countryCode default to 'IN' so existing Indian players aren't lost
+          const effectiveCode = pCode || 'IN';
+          return effectiveCode === visitorCountry.code;
+        }
+        return true;
       });
 
       const sorted = filtered.sort((a, b) => {
@@ -1710,15 +2169,18 @@
       });
 
       if (sorted.length === 0) {
-        list.innerHTML = `<div class="p-8 text-center text-slate-400 text-xs">${currentMainTab === 'ranked' ? (currentLang === 'hi' ? 'कोई रैंकड खिलाड़ी नहीं है। लीडरबोर्ड पर आने के लिए चैट स्क्रीनशॉट प्रूफ सबमिट करें!' : 'No ranked players yet. Submit a chat screenshot proof to get on the leaderboard!') : (currentLang === 'hi' ? 'कतार में कोई कंटेंडर नहीं है।' : 'No contenders in queue.')}</div>`;
+        const emptyMsg = currentMainTab === 'ranked'
+          ? `No ranked players in ${currentRegion === 'local' ? visitorCountry.name : 'Global'} yet. Submit a chat screenshot proof to claim #1!`
+          : `No contenders in ${currentRegion === 'local' ? visitorCountry.name : 'Global'} queue yet.`;
+        list.innerHTML = `<div class="p-8 text-center text-slate-400 text-xs">${emptyMsg}</div>`;
         return;
       }
 
       list.innerHTML = sorted.map((p, i) => {
         const totalPts = (p.longPoints || 0) + (p.shortPoints || 0);
         const rankBadge = currentMainTab === 'contenders' ? '⏳' : (i === 0 ? '🥇 #1' : i === 1 ? '🥈 #2' : i === 2 ? '🥉 #3' : `#${i + 1}`);
-        const matchText = currentLang === 'hi' ? 'मैच' : 'matches';
         const streakBadge = getStreakBadgeHtml(p.streak);
+        const pFlag = p.countryCode ? countryCodeToFlag(p.countryCode) : '🇮🇳';
 
         let adminActionHtml = '';
         if (isAdmin) {
@@ -1736,10 +2198,11 @@
               <img src="${p.photo}" class="w-8 h-8 rounded-full border border-slate-700 object-cover flex-shrink-0 shadow-sm" />
               <div class="truncate">
                 <div class="flex items-center gap-1.5 flex-wrap">
+                  <span class="text-xs" title="${p.countryName || 'Country'}">${pFlag}</span>
                   <span class="font-semibold text-xs text-white truncate">${p.ign || p.name}</span>
                   ${streakBadge}
                 </div>
-                <div class="text-[10px] text-slate-400 mt-0.5">${(p.longMatches || 0) + (p.shortMatches || 0)} ${matchText}</div>
+                <div class="text-[10px] text-slate-400 mt-0.5">${(p.longMatches || 0) + (p.shortMatches || 0)} matches</div>
               </div>
             </div>
             <div class="col-span-2 text-center text-xs font-medium text-sky-300">${currentMainTab === 'ranked' ? (currentSort === 'long' ? p.longPoints || 0 : (currentSort === 'short' ? p.shortPoints || 0 : (p.longPoints || 0) + (p.shortPoints || 0))) : '-'}</div>
@@ -1801,7 +2264,7 @@
       userIgn = newIgn;
       closeModal('ignModal');
       loadLeaderboard();
-      alert(currentLang === 'hi' ? "IGN सफलतापूर्वक अपडेट हो गया!" : "IGN updated successfully!");
+      alert("IGN updated successfully!");
     };
 
     window.openPlayer = (id) => {
@@ -1809,6 +2272,10 @@
       if (!selectedPlayer) return;
       document.getElementById('modalAvatar').src = selectedPlayer.photo;
       document.getElementById('modalName').innerText = selectedPlayer.ign || selectedPlayer.name;
+      
+      const pFlag = selectedPlayer.countryCode ? countryCodeToFlag(selectedPlayer.countryCode) : '🇮🇳';
+      const pCountry = selectedPlayer.countryName || 'India';
+      document.getElementById('modalCountryBadge').innerHTML = `<span class="bg-slate-800 border border-slate-700 text-slate-300 px-1.5 py-0.5 rounded text-[9px] font-semibold">${pFlag} ${pCountry}</span>`;
       document.getElementById('modalStreakBadge').innerHTML = getStreakBadgeHtml(selectedPlayer.streak);
       
       const dmBox = document.getElementById('playerDmTriggerBox');
@@ -1827,7 +2294,7 @@
       if (!selectedPlayer) return;
       const total1v1 = (selectedPlayer.longMatches || 0) + (selectedPlayer.shortMatches || 0);
       const totalPts = (selectedPlayer.longPoints || 0) + (selectedPlayer.shortPoints || 0);
-      document.getElementById('modalSub').innerText = `${currentLang === 'hi' ? 'कुल 1v1s' : 'Total 1v1s'}: ${total1v1} • ${currentLang === 'hi' ? 'कुल पॉइंट्स' : 'Total Pts'}: ${totalPts}`;
+      document.getElementById('modalSub').innerText = `Total 1v1s: ${total1v1} • Total Pts: ${totalPts}`;
       
       const rivalryMap = {};
       (selectedPlayer.proofs || []).forEach(pr => {
@@ -1872,11 +2339,11 @@
       const matches = tab === 'long' ? (selectedPlayer.longMatches || 0) : (selectedPlayer.shortMatches || 0);
       document.getElementById('modalStats').innerHTML = `
         <div class="bg-slate-900 border border-slate-800 p-3 rounded-xl shadow-sm">
-          <div class="text-[10px] text-slate-400">${tab === 'long' ? (currentLang === 'hi' ? 'लॉन्ग रेंज' : 'Long Range') : (currentLang === 'hi' ? 'शॉर्ट रेंज' : 'Short Range')} Pts</div>
+          <div class="text-[10px] text-slate-400">${tab === 'long' ? 'Long Range' : 'Short Range'} Pts</div>
           <div class="text-base font-bold text-cyan-400 mt-0.5">${pts}</div>
         </div>
         <div class="bg-slate-900 border border-slate-800 p-3 rounded-xl shadow-sm">
-          <div class="text-[10px] text-slate-400">${currentLang === 'hi' ? 'खेले गए मैच' : 'Matches Played'}</div>
+          <div class="text-[10px] text-slate-400">Matches Played</div>
           <div class="text-base font-bold text-emerald-400 mt-0.5">${matches}</div>
         </div>
       `;
@@ -1884,7 +2351,7 @@
       const proofs = (selectedPlayer.proofs || []).map((p, idx) => ({ ...p, originalIndex: idx })).filter(p => p.category === tab);
       const proofContainer = document.getElementById('modalProofs');
       if (proofs.length === 0) {
-        proofContainer.innerHTML = `<p class="text-[11px] text-slate-500 bg-slate-900/40 p-4 rounded-xl text-center">${currentLang === 'hi' ? 'अभी कोई सत्यापित स्क्रीनशॉट नहीं है।' : `No verified ${tab} range screenshots yet.`}</p>`;
+        proofContainer.innerHTML = `<p class="text-[11px] text-slate-500 bg-slate-900/40 p-4 rounded-xl text-center">No verified ${tab} range screenshots yet.</p>`;
       } else {
         proofContainer.innerHTML = proofs.map(pr => `
           <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 space-y-2">
@@ -1956,6 +2423,7 @@
 
     window.openSubmitProofModal = () => {
       document.getElementById('ignInput').value = userIgn;
+      document.getElementById('submitDetectedCountry').innerText = `${visitorCountry.flag} ${visitorCountry.name}`;
       document.getElementById('submitModal').classList.remove('hidden');
       document.getElementById('submitModal').classList.add('flex');
     };
@@ -1975,7 +2443,7 @@
       const fileInput = document.getElementById('screenshotFileInput');
 
       if (ign.toLowerCase() === opponent.toLowerCase()) {
-        return alert(currentLang === 'hi' ? "आप खुद के खिलाफ मैच सबमिट नहीं कर सकते!" : "You cannot submit a match against yourself!");
+        return alert("You cannot submit a match against yourself!");
       }
 
       if (fileInput.files.length === 0) return alert("Please select a screenshot image!");
@@ -1984,11 +2452,17 @@
       btn.innerText = "Uploading...";
 
       compressImage(fileInput.files[0], async (compressedBase64) => {
-        await updateDoc(doc(db, "players", currentUser.uid), { ign });
+        await updateDoc(doc(db, "players", currentUser.uid), {
+          ign,
+          countryCode: visitorCountry.code,
+          countryName: visitorCountry.name
+        });
         userIgn = ign;
         await addDoc(collection(db, "submissions"), {
           uid: currentUser.uid,
           ign,
+          countryCode: visitorCountry.code,
+          countryName: visitorCountry.name,
           opponent,
           category,
           screenshotUrl: compressedBase64,
@@ -1997,8 +2471,8 @@
         });
 
         btn.disabled = false;
-        btn.innerText = translations[currentLang].submitProofBtn;
-        alert(currentLang === 'hi' ? "स्क्रीनशॉट प्रूफ सफलतापूर्वक सबमिट हो गया! एडमिन जल्द वेरीफाई करेगा।" : "Screenshot submitted successfully! Admin will verify soon.");
+        btn.innerText = (translations[currentLang] || translations.en).submitProofBtn;
+        alert(`Screenshot submitted! Your country (${visitorCountry.name}) is tagged so you will rank on both ${visitorCountry.name} and Global boards.`);
         closeModal('submitModal');
         e.target.reset();
         loadLeaderboard();
@@ -2024,12 +2498,13 @@
         const s = docSnap.data();
         const sid = docSnap.id;
         pendingCache[sid] = s;
+        const sFlag = s.countryCode ? countryCodeToFlag(s.countryCode) : '🌍';
         const div = document.createElement('div');
         div.className = "bg-slate-900 border border-slate-800 rounded-xl p-3.5 space-y-3";
         div.innerHTML = `
           <div class="flex justify-between items-start gap-2">
             <div>
-              <div class="text-[10px] text-slate-400 mb-0.5">Player IGN:</div>
+              <div class="text-[10px] text-slate-400 mb-0.5">Player IGN (${sFlag} ${s.countryName || 'Global'}):</div>
               <div class="flex items-center gap-2">
                 <input type="text" id="admin-ign-${sid}" value="${s.ign}" class="bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1 text-xs font-bold text-white" />
                 <button onclick="updatePlayerIgnByAdmin('${s.uid}', '${sid}')" class="bg-cyan-500/20 text-cyan-400 text-[10px] px-2.5 py-1 rounded-lg border border-cyan-500/30 font-semibold cursor-pointer">Update</button>
@@ -2103,7 +2578,9 @@
 
           const updateData = { 
             proofs,
-            streak: newStreak
+            streak: newStreak,
+            countryCode: s.countryCode || data.countryCode || 'IN',
+            countryName: s.countryName || data.countryName || 'India'
           };
           if (s.category === 'long') {
             updateData.longPoints = (data.longPoints || 0) + pts;
@@ -2121,7 +2598,7 @@
         }
         
         await deleteDoc(subRef);
-        alert("Proof approved successfully! Points and streak updated.");
+        alert("Proof approved! Player is now ranked on both their Country board and Global board.");
         loadPendingSubmissions();
         loadLeaderboard();
       } catch (err) {
