@@ -89,7 +89,7 @@
     .chat-sheet-exit {
       animation: chatSheetOut 0.2s ease-in forwards;
     }
-  </style></head><body class="min-h-screen flex flex-col antialiased pb-16">
+  </style></head><body class="min-h-screen flex flex-col antialiased">
 
   <!-- Instagram / In-App Browser Warning Banner -->
   <div id="inAppBanner" class="hidden bg-amber-500 text-slate-950 px-3 py-2 text-center text-xs font-bold">
@@ -279,6 +279,99 @@
 
   </main>
 
+  <!-- Clean Professional Footer (Inspired by FlexCity.app & ByteByteGo) -->
+  <footer class="bg-[#090c12] border-t border-slate-800/80 mt-10 pb-20 sm:pb-10">
+    <div class="max-w-4xl mx-auto px-4 pt-8 pb-6 space-y-7">
+      
+      <!-- Top Row: Brand & Minimal Icon Links -->
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800/70 pb-6">
+        <div class="flex items-center gap-2.5">
+          <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center font-black text-white text-xs shadow-sm">FC</div>
+          <div>
+            <div class="font-bold text-xs tracking-wide text-white">FLEX CITY <span class="text-cyan-400">LEADERBOARD</span></div>
+            <div class="text-[11px] text-slate-500">Maintained by <span class="text-slate-300 font-semibold">BoomCraze</span></div>
+          </div>
+        </div>
+
+        <!-- Crisp Minimal Social & Contact Icons -->
+        <div class="flex items-center gap-4 text-slate-400">
+          <!-- Instagram -->
+          <a href="https://ig.me/m/boomcrraze" target="_blank" rel="noopener" class="hover:text-white transition p-1.5 rounded-lg hover:bg-slate-800/70" title="Instagram: @boomcrraze" aria-label="Instagram">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
+          </a>
+
+          <!-- Discord (Copies username boomcraze) -->
+          <button type="button" onclick="copyDiscordHandle()" class="hover:text-white transition p-1.5 rounded-lg hover:bg-slate-800/70 cursor-pointer flex items-center gap-1.5" title="Discord: boomcraze (Click to copy)" aria-label="Discord">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
+          </button>
+
+          <!-- Direct Email -->
+          <a href="mailto:flexcity.tierlist@gmail.com" class="hover:text-white transition p-1.5 rounded-lg hover:bg-slate-800/70" title="Email: flexcity.tierlist@gmail.com" aria-label="Email">
+            <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+          </a>
+        </div>
+      </div>
+
+      <!-- Middle Row: Clean 3-Column Directory (ByteByteGo style) -->
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-xs">
+        
+        <!-- Column 1: Leaderboard -->
+        <div class="space-y-2.5">
+          <h4 id="footerCol1Title" class="font-bold text-slate-200 tracking-wide">Leaderboard</h4>
+          <ul class="space-y-2 text-slate-400">
+            <li><button type="button" onclick="setRegionFilter('local'); window.scrollTo({top:0, behavior:'smooth'})" class="hover:text-cyan-400 transition cursor-pointer">Regional Rankings</button></li>
+            <li><button type="button" onclick="setRegionFilter('global'); window.scrollTo({top:0, behavior:'smooth'})" class="hover:text-cyan-400 transition cursor-pointer">Global Top Players</button></li>
+            <li><button type="button" onclick="switchMainTab('contenders'); window.scrollTo({top:0, behavior:'smooth'})" class="hover:text-cyan-400 transition cursor-pointer">Contenders Queue</button></li>
+            <li><button type="button" onclick="openWhatsNewModal()" class="hover:text-cyan-400 transition cursor-pointer">Changelog & Updates</button></li>
+          </ul>
+        </div>
+
+        <!-- Column 2: Connect & Socials -->
+        <div class="space-y-2.5">
+          <h4 id="footerCol2Title" class="font-bold text-slate-200 tracking-wide">Connect</h4>
+          <ul class="space-y-2 text-slate-400">
+            <li>
+              <a href="https://ig.me/m/boomcrraze" target="_blank" rel="noopener" class="hover:text-cyan-400 transition inline-flex items-center gap-1.5">
+                <span>Instagram:</span> <span class="text-slate-300">@boomcrraze</span>
+              </a>
+            </li>
+            <li>
+              <button type="button" onclick="copyDiscordHandle()" class="hover:text-cyan-400 transition inline-flex items-center gap-1.5 cursor-pointer text-left">
+                <span>Discord:</span> <span class="text-slate-300">boomcraze</span> <span id="discordCopiedTag" class="text-[10px] text-emerald-400 font-semibold hidden">(Copied!)</span>
+              </button>
+            </li>
+            <li>
+              <button type="button" onclick="openChatDrawer()" class="hover:text-cyan-400 transition cursor-pointer">Live Global & DM Chat</button>
+            </li>
+          </ul>
+        </div>
+
+        <!-- Column 3: Support & Inquiries -->
+        <div class="space-y-2.5">
+          <h4 id="footerCol3Title" class="font-bold text-slate-200 tracking-wide">Support & Inquiries</h4>
+          <ul class="space-y-2 text-slate-400">
+            <li>
+              <a href="mailto:flexcity.tierlist@gmail.com" class="hover:text-cyan-400 transition break-all">flexcity.tierlist@gmail.com</a>
+              <span class="block text-[10px] text-slate-500">Match proofs & leaderboard help</span>
+            </li>
+            <li>
+              <a href="mailto:boomcrazee@gmail.com" class="hover:text-cyan-400 transition break-all">boomcrazee@gmail.com</a>
+              <span class="block text-[10px] text-slate-500">Creator & collaboration inquiries</span>
+            </li>
+          </ul>
+        </div>
+
+      </div>
+
+      <!-- Bottom Copyright & Disclaimer Bar -->
+      <div class="border-t border-slate-800/70 pt-5 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-slate-500">
+        <p id="footerText1">© 2026 Flex City Community Leaderboard • Created by BoomCraze.</p>
+        <p id="footerText2">Unofficial fan-made platform • Not affiliated with Jarvi Games.</p>
+      </div>
+
+    </div>
+  </footer>
+
   <!-- Floating Message Button (Bottom Right) -->
   <button onclick="openChatDrawer()" id="floatingChatBtn" class="fixed bottom-5 right-5 z-40 w-13 h-13 p-3.5 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white shadow-xl shadow-cyan-500/25 flex items-center justify-center transition transform hover:scale-105 active:scale-90 cursor-pointer" title="Messages & Global Chat">
     <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
@@ -423,17 +516,6 @@
       </div>
     </div>
   </div>
-
-  <!-- Footer -->
-  <footer class="border-t border-slate-800/60 py-6 text-center text-xs text-slate-400 px-4 space-y-3 mt-6">
-    <p id="footerContactText">If you have any issues or want to send 1v1 recordings, contact us:</p>
-    <div class="max-w-xs mx-auto">
-      <a href="https://ig.me/m/boomcrraze" target="_blank" class="flex items-center justify-center gap-2 bg-gradient-to-r from-purple-600 via-pink-600 to-amber-500 hover:opacity-90 text-white font-bold px-4 py-2.5 rounded-2xl text-xs transition shadow-lg">
-        <span class="text-base">📸</span> <span>Instagram: <span class="underline">@boomcrraze</span></span>
-      </a>
-    </div>
-    <p id="footerText1" class="text-[10px] text-slate-500 pt-1">Flex City Community Leaderboard • Unofficial fan-made platform.</p>
-  </footer>
 
   <!-- Forced IGN Setup Modal -->
   <div id="forcedIgnModal" class="fixed inset-0 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
@@ -621,6 +703,17 @@
       navigator.serviceWorker.register('/firebase-messaging-sw.js').catch(() => {});
     }
 
+    window.copyDiscordHandle = () => {
+      if (navigator.clipboard) {
+        navigator.clipboard.writeText('boomcraze').catch(() => {});
+      }
+      const tag = document.getElementById('discordCopiedTag');
+      if (tag) {
+        tag.classList.remove('hidden');
+        setTimeout(() => tag.classList.add('hidden'), 2200);
+      }
+    };
+
     // ==================== COUNTRY CODE TO FLAG EMOJI HELPER ====================
     function countryCodeToFlag(code) {
       if (!code || code.length !== 2) return '🌍';
@@ -674,8 +767,8 @@
         colRange: "Range Pts",
         colTotal: "Total",
         loadingText: "Loading fresh leaderboard data...",
-        footerContactText: "If you have any issues or want to send 1v1 recordings, contact us:",
-        footerText1: "Flex City Community Leaderboard • Unofficial fan-made platform.",
+        footerText1: "© 2026 Flex City Community Leaderboard • Created by BoomCraze.",
+        footerText2: "Unofficial fan-made platform • Not affiliated with Jarvi Games.",
         openSubmitBtn: "+ Submit Proof",
         modalTitle: "Welcome to Flex City Leaderboard!",
         modalSubText: "Please enter your official In-Game Name (IGN) to continue.",
@@ -719,8 +812,8 @@
         colRange: "रेंज पॉइंट्स",
         colTotal: "कुल",
         loadingText: "लीडरबोर्ड डाटा लोड हो रहा है...",
-        footerContactText: "यदि आपको कोई समस्या है या 1v1 रिकॉर्डिंग भेजनी है, तो संपर्क करें:",
-        footerText1: "Flex City कम्युनिटी लीडरबोर्ड • अनौपचारिक फैन-मेड प्लेटफॉर्म।",
+        footerText1: "© 2026 Flex City कम्युनिटी लीडरबोर्ड • BoomCraze द्वारा निर्मित।",
+        footerText2: "अनौपचारिक फैन-मेड प्लेटफॉर्म • Jarvi Games से संबद्ध नहीं।",
         openSubmitBtn: "+ प्रूफ सबमिट करें",
         modalTitle: "Flex City लीडरबोर्ड में आपका स्वागत है!",
         modalSubText: "कृपया आगे बढ़ने के लिए अपना ऑफिशियल इन-गेम नाम (IGN) दर्ज करें।",
@@ -764,8 +857,8 @@
         colRange: "Pts Alcance",
         colTotal: "Total",
         loadingText: "Carregando placar...",
-        footerContactText: "Se tiver algum problema ou quiser enviar gravações de 1v1, fale conosco:",
-        footerText1: "Flex City Community Leaderboard • Plataforma feita por fãs.",
+        footerText1: "© 2026 Flex City Community Leaderboard • Criado por BoomCraze.",
+        footerText2: "Plataforma não oficial feita por fãs • Sem vínculo com a Jarvi Games.",
         openSubmitBtn: "+ Enviar Prova",
         modalTitle: "Bem-vindo ao Flex City Leaderboard!",
         modalSubText: "Digite seu nome oficial no jogo (IGN) para continuar.",
@@ -809,8 +902,8 @@
         colRange: "Очки",
         colTotal: "Всего",
         loadingText: "Загрузка таблицы лидеров...",
-        footerContactText: "Если есть вопросы или записи 1v1 матчей, напишите нам:",
-        footerText1: "Flex City Community Leaderboard • Фанатская платформа.",
+        footerText1: "© 2026 Flex City Community Leaderboard • Создано BoomCraze.",
+        footerText2: "Неофициальная фанатская платформа • Не связано с Jarvi Games.",
         openSubmitBtn: "+ Отправить пруф",
         modalTitle: "Добро пожаловать в Flex City Leaderboard!",
         modalSubText: "Введите ваш игровой никнейм (IGN), чтобы продолжить.",
@@ -854,8 +947,8 @@
         colRange: "Pts Rango",
         colTotal: "Total",
         loadingText: "Cargando clasificación...",
-        footerContactText: "Si tienes problemas o quieres enviar grabaciones 1v1, contáctanos:",
-        footerText1: "Flex City Community Leaderboard • Plataforma hecha por fans.",
+        footerText1: "© 2026 Flex City Community Leaderboard • Creado por BoomCraze.",
+        footerText2: "Plataforma no oficial hecha por fans • No afiliada a Jarvi Games.",
         openSubmitBtn: "+ Enviar Prueba",
         modalTitle: "¡Bienvenido a Flex City Leaderboard!",
         modalSubText: "Ingresa tu nombre oficial en el juego (IGN) para continuar.",
@@ -899,8 +992,8 @@
         colRange: "نقاط المدى",
         colTotal: "المجموع",
         loadingText: "جاري تحميل لوحة المتصدرين...",
-        footerContactText: "إذا واجهت أي مشكلة أو أردت إرسال مقاطع 1v1، تواصل معنا:",
-        footerText1: "Flex City Community Leaderboard • منصة مجتمعية غير رسمية.",
+        footerText1: "© 2026 Flex City Community Leaderboard • تطوير BoomCraze.",
+        footerText2: "منصة مجتمعية غير رسمية • غير تابعة لشركة Jarvi Games.",
         openSubmitBtn: "+ إرسال إثبات",
         modalTitle: "مرحبًا بك في Flex City Leaderboard!",
         modalSubText: "يرجى إدخال اسمك الرسمي داخل اللعبة (IGN) للمتابعة.",
@@ -944,8 +1037,8 @@
         colRange: "Poin Jarak",
         colTotal: "Total",
         loadingText: "Memuat data papan peringkat...",
-        footerContactText: "Jika ada kendala atau ingin mengirim rekaman 1v1, hubungi kami:",
-        footerText1: "Flex City Community Leaderboard • Platform buatan komunitas.",
+        footerText1: "© 2026 Flex City Community Leaderboard • Dibuat oleh BoomCraze.",
+        footerText2: "Platform buatan komunitas tidak resmi • Tidak berafiliasi dengan Jarvi Games.",
         openSubmitBtn: "+ Kirim Bukti",
         modalTitle: "Selamat Datang di Flex City Leaderboard!",
         modalSubText: "Masukkan In-Game Name (IGN) resmimu untuk melanjutkan.",
@@ -989,8 +1082,8 @@
         colRange: "Mesafe Puanı",
         colTotal: "Toplam",
         loadingText: "Liderlik tablosu yükleniyor...",
-        footerContactText: "Sorun yaşarsanız veya 1v1 kayıtları göndermek isterseniz bize ulaşın:",
-        footerText1: "Flex City Community Leaderboard • Hayran yapımı topluluk platformu.",
+        footerText1: "© 2026 Flex City Community Leaderboard • BoomCraze tarafından oluşturuldu.",
+        footerText2: "Resmi olmayan hayran platformu • Jarvi Games ile bağlantılı değildir.",
         openSubmitBtn: "+ Kanıt Gönder",
         modalTitle: "Flex City Liderlik Tablosuna Hoş Geldiniz!",
         modalSubText: "Devam etmek için resmi Oyun İçi Adınızı (IGN) girin.",
@@ -1034,8 +1127,8 @@
         colRange: "Pts Portée",
         colTotal: "Total",
         loadingText: "Chargement du classement...",
-        footerContactText: "Un problème ou une vidéo 1v1 à envoyer ? Contactez-nous :",
-        footerText1: "Flex City Community Leaderboard • Plateforme communautaire.",
+        footerText1: "© 2026 Flex City Community Leaderboard • Créé par BoomCraze.",
+        footerText2: "Plateforme communautaire non officielle • Non affiliée à Jarvi Games.",
         openSubmitBtn: "+ Envoyer Preuve",
         modalTitle: "Bienvenue sur Flex City Leaderboard !",
         modalSubText: "Entrez votre pseudo officiel en jeu (IGN) pour continuer.",
@@ -1221,14 +1314,14 @@
 
     const whatsNewData = [
       {
+        version: "v2.8",
+        date: "Nov 25, 2026 • 10:35 AM IST",
+        en: "✨ Redesign: Upgraded the website footer into a clean multi-column layout with minimal social icons, one-click Discord handle copy (boomcraze), and direct support/creator emails."
+      },
+      {
         version: "v2.7",
         date: "Nov 25, 2026 • 09:30 AM IST",
         en: "✨ Idea: Placed your detected Country tab to the left of Global and set it as default view so you see your local ladder first with one-tap access to Global."
-      },
-      {
-        version: "v2.6",
-        date: "Nov 20, 2026 • 11:57 AM IST",
-        en: "✨ Idea: Live IP Country Detection — automatically detects your country (or VPN region) next to Global! Winning matches ranks you on both your Country board and Global board, plus auto-switches local language options by country."
       }
     ];
 
@@ -1290,8 +1383,8 @@
       setSafeText('colRange', t.colRange);
       setSafeText('colTotal', t.colTotal);
       setSafeText('loadingText', t.loadingText);
-      setSafeText('footerContactText', t.footerContactText);
       setSafeText('footerText1', t.footerText1);
+      setSafeText('footerText2', t.footerText2);
       setSafeText('openSubmitBtn', t.openSubmitBtn);
       setSafeText('modalTitle', t.modalTitle);
       setSafeText('modalSubText', t.modalSubText);
