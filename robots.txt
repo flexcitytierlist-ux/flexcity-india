@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://flexcity-leaderboard.vercel.app/sitemap.xml
