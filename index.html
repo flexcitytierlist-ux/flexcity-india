@@ -38,8 +38,6 @@
     .card-bg { background: linear-gradient(145deg, #131824, #0f131d); }
     @keyframes pulse-slow { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
     .animate-pulse-slow { animation: pulse-slow 1.5s cubic-bezier(0.4, 0, 0.6, 1) infinite; }
-    @keyframes ping-dot { 0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); } 70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(239, 68, 68, 0); } 100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); } }
-    .animate-ping-dot { animation: ping-dot 1.5s infinite; }
     .ticker-fade { transition: opacity 0.4s ease-in-out; }
     .chat-scroll::-webkit-scrollbar { width: 4px; }
     .chat-scroll::-webkit-scrollbar-track { background: #0f131d; }
@@ -62,6 +60,18 @@
     }
     .animate-pop-menu {
       animation: popInMenu 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+    }
+
+    @keyframes tooltipPop {
+      0% { opacity: 0; transform: translateY(6px) scale(0.92); }
+      100% { opacity: 1; transform: translateY(0) scale(1); }
+    }
+    @keyframes tooltipFloat {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-3px); }
+    }
+    .animate-mini-popup {
+      animation: tooltipPop 0.22s cubic-bezier(0.16, 1, 0.3, 1) forwards, tooltipFloat 2.4s ease-in-out 0.25s infinite;
     }
 
     @keyframes chatBackdropIn {
@@ -91,10 +101,11 @@
     ⚠️ Instagram Browser Detected! Tap <span class="underline">⋮ (3 dots)</span> at top right & select <span class="underline">"Open in Chrome / Browser"</span> to Login.
   </div>
 
+  <!-- Shown ONLY to users who haven't allowed notifications yet -->
   <div id="notifPromptBanner" class="hidden bg-gradient-to-r from-cyan-600 to-blue-700 text-white px-3 py-2.5 text-xs flex items-center justify-between gap-2 shadow-md">
     <div class="flex items-center gap-2 font-medium">
       <span>🔔</span>
-      <span id="notifBannerText">Allow notifications for instant DM alerts & updates!</span>
+      <span id="notifBannerText">Enable notifications for instant DM & match request alerts!</span>
     </div>
     <div class="flex items-center gap-1.5 flex-shrink-0">
       <button onclick="requestBrowserNotifications()" class="bg-white text-slate-950 font-bold px-3 py-1 rounded-lg text-xs hover:bg-slate-100 transition cursor-pointer">Allow</button>
@@ -119,9 +130,9 @@
       </div>
 
       <div class="flex items-center gap-2">
-        <button onclick="openWhatsNewModal()" class="relative bg-slate-800/90 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 cursor-pointer shadow-sm">
+        <!-- What's New button WITHOUT red notification dot -->
+        <button onclick="openWhatsNewModal()" class="bg-slate-800/90 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 cursor-pointer shadow-sm">
           <span>✨ <span id="whatsNewBtnText">What's New</span></span>
-          <span id="whatsNewDot" class="w-2 h-2 rounded-full bg-red-500 animate-ping-dot hidden"></span>
         </button>
         <div id="authArea" class="flex items-center gap-2">
           <button id="loginBtn" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold px-3.5 py-1.5 rounded-xl text-xs transition">
@@ -139,7 +150,6 @@
     <div class="card-bg rounded-2xl neon-border p-4 sm:p-5 relative space-y-3 shadow-lg">
       <div class="flex items-center justify-between gap-2">
         <h2 id="descTitle" class="text-xs font-bold text-cyan-400 uppercase tracking-wider">What is this?</h2>
-        <!-- Shown ONLY for India (IN), default is English -->
         <button type="button" id="langToggleBtn" onclick="toggleLanguage()" class="hidden bg-slate-800/90 hover:bg-slate-700 active:scale-95 text-slate-200 border border-slate-700 px-3 py-1.5 rounded-xl text-xs font-semibold transition items-center gap-1.5 cursor-pointer">
           <span id="langFlag">🇮🇳</span> <span id="langBtnText">Hinglish</span>
         </button>
@@ -152,7 +162,7 @@
         <div id="rulesHeading" class="text-xs font-bold text-amber-400 mb-1">📜 How to Submit Proof & Challenge Rules:</div>
         <ul id="rulesList" class="text-xs text-slate-300 space-y-1.5 list-disc list-inside leading-relaxed">
           <li><strong>Chat Screenshot:</strong> Upload a clear chat screenshot where your opponent agrees to the 1v1 result & points.</li>
-          <li><strong>Dual Ranking:</strong> Winning a match puts you on both your Country Leaderboard and the Global Leaderboard!</li>
+          <li><strong>Submission Limit:</strong> Up to 5 match proof submissions every 8 hours.</li>
           <li><strong>Direct Challenge:</strong> Tap on any player or use the bottom-right Chat icon to message opponents directly for 1v1s.</li>
         </ul>
       </div>
@@ -181,9 +191,19 @@
         <button onclick="openSubmitProofModal()" id="openSubmitBtn" class="hidden flex-1 sm:flex-none bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-xs transition text-center shadow-md cursor-pointer">
           + Submit Proof
         </button>
-        <button onclick="openAdminModal()" id="openAdminBtn" class="hidden flex-1 sm:flex-none bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-xs transition text-center shadow-md cursor-pointer">
-          🛡️ Admin (<span id="pendingCount">0</span>)
-        </button>
+
+        <!-- Admin Button + Floating Animated Request Popup right above it -->
+        <div id="adminBtnWrapper" class="relative hidden flex-1 sm:flex-none">
+          <div id="adminRequestPopup" onclick="openAdminModal()" class="hidden animate-mini-popup cursor-pointer absolute -top-9 right-0 z-30 whitespace-nowrap bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 text-[10px] font-extrabold px-2.5 py-1 rounded-lg shadow-lg border border-amber-200/70 flex items-center gap-1">
+            <span>🔔</span>
+            <span id="adminRequestPopupText">Someone has requested!</span>
+            <span class="absolute -bottom-1 right-5 w-2 h-2 bg-amber-400 rotate-45"></span>
+          </div>
+          <button onclick="openAdminModal()" id="openAdminBtn" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-xs transition text-center shadow-md cursor-pointer">
+            🛡️ Admin (<span id="pendingCount">0</span>)
+          </button>
+        </div>
+
         <button onclick="openOwnerModal()" id="openOwnerBtn" class="hidden flex-1 sm:flex-none bg-purple-500 hover:bg-purple-400 text-white font-bold px-4 py-2.5 rounded-xl text-xs transition text-center shadow-md cursor-pointer">
           👑 Owner
         </button>
@@ -246,11 +266,11 @@
 
         <div class="bg-slate-900/80 border border-slate-800 rounded-xl overflow-hidden transition">
           <button onclick="toggleFaq(3)" class="w-full px-4 py-3 text-left flex items-center justify-between text-xs font-bold text-white cursor-pointer">
-            <span id="faq3Q">03. What is Rank Swap and how does it work?</span>
+            <span id="faq3Q">03. How does Streak & Submission Limit work?</span>
             <span class="text-cyan-400 text-sm font-black">+</span>
           </button>
           <div id="faq3Ans" class="hidden px-4 pb-3 text-xs text-slate-300 leading-relaxed border-t border-slate-800/60 pt-2">
-            If you defeat a player ranked higher than you on the leaderboard and have your proof verified by an admin, you take their exact position on the leaderboard!
+            You can submit up to 5 match proofs every 8 hours. When an admin approves a win against a ranked player, that opponent's win streak resets to 0.
           </div>
         </div>
 
@@ -274,7 +294,7 @@
         <div class="flex items-center gap-2.5">
           <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center font-black text-white text-xs shadow-sm">FC</div>
           <div>
-            <div class="font-bold text-xs tracking-wide text-white">FLEX CITY <span class="text-cyan-400">LEADERBOARD</span></div>
+            <div class="font-bold text-xs tracking-wide text-white">FLEX CITY <span class="text-cyan-400">LEADERBOARD</span> <span class="text-[10px] text-cyan-400/80 font-semibold ml-1">v1.3</span></div>
             <div class="text-[11px] text-slate-500">Maintained by <span class="text-slate-300 font-semibold">BoomCraze</span></div>
           </div>
         </div>
@@ -493,11 +513,14 @@
     </div>
   </div>
 
-  <!-- What's New Modal -->
+  <!-- What's New Modal (Major Updates only, Version 1.3) -->
   <div id="whatsNewModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
     <div class="card-bg neon-border rounded-2xl max-w-md w-full p-5 relative space-y-3.5 shadow-2xl">
-      <button onclick="closeModal('whatsNewModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg">&times;</button>
-      <h2 id="whatsNewModalTitle" class="text-base font-bold text-cyan-400">✨ What's New</h2>
+      <button onclick="closeModal('whatsNewModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg cursor-pointer">&times;</button>
+      <div class="flex items-center justify-between pr-6">
+        <h2 id="whatsNewModalTitle" class="text-base font-bold text-cyan-400">✨ What's New</h2>
+        <span class="bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 px-2 py-0.5 rounded-lg text-[11px] font-bold">v1.3</span>
+      </div>
       <div id="whatsNewContentList" class="space-y-2.5 text-xs text-slate-300 max-h-64 overflow-y-auto pr-1"></div>
       <button onclick="closeModal('whatsNewModal')" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs transition shadow-md cursor-pointer">
         Close
@@ -633,11 +656,17 @@
   <!-- Submit Proof Modal -->
   <div id="submitModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
     <div class="card-bg neon-border rounded-2xl max-w-md w-full p-5 relative max-h-[90vh] overflow-y-auto shadow-2xl">
-      <button onclick="closeModal('submitModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg">&times;</button>
+      <button onclick="closeModal('submitModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg cursor-pointer">&times;</button>
       <h2 id="submitProofTitle" class="text-base font-bold text-white mb-1">Submit Match Screenshot</h2>
       
-      <div id="modalRuleNote" class="bg-cyan-500/10 border border-cyan-500/30 rounded-xl p-3 mb-3 text-xs text-cyan-300 leading-relaxed">
+      <div id="modalRuleNote" class="bg-cyan-500/10 border border-cyan-500/30 rounded-xl p-3 mb-2.5 text-xs text-cyan-300 leading-relaxed">
         Upload a chat screenshot where your opponent agrees to the result. Country (<span id="submitDetectedCountry" class="font-bold">Global</span>) is auto-tagged.
+      </div>
+
+      <!-- 5 Matches / 8 Hours Quota Pill -->
+      <div id="submissionQuotaBox" class="bg-slate-900/90 border border-slate-800 rounded-xl px-3 py-2 mb-3 flex items-center justify-between text-[11px]">
+        <span class="text-slate-400">8-Hour Limit:</span>
+        <span id="submissionQuotaText" class="font-bold text-emerald-400">0 / 5 matches used</span>
       </div>
 
       <form id="proofForm" class="space-y-3">
@@ -645,10 +674,34 @@
           <label id="labelIgn" class="text-[11px] text-slate-300 block mb-1">Your IGN</label>
           <input type="text" id="ignInput" required placeholder="e.g. BoomCraze" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white" />
         </div>
+
+        <!-- Opponent IGN with Live Spinner, Green Tick, and Mini Warning Popup -->
         <div>
           <label id="labelOpponent" class="text-[11px] text-slate-300 block mb-1">Opponent IGN</label>
-          <input type="text" id="opponentInput" required placeholder="Opponent IGN" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white" />
+          <div class="relative flex items-center">
+            <input type="text" id="opponentInput" oninput="onOpponentIgnTyping()" required placeholder="Opponent IGN" class="w-full bg-slate-900 border border-slate-700 rounded-xl pl-3.5 pr-10 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-500" />
+            
+            <!-- Status Indicator inside right side of input -->
+            <div id="opponentStatusWrap" class="absolute right-2.5 flex items-center">
+              <!-- Small Spinner -->
+              <span id="oppCheckSpinner" class="hidden w-4 h-4 border-2 border-cyan-400 border-t-transparent rounded-full animate-spin"></span>
+              
+              <!-- Green Tick if player exists -->
+              <span id="oppMatchTick" class="hidden w-5 h-5 rounded-full bg-emerald-500/20 border border-emerald-500/50 text-emerald-400 flex items-center justify-center text-[11px] font-black" title="Player verified on leaderboard">✓</span>
+              
+              <!-- Subtle Warning Sign + Mini Animated Popup right above it -->
+              <div id="oppNotFoundWrap" class="hidden relative flex items-center">
+                <div id="oppNotFoundMiniPopup" class="animate-mini-popup absolute bottom-7 right-0 w-56 bg-slate-900/95 border border-amber-500/50 text-amber-200 text-[10px] leading-snug px-2.5 py-1.5 rounded-xl shadow-xl z-30 pointer-events-none">
+                  This player doesn't exist on this website, but you can submit the request.
+                  <span class="absolute -bottom-1 right-2 w-2 h-2 bg-slate-900 border-r border-b border-amber-500/50 rotate-45"></span>
+                </div>
+                <button type="button" onclick="toggleOppNotFoundPopup()" class="w-5 h-5 rounded-full bg-amber-500/20 border border-amber-500/40 text-amber-300 flex items-center justify-center text-[11px] font-bold cursor-pointer" title="Unregistered player">!</button>
+              </div>
+            </div>
+          </div>
+          <p id="oppMatchedInfoText" class="hidden text-[10px] text-emerald-400 mt-1 font-medium"></p>
         </div>
+
         <div>
           <label id="labelCategory" class="text-[11px] text-slate-300 block mb-1">Category</label>
           <select id="categoryInput" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white">
@@ -660,6 +713,7 @@
           <label id="labelScreenshotFile" class="text-[11px] text-slate-300 block mb-1">Chat Screenshot</label>
           <input type="file" id="screenshotFileInput" accept="image/*" required class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-slate-300 file:mr-3 file:py-1.5 file:px-3 file:rounded-lg file:border-0 file:text-xs file:font-semibold file:bg-cyan-500 file:text-slate-950 hover:file:bg-cyan-400 cursor-pointer" />
         </div>
+        <div id="submitErrorBox" class="hidden text-[11px] text-rose-300 bg-rose-500/15 border border-rose-500/40 rounded-xl px-3 py-2"></div>
         <button type="submit" id="submitProofBtn" class="w-full bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold py-3 rounded-xl text-xs transition mt-2 shadow-md cursor-pointer">
           Submit Proof
         </button>
@@ -680,7 +734,7 @@
         <div id="adminRulesHeading" class="text-[11px] font-bold text-amber-400">📜 Admin Rules:</div>
         <ul id="adminRulesList" class="text-[11px] text-slate-300 space-y-1 list-disc list-inside leading-relaxed">
           <li>Approve only clear chat screenshots with opponent agreement.</li>
-          <li>Edit IGN, points, or streak only for valid matches or corrections.</li>
+          <li>Approving a win resets the defeated opponent's streak if they are registered.</li>
         </ul>
       </div>
 
@@ -700,6 +754,10 @@
 
     const isIosDevice = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
     const isStandaloneMode = window.navigator.standalone === true || window.matchMedia('(display-mode: standalone)').matches;
+
+    const EIGHT_HOURS_MS = 8 * 60 * 60 * 1000;
+    const MAX_SUBS_PER_WINDOW = 5;
+    const SITE_VERSION = "v1.3";
 
     const firebaseConfig = {
       apiKey: "AIzaSyDZylrN12JJn11p4yQ9lCqd2MGOrr9jk7U",
@@ -739,7 +797,6 @@
     }
 
     let visitorCountry = { code: 'IN', name: 'India', flag: '🇮🇳' };
-    // Always default to English for everyone; India users can toggle Hinglish
     let currentLang = 'en';
     let userPickedHinglish = false;
 
@@ -756,7 +813,7 @@
         rulesHeading: "📜 Proof & Challenge Rules:",
         rulesHtml: `
           <li><strong>Chat Screenshot:</strong> Aisa chat screenshot daalein jisme opponent 1v1 result aur points par agree kare.</li>
-          <li><strong>Country + Global:</strong> Win karne par aap apni country aur Global dono leaderboard par aayenge.</li>
+          <li><strong>Submission Limit:</strong> Har 8 ghante mein maximum 5 match proofs submit kiye ja sakte hain.</li>
           <li><strong>Challenge:</strong> Kisi player par tap karein ya neeche right chat icon se direct message bhejein.</li>
         `,
         tabRanked: "🏆 Ranked",
@@ -794,7 +851,7 @@
         adminRulesHeading: "📜 Admin Rules:",
         adminRulesHtml: `
           <li>Sirf clear chat screenshot aur opponent agreement wale proof approve karein.</li>
-          <li>IGN, points ya streak sirf genuine fix ya match ke liye edit karein.</li>
+          <li>Approve karne par haare hue registered opponent ka streak reset ho jaayega.</li>
         `,
         ownerSubText: "Admins aur players manage kijiye.",
         manageAdminsTitle: "🛡️ Admins",
@@ -817,13 +874,13 @@
         loginBtn: "Login with Google",
         whatsNewBtn: "What's New",
         installPillText: isIosDevice ? "Add to Home Screen" : "Install App",
-        notifBannerText: "Allow notifications for instant DM alerts & updates!",
+        notifBannerText: "Enable notifications for instant DM & match request alerts!",
         descTitle: "What is this?",
         descText: "Official Flex City community leaderboard tracking Long Range and Short Range 1v1 PvP tiers, verified proofs, and regional/global rankings.",
         rulesHeading: "📜 Proof & Challenge Rules:",
         rulesHtml: `
           <li><strong>Chat Screenshot:</strong> Upload a chat screenshot showing opponent agreement on the 1v1 result.</li>
-          <li><strong>Dual Ranking:</strong> Wins count toward both your country and Global leaderboard.</li>
+          <li><strong>Submission Limit:</strong> Up to 5 match proof submissions every 8 hours.</li>
           <li><strong>Direct Challenge:</strong> Tap any player or use the bottom-right chat button to message directly.</li>
         `,
         tabRanked: "🏆 Ranked",
@@ -861,7 +918,7 @@
         adminRulesHeading: "📜 Admin Rules:",
         adminRulesHtml: `
           <li>Approve only clear chat screenshots with opponent agreement.</li>
-          <li>Edit IGN, points, or streak only for valid matches or corrections.</li>
+          <li>Approving a win resets the defeated registered opponent's win streak.</li>
         `,
         ownerSubText: "Manage Admins and player stats.",
         manageAdminsTitle: "🛡️ Admins",
@@ -880,14 +937,17 @@
       }
     };
 
+    // Only major updates shown here
     const whatsNewData = {
       hinglish: [
-        { version: "v2.11", date: "26 Nov 2026", text: "• Default language English set kiya (India mein Hinglish toggle available)\n• iOS / iPadOS Safari Add to Home Screen option add kiya\n• Safari notifications support add kiya" },
-        { version: "v2.10", date: "26 Nov 2026", text: "• Foreign IP/VPN par Hinglish toggle hide aur Admin instant feedback add kiya" }
+        { version: "v1.3", date: "26 Nov 2026", text: "• Live Opponent IGN verification (case-insensitive match + green tick)\n• 8 ghante mein 5 match proofs ki limit aur auto-reset\n• Admin live request popup & notifications aur opponent streak reset" },
+        { version: "v1.2", date: "26 Nov 2026", text: "• Owner & Admin role management panel aur live Global/DM chat" },
+        { version: "v1.0", date: "Nov 2026", text: "• Flex City Global & Regional 1v1 Leaderboard launch" }
       ],
       en: [
-        { version: "v2.11", date: "Nov 26, 2026", text: "• Set English as default (Hinglish toggle available in India)\n• Added iOS / iPadOS Safari Add to Home Screen guide\n• Enabled Safari notification prompt" },
-        { version: "v2.10", date: "Nov 26, 2026", text: "• Hid Hinglish toggle for non-India visitors and added instant Admin feedback" }
+        { version: "v1.3", date: "Nov 26, 2026", text: "• Live Opponent IGN check (case-insensitive matching with verified tick)\n• 5 match submissions per 8-hour window limit\n• Instant Admin request popup/notifications & defeated opponent streak reset" },
+        { version: "v1.2", date: "Nov 26, 2026", text: "• Owner & Admin management panels with live Global & Direct Messaging" },
+        { version: "v1.0", date: "Nov 2026", text: "• Initial launch of Flex City Global & Regional 1v1 Leaderboard" }
       ]
     };
 
@@ -956,7 +1016,6 @@
       const iosStepsEl = document.getElementById('iosHomeSteps');
       if (iosStepsEl) iosStepsEl.innerHTML = t.iosHomeStepsHtml;
 
-      // Show Hinglish toggle ONLY if country is India (IN); default is always English
       const langBtn = document.getElementById('langToggleBtn');
       if (langBtn) {
         if (visitorCountry.code === 'IN') {
@@ -1030,7 +1089,6 @@
       if (nameEl) nameEl.innerText = visitorCountry.name;
       if (subCountryEl) subCountryEl.innerText = `${visitorCountry.flag} ${visitorCountry.name}`;
 
-      // Keep English as default; only honor Hinglish if user in India explicitly toggled it
       if (visitorCountry.code !== 'IN' || !userPickedHinglish) {
         currentLang = 'en';
       }
@@ -1098,6 +1156,8 @@
     let lastMsgSentTime = 0;
     let unsubscribeGlobalChat = null;
     let unsubscribeDmListener = null;
+    let unsubscribeSubmissionsListener = null;
+    let isFirstSubmissionSnapshot = true;
     let allUserDms = [];
     let latestGlobalMsgs = [];
     let isFirstDmSnapshot = true;
@@ -1143,11 +1203,17 @@
     initNotificationPromptOnEntry();
     loadLeaderboard();
 
+    // Ask notification permission for anyone who has NOT allowed it yet
     function initNotificationPromptOnEntry() {
       if (!("Notification" in window)) return;
+      const banner = document.getElementById('notifPromptBanner');
+      if (Notification.permission === "granted") {
+        if (banner) banner.classList.add('hidden');
+        return;
+      }
+      // Show banner for 'default' or 'denied' (not allowed)
+      if (banner) banner.classList.remove('hidden');
       if (Notification.permission === "default") {
-        const banner = document.getElementById('notifPromptBanner');
-        if (banner) banner.classList.remove('hidden');
         try {
           Notification.requestPermission().then(perm => {
             if (perm === "granted" && banner) {
@@ -1227,14 +1293,14 @@
       isOwner = Boolean(currentUser && email === OWNER_EMAIL.toLowerCase());
       isAdmin = Boolean(currentUser && (isOwner || adminEmails.includes(email)));
 
-      const adminBtn = document.getElementById('openAdminBtn');
+      const adminWrapper = document.getElementById('adminBtnWrapper');
       const ownerBtn = document.getElementById('openOwnerBtn');
       const roleBar = document.getElementById('roleStatusBar');
 
       if (isOwner) {
         ownerBtn.classList.remove('hidden');
-        adminBtn.classList.remove('hidden');
-        loadPendingSubmissions();
+        adminWrapper.classList.remove('hidden');
+        startAdminPendingListener();
         roleBar.className = "rounded-2xl px-4 py-2.5 text-xs flex flex-wrap items-center justify-between gap-2 border bg-purple-950/50 border-purple-500/40 text-purple-200";
         roleBar.innerHTML = `
           <div><span class="font-black text-purple-300">👑 Owner</span></div>
@@ -1242,8 +1308,8 @@
         `;
       } else if (isAdmin) {
         ownerBtn.classList.add('hidden');
-        adminBtn.classList.remove('hidden');
-        loadPendingSubmissions();
+        adminWrapper.classList.remove('hidden');
+        startAdminPendingListener();
         roleBar.className = "rounded-2xl px-4 py-2.5 text-xs flex flex-wrap items-center justify-between gap-2 border bg-amber-950/40 border-amber-500/40 text-amber-200";
         roleBar.innerHTML = `
           <div><span class="font-black text-amber-300">🛡️ Admin</span></div>
@@ -1251,11 +1317,60 @@
         `;
       } else {
         ownerBtn.classList.add('hidden');
-        adminBtn.classList.add('hidden');
+        adminWrapper.classList.add('hidden');
         roleBar.classList.add('hidden');
+        if (unsubscribeSubmissionsListener) {
+          unsubscribeSubmissionsListener();
+          unsubscribeSubmissionsListener = null;
+        }
       }
 
       renderLeaderboard();
+    }
+
+    // Real-time listener for Admins: shows popup above Admin button + sends browser notification
+    function startAdminPendingListener() {
+      if (!isAdmin) return;
+      if (unsubscribeSubmissionsListener) return;
+      isFirstSubmissionSnapshot = true;
+
+      const q = query(collection(db, "submissions"), where("status", "==", "pending"));
+      unsubscribeSubmissionsListener = onSnapshot(q, (snap) => {
+        const countEl = document.getElementById('pendingCount');
+        const popupEl = document.getElementById('adminRequestPopup');
+        const popupText = document.getElementById('adminRequestPopupText');
+
+        if (countEl) countEl.innerText = snap.size;
+
+        if (snap.size > 0) {
+          if (popupText) {
+            popupText.innerText = snap.size === 1
+              ? "Someone has requested!"
+              : `${snap.size} new requests waiting!`;
+          }
+          if (popupEl) popupEl.classList.remove('hidden');
+        } else {
+          if (popupEl) popupEl.classList.add('hidden');
+        }
+
+        if (!isFirstSubmissionSnapshot) {
+          snap.docChanges().forEach(change => {
+            if (change.type === "added") {
+              const reqData = change.doc.data();
+              playPingSound();
+              triggerSystemNotification(
+                "🛡️ New Match Proof Request",
+                `${reqData.ign || 'A player'} submitted a proof vs ${reqData.opponent || 'opponent'}!`
+              );
+            }
+          });
+        }
+        isFirstSubmissionSnapshot = false;
+
+        if (!document.getElementById('adminModal').classList.contains('hidden')) {
+          loadPendingSubmissions();
+        }
+      });
     }
 
     window.openOwnerModal = async () => {
@@ -1382,7 +1497,6 @@
         document.getElementById('ignInput').value = userIgn;
 
         await loadRolesConfig();
-        checkWhatsNewStatus(user.uid);
         startRealtimeDmListener(user.uid);
         checkNotificationPermissionBtn();
       } else {
@@ -1393,7 +1507,6 @@
         authArea.innerHTML = `<button id="loginBtn" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold px-3.5 py-1.5 rounded-xl text-xs transition cursor-pointer">${loginLabel}</button>`;
         document.getElementById('loginBtn').onclick = () => signInWithPopup(auth, provider);
         submitBtn.classList.add('hidden');
-        document.getElementById('whatsNewDot').classList.add('hidden');
         document.getElementById('unreadChatBadge').classList.add('hidden');
         if (unsubscribeDmListener) unsubscribeDmListener();
       }
@@ -1414,7 +1527,7 @@
         countryName: visitorCountry.name,
         photo: currentUser.photoURL || "https://api.dicebear.com/7.x/avataaars/svg?seed=" + currentUser.uid,
         longPoints: 0, shortPoints: 0, longMatches: 0, shortMatches: 0, streak: 0,
-        joinedAt: Date.now(), proofs: [], whatsNewSeenVersion: ""
+        joinedAt: Date.now(), proofs: [], submissionTimestamps: []
       }, { merge: true });
       closeModal('forcedIgnModal');
       location.reload();
@@ -1434,7 +1547,6 @@
           const updated = allPlayers.find(p => p.id === selectedPlayer.id);
           if (updated) { selectedPlayer = updated; updatePlayerModalView(); }
         }
-        if (currentUser) checkWhatsNewStatus(currentUser.uid);
       } catch (err) {
         console.error(err);
       }
@@ -1443,7 +1555,8 @@
     function checkNotificationPermissionBtn() {
       const btn = document.getElementById('enableNotifBtn');
       const banner = document.getElementById('notifPromptBanner');
-      if ("Notification" in window && Notification.permission === "default") {
+      if (!("Notification" in window)) return;
+      if (Notification.permission !== "granted") {
         if (btn) btn.classList.remove('hidden');
         if (banner) banner.classList.remove('hidden');
       } else {
@@ -1458,6 +1571,10 @@
           document.getElementById('iosHomeModal').classList.remove('hidden');
           document.getElementById('iosHomeModal').classList.add('flex');
         }
+        return;
+      }
+      if (Notification.permission === "denied") {
+        alert("Notifications are blocked in your browser settings. Please enable notifications for this site from the address bar lock/settings icon.");
         return;
       }
       try {
@@ -1909,25 +2026,10 @@
       return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
     }
 
-    async function checkWhatsNewStatus(uid) {
-      const me = allPlayers.find(p => p.id === uid);
-      const dot = document.getElementById('whatsNewDot');
-      if (!dot) return;
-      const list = whatsNewData[currentLang] || whatsNewData.en;
-      const latest = list[0];
-      if (me && me.whatsNewSeenVersion === latest.version) dot.classList.add('hidden');
-      else dot.classList.remove('hidden');
-    }
-
-    window.openWhatsNewModal = async () => {
+    window.openWhatsNewModal = () => {
       renderWhatsNewContent();
       document.getElementById('whatsNewModal').classList.remove('hidden');
       document.getElementById('whatsNewModal').classList.add('flex');
-      document.getElementById('whatsNewDot')?.classList.add('hidden');
-      if (currentUser) {
-        const list = whatsNewData[currentLang] || whatsNewData.en;
-        await updateDoc(doc(db, "players", currentUser.uid), { whatsNewSeenVersion: list[0].version }).catch(() => {});
-      }
     };
 
     function renderWhatsNewContent() {
@@ -2244,47 +2346,206 @@
       reader.readAsDataURL(file);
     }
 
-    window.openSubmitProofModal = () => {
+    // Live case-insensitive Opponent IGN verification
+    let oppCheckDebounce = null;
+    let matchedOpponentProfile = null;
+
+    function resetOpponentCheckUI() {
+      matchedOpponentProfile = null;
+      document.getElementById('oppCheckSpinner')?.classList.add('hidden');
+      document.getElementById('oppMatchTick')?.classList.add('hidden');
+      document.getElementById('oppNotFoundWrap')?.classList.add('hidden');
+      document.getElementById('oppMatchedInfoText')?.classList.add('hidden');
+    }
+
+    window.toggleOppNotFoundPopup = () => {
+      const pop = document.getElementById('oppNotFoundMiniPopup');
+      if (pop) pop.classList.toggle('hidden');
+    };
+
+    window.onOpponentIgnTyping = () => {
+      clearTimeout(oppCheckDebounce);
+      const rawVal = (document.getElementById('opponentInput')?.value || "").trim();
+      resetOpponentCheckUI();
+      if (!rawVal) return;
+
+      const spinner = document.getElementById('oppCheckSpinner');
+      if (spinner) spinner.classList.remove('hidden');
+
+      oppCheckDebounce = setTimeout(() => {
+        if (spinner) spinner.classList.add('hidden');
+        const normalized = rawVal.toLowerCase();
+        // Match against all players (Ranked & Contenders) ignoring capitalization
+        const found = allPlayers.find(p => ((p.ign || p.name || "").trim().toLowerCase()) === normalized);
+
+        if (found) {
+          matchedOpponentProfile = found;
+          const tick = document.getElementById('oppMatchTick');
+          const infoText = document.getElementById('oppMatchedInfoText');
+          if (tick) tick.classList.remove('hidden');
+          if (infoText) {
+            const pts = (found.longPoints || 0) + (found.shortPoints || 0);
+            const tabLabel = pts > 0 ? "Ranked" : "Contenders";
+            const streakStr = (found.streak || 0) > 0 ? ` • 🔥 ${found.streak} streak` : "";
+            infoText.innerText = `✓ Found: ${found.ign || found.name} (${tabLabel}${streakStr})`;
+            infoText.classList.remove('hidden');
+          }
+        } else {
+          matchedOpponentProfile = null;
+          const warnWrap = document.getElementById('oppNotFoundWrap');
+          const miniPop = document.getElementById('oppNotFoundMiniPopup');
+          if (warnWrap) warnWrap.classList.remove('hidden');
+          if (miniPop) miniPop.classList.remove('hidden');
+        }
+      }, 320);
+    };
+
+    // 5 matches per 8-hour window helper
+    function getRecentWindowTimestamps(timestamps = []) {
+      const cutoff = Date.now() - EIGHT_HOURS_MS;
+      return (timestamps || []).filter(ts => typeof ts === 'number' && ts > cutoff).sort((a, b) => a - b);
+    }
+
+    function formatRemainingTime(ms) {
+      const totalMins = Math.max(1, Math.ceil(ms / 60000));
+      const hrs = Math.floor(totalMins / 60);
+      const mins = totalMins % 60;
+      return hrs > 0 ? `${hrs}h ${mins}m` : `${mins}m`;
+    }
+
+    async function refreshSubmissionQuotaUI() {
+      const quotaText = document.getElementById('submissionQuotaText');
+      const submitBtn = document.getElementById('submitProofBtn');
+      const errBox = document.getElementById('submitErrorBox');
+      if (errBox) errBox.classList.add('hidden');
+      if (!currentUser || !quotaText) return [];
+
+      let recent = [];
+      try {
+        const pSnap = await getDoc(doc(db, "players", currentUser.uid));
+        if (pSnap.exists()) {
+          recent = getRecentWindowTimestamps(pSnap.data().submissionTimestamps || []);
+        }
+      } catch (e) {}
+
+      const used = recent.length;
+      if (used >= MAX_SUBS_PER_WINDOW) {
+        const waitMs = (recent[0] + EIGHT_HOURS_MS) - Date.now();
+        quotaText.innerText = `5 / 5 used (Resets in ${formatRemainingTime(waitMs)})`;
+        quotaText.className = "font-bold text-rose-400";
+        if (submitBtn) {
+          submitBtn.disabled = true;
+          submitBtn.classList.add('opacity-50', 'cursor-not-allowed');
+        }
+      } else {
+        quotaText.innerText = `${used} / 5 matches used`;
+        quotaText.className = "font-bold text-emerald-400";
+        if (submitBtn) {
+          submitBtn.disabled = false;
+          submitBtn.classList.remove('opacity-50', 'cursor-not-allowed');
+        }
+      }
+      return recent;
+    }
+
+    window.openSubmitProofModal = async () => {
       document.getElementById('ignInput').value = userIgn;
+      document.getElementById('opponentInput').value = "";
+      resetOpponentCheckUI();
       document.getElementById('submitDetectedCountry').innerText = `${visitorCountry.flag} ${visitorCountry.name}`;
       document.getElementById('submitModal').classList.remove('hidden');
       document.getElementById('submitModal').classList.add('flex');
+      await refreshSubmissionQuotaUI();
     };
 
     window.openAdminModal = () => {
       if (!isAdmin) return;
+      document.getElementById('adminRequestPopup')?.classList.add('hidden');
       loadPendingSubmissions();
       document.getElementById('adminModal').classList.remove('hidden');
       document.getElementById('adminModal').classList.add('flex');
     };
 
+    function showSubmitError(msg) {
+      const errBox = document.getElementById('submitErrorBox');
+      if (!errBox) return;
+      errBox.innerText = msg;
+      errBox.classList.remove('hidden');
+    }
+
     document.getElementById('proofForm').onsubmit = async (e) => {
       e.preventDefault();
       if (!currentUser) return;
+      const errBox = document.getElementById('submitErrorBox');
+      if (errBox) errBox.classList.add('hidden');
+
       const ign = document.getElementById('ignInput').value.trim();
-      const opponent = document.getElementById('opponentInput').value.trim();
+      const rawOpponent = document.getElementById('opponentInput').value.trim();
       const category = document.getElementById('categoryInput').value;
       const fileInput = document.getElementById('screenshotFileInput');
-      if (ign.toLowerCase() === opponent.toLowerCase()) return;
+
+      if (!ign || !rawOpponent) return;
+      if (ign.toLowerCase() === rawOpponent.toLowerCase()) {
+        showSubmitError("You cannot submit a match against yourself.");
+        return;
+      }
       if (fileInput.files.length === 0) return;
+
+      // Enforce 5 matches per 8 hours limit
+      const recentTimestamps = await refreshSubmissionQuotaUI();
+      if (recentTimestamps.length >= MAX_SUBS_PER_WINDOW) {
+        const waitMs = (recentTimestamps[0] + EIGHT_HOURS_MS) - Date.now();
+        showSubmitError(`Limit reached: 5 proofs per 8 hours. Try again in ${formatRemainingTime(waitMs)}.`);
+        return;
+      }
+
+      // Case-insensitive lookup so canonical IGN is preserved if player exists
+      const foundOpp = allPlayers.find(p => ((p.ign || p.name || "").trim().toLowerCase()) === rawOpponent.toLowerCase());
+      const canonicalOpponentIgn = foundOpp ? (foundOpp.ign || foundOpp.name || rawOpponent) : rawOpponent;
+      const opponentUid = foundOpp ? foundOpp.id : "";
+
       const btn = document.getElementById('submitProofBtn');
       btn.disabled = true;
-      btn.innerText = "...";
+      btn.innerText = "Submitting...";
 
       compressImage(fileInput.files[0], async (compressedBase64) => {
-        await updateDoc(doc(db, "players", currentUser.uid), {
-          ign, countryCode: visitorCountry.code, countryName: visitorCountry.name
-        });
-        userIgn = ign;
-        await addDoc(collection(db, "submissions"), {
-          uid: currentUser.uid, ign, countryCode: visitorCountry.code, countryName: visitorCountry.name,
-          opponent, category, screenshotUrl: compressedBase64, status: "pending", createdAt: Date.now()
-        });
-        btn.disabled = false;
-        btn.innerText = (uiText[currentLang] || uiText.en).submitProofBtn;
-        closeModal('submitModal');
-        e.target.reset();
-        loadLeaderboard();
+        try {
+          const nowTs = Date.now();
+          const updatedTimestamps = [...recentTimestamps, nowTs];
+
+          await updateDoc(doc(db, "players", currentUser.uid), {
+            ign,
+            countryCode: visitorCountry.code,
+            countryName: visitorCountry.name,
+            submissionTimestamps: updatedTimestamps
+          });
+          userIgn = ign;
+
+          await addDoc(collection(db, "submissions"), {
+            uid: currentUser.uid,
+            ign,
+            countryCode: visitorCountry.code,
+            countryName: visitorCountry.name,
+            opponent: canonicalOpponentIgn,
+            opponentUid,
+            category,
+            screenshotUrl: compressedBase64,
+            status: "pending",
+            createdAt: nowTs
+          });
+
+          btn.disabled = false;
+          btn.innerText = (uiText[currentLang] || uiText.en).submitProofBtn;
+          closeModal('submitModal');
+          e.target.reset();
+          resetOpponentCheckUI();
+          loadLeaderboard();
+        } catch (err) {
+          console.error(err);
+          btn.disabled = false;
+          btn.innerText = (uiText[currentLang] || uiText.en).submitProofBtn;
+          showSubmitError("Failed to submit proof. Please try again.");
+        }
       });
     };
 
@@ -2309,6 +2570,16 @@
         const sid = docSnap.id;
         pendingCache[sid] = s;
         const sFlag = s.countryCode ? countryCodeToFlag(s.countryCode) : '🌍';
+
+        // Check if opponent exists on site (case-insensitive)
+        const oppMatch = allPlayers.find(p =>
+          (s.opponentUid && p.id === s.opponentUid) ||
+          ((p.ign || p.name || "").trim().toLowerCase() === (s.opponent || "").trim().toLowerCase())
+        );
+        const oppStatusTag = oppMatch
+          ? `<span class="text-[10px] text-emerald-400 font-semibold ml-1">(Registered • 🔥${oppMatch.streak || 0})</span>`
+          : `<span class="text-[10px] text-slate-400 ml-1">(Unlisted)</span>`;
+
         const div = document.createElement('div');
         div.className = "bg-slate-900 border border-slate-800 rounded-xl p-3.5 space-y-3";
         div.innerHTML = `
@@ -2319,7 +2590,7 @@
                 <input type="text" id="admin-ign-${sid}" value="${escapeHtml(s.ign)}" class="bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1 text-xs font-bold text-white" />
                 <button onclick="updatePlayerIgnByAdmin('${s.uid}', '${sid}')" class="bg-cyan-500/20 text-cyan-400 text-[10px] px-2.5 py-1 rounded-lg border border-cyan-500/30 font-semibold cursor-pointer">Update</button>
               </div>
-              <div class="text-[10px] text-slate-400 mt-2">vs <span class="text-cyan-300 font-semibold">${escapeHtml(s.opponent)}</span> • <span class="text-amber-400 uppercase">${escapeHtml(s.category)}</span></div>
+              <div class="text-[10px] text-slate-400 mt-2">vs <span class="text-cyan-300 font-semibold">${escapeHtml(s.opponent)}</span>${oppStatusTag} • <span class="text-amber-400 uppercase">${escapeHtml(s.category)}</span></div>
             </div>
             <img onclick="window.open().document.write('<img src=\\'${s.screenshotUrl}\\' style=\\'max-width:100%\\'/>')" src="${s.screenshotUrl}" class="w-16 h-16 rounded-lg border border-slate-700 object-cover cursor-pointer flex-shrink-0 shadow-sm" />
           </div>
@@ -2371,7 +2642,7 @@
           if (proofs.length > 15) proofs = proofs.slice(0, 15);
           const updateData = {
             proofs,
-            streak: proofs.length,
+            streak: (data.streak || 0) + 1,
             countryCode: s.countryCode || data.countryCode || 'IN',
             countryName: s.countryName || data.countryName || 'India'
           };
@@ -2383,8 +2654,18 @@
             updateData.shortMatches = (data.shortMatches || 0) + 1;
           }
           await updateDoc(playerRef, updateData);
-          const oppPlayer = allPlayers.find(p => (p.ign || "").toLowerCase() === (s.opponent || "").toLowerCase());
-          if (oppPlayer && oppPlayer.streak > 0) await updateDoc(doc(db, "players", oppPlayer.id), { streak: 0 });
+
+          // Case-insensitive match for defeated opponent -> break their streak if > 0
+          const normalizedOpp = (s.opponent || "").trim().toLowerCase();
+          const oppPlayer = allPlayers.find(p =>
+            p.id !== s.uid && (
+              (s.opponentUid && p.id === s.opponentUid) ||
+              ((p.ign || p.name || "").trim().toLowerCase() === normalizedOpp)
+            )
+          );
+          if (oppPlayer && (oppPlayer.streak || 0) > 0) {
+            await updateDoc(doc(db, "players", oppPlayer.id), { streak: 0 });
+          }
         }
         await deleteDoc(subRef);
         loadPendingSubmissions();
