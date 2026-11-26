@@ -11,11 +11,11 @@
   <link rel="manifest" href="/manifest.json" />
   <meta name="theme-color" content="#06b6d4" />
 
-  <!-- OpenGraph & Self-Contained FC SVG Favicon -->
+  <!-- OpenGraph & External FC SVG Favicon -->
   <meta property="og:site_name" content="Flex City Leaderboard" />
   <meta property="og:title" content="Flex City Leaderboard — Global & Regional 1v1 Tiers" />
   <meta property="og:description" content="Compete in your country and climb the Global Flex City 1v1 PvP rankings." />
-  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%2306b6d4'/%3E%3Ctext x='50%25' y='56%25' dominant-baseline='middle' text-anchor='middle' fill='%230b0e14' font-family='Arial,sans-serif' font-size='30' font-weight='900'%3EFC%3C/text%3E%3C/svg%3E" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
 
   <!-- Structured Data for Google Search Site Name -->
   <script type="application/ld+json">
@@ -47,7 +47,6 @@
     .chat-scroll::-webkit-scrollbar-track { background: #0f131d; }
     .chat-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
 
-    /* Press & Hold Animation for Chat Bubbles */
     .msg-bubble {
       transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.22s ease, filter 0.22s ease;
       user-select: none;
@@ -67,7 +66,6 @@
       animation: popInMenu 0.2s cubic-bezier(0.16, 1, 0.3, 1) forwards;
     }
 
-    /* Smooth Slide & Scale Animation for Chat Drawer */
     @keyframes chatBackdropIn {
       from { opacity: 0; }
       to { opacity: 1; }
@@ -143,6 +141,9 @@
   <!-- Main Content -->
   <main class="max-w-4xl w-full mx-auto px-3 py-5 flex-1 space-y-4">
 
+    <!-- Role Status Bar (Visible when Owner or Admin is logged in) -->
+    <div id="roleStatusBar" class="hidden rounded-2xl px-4 py-2.5 text-xs flex flex-wrap items-center justify-between gap-2 border"></div>
+
     <!-- Natural SEO-Friendly Description & Rules Box -->
     <div class="card-bg rounded-2xl neon-border p-4 sm:p-5 relative space-y-3 shadow-lg">
       <div class="flex items-center justify-between gap-2">
@@ -187,12 +188,15 @@
         </div>
       </div>
 
-      <div class="flex items-center gap-2.5">
+      <div class="flex items-center flex-wrap gap-2">
         <button onclick="openSubmitProofModal()" id="openSubmitBtn" class="hidden flex-1 sm:flex-none bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-xs transition text-center shadow-md cursor-pointer">
           + Submit Proof
         </button>
         <button onclick="openAdminModal()" id="openAdminBtn" class="hidden flex-1 sm:flex-none bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-xs transition text-center shadow-md cursor-pointer">
           🛡️ Admin (<span id="pendingCount">0</span>)
+        </button>
+        <button onclick="openOwnerModal()" id="openOwnerBtn" class="hidden flex-1 sm:flex-none bg-purple-500 hover:bg-purple-400 text-white font-bold px-4 py-2.5 rounded-xl text-xs transition text-center shadow-md cursor-pointer">
+          👑 Owner
         </button>
       </div>
     </div>
@@ -279,11 +283,10 @@
 
   </main>
 
-  <!-- Clean Professional Footer (Inspired by FlexCity.app & ByteByteGo) -->
+  <!-- Clean Professional Footer -->
   <footer class="bg-[#090c12] border-t border-slate-800/80 mt-10 pb-20 sm:pb-10">
     <div class="max-w-4xl mx-auto px-4 pt-8 pb-6 space-y-7">
       
-      <!-- Top Row: Brand & Minimal Icon Links -->
       <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800/70 pb-6">
         <div class="flex items-center gap-2.5">
           <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center font-black text-white text-xs shadow-sm">FC</div>
@@ -293,29 +296,22 @@
           </div>
         </div>
 
-        <!-- Crisp Minimal Social & Contact Icons -->
         <div class="flex items-center gap-4 text-slate-400">
-          <!-- Instagram -->
           <a href="https://ig.me/m/boomcrraze" target="_blank" rel="noopener" class="hover:text-white transition p-1.5 rounded-lg hover:bg-slate-800/70" title="Instagram: @boomcrraze" aria-label="Instagram">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
           </a>
 
-          <!-- Discord (Copies username boomcraze) -->
           <button type="button" onclick="copyDiscordHandle()" class="hover:text-white transition p-1.5 rounded-lg hover:bg-slate-800/70 cursor-pointer flex items-center gap-1.5" title="Discord: boomcraze (Click to copy)" aria-label="Discord">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M20.317 4.3698a19.7913 19.7913 0 00-4.8851-1.5152.0741.0741 0 00-.0785.0371c-.211.3753-.4447.8648-.6083 1.2495-1.8447-.2762-3.68-.2762-5.4868 0-.1636-.3933-.4058-.8742-.6177-1.2495a.077.077 0 00-.0785-.037 19.7363 19.7363 0 00-4.8852 1.515.0699.0699 0 00-.0321.0277C.5334 9.0458-.319 13.5799.0992 18.0578a.0824.0824 0 00.0312.0561c2.0528 1.5076 4.0413 2.4228 5.9929 3.0294a.0777.0777 0 00.0842-.0276c.4616-.6304.8731-1.2952 1.226-1.9942a.076.076 0 00-.0416-.1057c-.6528-.2476-1.2743-.5495-1.8722-.8923a.077.077 0 01-.0076-.1277c.1258-.0943.2517-.1923.3718-.2914a.0743.0743 0 01.0776-.0105c3.9278 1.7933 8.18 1.7933 12.0614 0a.0739.0739 0 01.0785.0095c.1202.099.246.1981.3728.2924a.077.077 0 01-.0066.1276 12.2986 12.2986 0 01-1.873.8914.0766.0766 0 00-.0407.1067c.3604.698.7719 1.3628 1.225 1.9932a.076.076 0 00.0842.0286c1.961-.6067 3.9495-1.5219 6.0023-3.0294a.077.077 0 00.0313-.0552c.5004-5.177-.8382-9.6739-3.5485-13.6604a.061.061 0 00-.0312-.0286zM8.02 15.3312c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9555-2.4189 2.157-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.9555 2.4189-2.1569 2.4189zm7.9748 0c-1.1825 0-2.1569-1.0857-2.1569-2.419 0-1.3332.9554-2.4189 2.1569-2.4189 1.2108 0 2.1757 1.0952 2.1568 2.419 0 1.3332-.946 2.4189-2.1568 2.4189Z"/></svg>
           </button>
 
-          <!-- Direct Email -->
           <a href="mailto:flexcity.tierlist@gmail.com" class="hover:text-white transition p-1.5 rounded-lg hover:bg-slate-800/70" title="Email: flexcity.tierlist@gmail.com" aria-label="Email">
             <svg class="w-5 h-5" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
           </a>
         </div>
       </div>
 
-      <!-- Middle Row: Clean 3-Column Directory (ByteByteGo style) -->
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-xs">
-        
-        <!-- Column 1: Leaderboard -->
         <div class="space-y-2.5">
           <h4 id="footerCol1Title" class="font-bold text-slate-200 tracking-wide">Leaderboard</h4>
           <ul class="space-y-2 text-slate-400">
@@ -326,7 +322,6 @@
           </ul>
         </div>
 
-        <!-- Column 2: Connect & Socials -->
         <div class="space-y-2.5">
           <h4 id="footerCol2Title" class="font-bold text-slate-200 tracking-wide">Connect</h4>
           <ul class="space-y-2 text-slate-400">
@@ -346,13 +341,12 @@
           </ul>
         </div>
 
-        <!-- Column 3: Support & Inquiries -->
         <div class="space-y-2.5">
           <h4 id="footerCol3Title" class="font-bold text-slate-200 tracking-wide">Support & Inquiries</h4>
           <ul class="space-y-2 text-slate-400">
             <li>
               <a href="mailto:flexcity.tierlist@gmail.com" class="hover:text-cyan-400 transition break-all">flexcity.tierlist@gmail.com</a>
-              <span class="block text-[10px] text-slate-500">Match proofs & leaderboard help</span>
+              <span class="block text-[10px] text-slate-500">Owner • Match proofs & leaderboard</span>
             </li>
             <li>
               <a href="mailto:boomcrazee@gmail.com" class="hover:text-cyan-400 transition break-all">boomcrazee@gmail.com</a>
@@ -360,15 +354,12 @@
             </li>
           </ul>
         </div>
-
       </div>
 
-      <!-- Bottom Copyright & Disclaimer Bar -->
       <div class="border-t border-slate-800/70 pt-5 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-slate-500">
         <p id="footerText1">© 2026 Flex City Community Leaderboard • Created by BoomCraze.</p>
         <p id="footerText2">Unofficial fan-made platform • Not affiliated with Jarvi Games.</p>
       </div>
-
     </div>
   </footer>
 
@@ -380,11 +371,10 @@
     <span id="unreadChatBadge" class="hidden absolute -top-1 -right-1 min-w-[20px] h-5 px-1 rounded-full bg-red-500 text-white text-[10px] font-black flex items-center justify-center border-2 border-[#0b0e14] animate-bounce">1</span>
   </button>
 
-  <!-- Floating Chat & DM Drawer Modal (With Animated Open/Close) -->
+  <!-- Floating Chat & DM Drawer Modal -->
   <div id="chatDrawerModal" onclick="closeChatDrawerAnimated()" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-end sm:items-center justify-center p-0 sm:p-4 z-50">
     <div id="chatDrawerCard" onclick="event.stopPropagation()" class="card-bg neon-border rounded-t-3xl sm:rounded-2xl max-w-md w-full h-[85vh] sm:h-[600px] flex flex-col overflow-hidden shadow-2xl relative">
       
-      <!-- Drawer Header -->
       <div class="px-4 py-3.5 border-b border-slate-800 flex items-center justify-between bg-[#0d111a]">
         <div class="flex items-center gap-2">
           <button id="chatBackBtn" onclick="backToChatList()" class="hidden text-cyan-400 hover:text-white text-sm font-bold pr-1 cursor-pointer">←</button>
@@ -396,7 +386,6 @@
         </div>
       </div>
 
-      <!-- Mode Switcher -->
       <div id="chatModeTabs" class="grid grid-cols-2 gap-1.5 p-2 bg-slate-950/90 border-b border-slate-800">
         <button onclick="switchChatTab('global')" id="tabChatGlobal" class="py-1.5 rounded-xl text-xs font-bold bg-cyan-500 text-slate-950 transition cursor-pointer">
           🌍 All (Global Chat)
@@ -406,14 +395,12 @@
         </button>
       </div>
 
-      <!-- Login Wall if not logged in -->
       <div id="chatLoginWall" class="hidden flex-1 flex flex-col items-center justify-center p-6 text-center space-y-3">
         <div class="text-3xl">🔒</div>
         <p class="text-xs text-slate-300">Login with Google to chat with players and send 1v1 challenges!</p>
         <button onclick="triggerLoginFromChat()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs cursor-pointer">Login with Google</button>
       </div>
 
-      <!-- VIEW 1: Global Chat Room -->
       <div id="globalChatView" class="flex-1 flex flex-col overflow-hidden">
         <div class="text-[10px] text-slate-500 text-center py-1 bg-slate-950/50 border-b border-slate-800/50">
           Tip: Press & hold any message for options
@@ -427,7 +414,6 @@
         </form>
       </div>
 
-      <!-- VIEW 2: Personal DMs List -->
       <div id="dmListView" class="hidden flex-1 flex flex-col overflow-hidden">
         <div class="p-2.5 border-b border-slate-800/80">
           <input type="text" id="dmSearchInput" oninput="renderDmPlayerList()" placeholder="🔍 Search player IGN to message..." class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500" />
@@ -435,7 +421,6 @@
         <div id="dmPlayersList" class="flex-1 overflow-y-auto divide-y divide-slate-800/50 chat-scroll"></div>
       </div>
 
-      <!-- VIEW 3: Active 1-on-1 Conversation -->
       <div id="activeDmView" class="hidden flex-1 flex flex-col overflow-hidden">
         <div class="text-[10px] text-slate-500 text-center py-1 bg-slate-950/50 border-b border-slate-800/50">
           Tip: Press & hold any message to Rewrite, Hide, or Erase Globally
@@ -483,6 +468,52 @@
         </form>
       </div>
 
+    </div>
+  </div>
+
+  <!-- Owner Control Center Modal (Owner Only: flexcity.tierlist@gmail.com) -->
+  <div id="ownerModal" class="fixed inset-0 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+    <div class="card-bg neon-border rounded-2xl max-w-2xl w-full p-5 relative max-h-[88vh] overflow-y-auto shadow-2xl space-y-4">
+      <button onclick="closeModal('ownerModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg cursor-pointer">&times;</button>
+      
+      <div class="border-b border-slate-800 pb-3">
+        <h2 class="text-base font-bold text-purple-400 flex items-center gap-2">👑 Owner Control Center</h2>
+        <p class="text-xs text-slate-400 mt-0.5">Owner Priority: <span class="text-white font-semibold">flexcity.tierlist@gmail.com</span> • Full access over Admins, Players, Points & Match Proofs.</p>
+      </div>
+
+      <!-- 1. Manage Admins Section -->
+      <div class="bg-slate-950/80 border border-purple-500/30 rounded-xl p-3.5 space-y-3">
+        <div class="flex items-center justify-between">
+          <h3 class="text-xs font-bold text-purple-300 uppercase tracking-wider">🛡️ Manage Admins</h3>
+          <span class="text-[10px] text-slate-400">Admins get Proof + IGN/Points/Streak permissions</span>
+        </div>
+
+        <form onsubmit="addAdminEmailByOwner(event)" class="flex gap-2">
+          <input type="email" id="newAdminEmailInput" required placeholder="Enter friend's Gmail (e.g. prayrpro@gmail.com)" class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-purple-500" />
+          <button type="submit" class="bg-purple-500 hover:bg-purple-400 text-white font-bold px-3.5 py-2 rounded-xl text-xs transition cursor-pointer">+ Add Admin</button>
+        </form>
+
+        <div id="ownerAdminList" class="space-y-2"></div>
+      </div>
+
+      <!-- 2. Admin Rules & Guide (Shown inside Owner Panel too) -->
+      <div class="bg-slate-950/80 border border-amber-500/30 rounded-xl p-3.5 space-y-1.5">
+        <h3 class="text-xs font-bold text-amber-400 uppercase tracking-wider">📜 Admin Rules & Workflow</h3>
+        <ul class="text-xs text-slate-300 space-y-1 list-disc list-inside leading-relaxed">
+          <li><strong>Fair Proof Check:</strong> Verify opponent agreement, clear chat screenshot, and category (Long/Short Range) before approving.</li>
+          <li><strong>No Fake Points/IGN Abuse:</strong> Edit IGN, points, or streak only for genuine matches or corrections.</li>
+          <li><strong>Owner Priority:</strong> Owner (<span class="text-purple-300">flexcity.tierlist@gmail.com</span>) holds supreme authority and can add/remove any Admin anytime.</li>
+        </ul>
+      </div>
+
+      <!-- 3. All Players Directory (Inspect & Edit Anything) -->
+      <div class="bg-slate-950/80 border border-slate-800 rounded-xl p-3.5 space-y-2.5">
+        <div class="flex items-center justify-between gap-2">
+          <h3 class="text-xs font-bold text-cyan-400 uppercase tracking-wider">🎮 All Registered Players</h3>
+          <input type="text" id="ownerPlayerSearch" oninput="renderOwnerPlayersList()" placeholder="Search IGN..." class="bg-slate-900 border border-slate-700 rounded-lg px-2.5 py-1 text-xs text-white w-36 sm:w-48" />
+        </div>
+        <div id="ownerPlayersList" class="max-h-56 overflow-y-auto divide-y divide-slate-800/70 chat-scroll"></div>
+      </div>
     </div>
   </div>
 
@@ -576,12 +607,12 @@
     </div>
   </div>
 
-  <!-- Admin Direct Edit Player Modal -->
+  <!-- Admin / Owner Direct Edit Player Modal -->
   <div id="adminEditPlayerModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
     <div class="card-bg neon-border rounded-2xl max-w-sm w-full p-5 relative shadow-2xl">
-      <button onclick="closeModal('adminEditPlayerModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg">&times;</button>
-      <h2 class="text-base font-bold text-amber-400 mb-1">⚡ Admin Edit Player</h2>
-      <p class="text-xs text-slate-400 mb-3">Update player IGN, points, or streak directly.</p>
+      <button onclick="closeModal('adminEditPlayerModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg cursor-pointer">&times;</button>
+      <h2 class="text-base font-bold text-amber-400 mb-1">⚡ Edit Player IGN & Points</h2>
+      <p class="text-xs text-slate-400 mb-3">Update player IGN, Long/Short points, or Streak.</p>
       
       <form id="adminEditPlayerForm" class="space-y-2.5">
         <input type="hidden" id="editPlayerId" />
@@ -662,12 +693,25 @@
     </div>
   </div>
 
-  <!-- Admin Panel Modal -->
+  <!-- Admin Panel Modal (With Rules + Proof Queue) -->
   <div id="adminModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
-    <div class="card-bg neon-border rounded-2xl max-w-xl w-full p-5 relative max-h-[85vh] overflow-y-auto shadow-2xl">
-      <button onclick="closeModal('adminModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg">&times;</button>
-      <h2 class="text-base font-bold text-amber-400 mb-1">🛡️ Admin Verification Queue</h2>
-      <p class="text-xs text-slate-400 mb-3">Approving verifies chat proof, updates points, country rank & streak, and posts to live ticker. Rejecting permanently deletes screenshot.</p>
+    <div class="card-bg neon-border rounded-2xl max-w-xl w-full p-5 relative max-h-[85vh] overflow-y-auto shadow-2xl space-y-3.5">
+      <button onclick="closeModal('adminModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg cursor-pointer">&times;</button>
+      <div>
+        <h2 class="text-base font-bold text-amber-400 mb-1">🛡️ Admin Verification & Control Panel</h2>
+        <p class="text-xs text-slate-400">Approve/reject match proofs, edit player IGN or points, and follow Admin rules below.</p>
+      </div>
+
+      <!-- Admin Rules Box -->
+      <div class="bg-slate-950/90 border border-amber-500/30 rounded-xl p-3 space-y-1">
+        <div class="text-[11px] font-bold text-amber-400">📜 Admin Rules & Kaise Kaam Karna Hai:</div>
+        <ul class="text-[11px] text-slate-300 space-y-1 list-disc list-inside leading-relaxed">
+          <li><strong>Proof Check:</strong> Screenshot mein opponent ki agreement aur match category (Long/Short Range) check karke hi Approve ya Reject karein.</li>
+          <li><strong>IGN & Points Edit:</strong> Leaderboard par player ke paas <code>⋮</code> button se IGN, Long/Short points, ya Streak edit kar sakte hain—sirf genuine correction ke liye.</li>
+          <li><strong>Owner Priority:</strong> Owner (<span class="text-purple-300">flexcity.tierlist@gmail.com</span>) ko sabse upar priority hai; kisi bhi dispute mein Owner ka decision final hoga.</li>
+        </ul>
+      </div>
+
       <div id="pendingList" class="space-y-3"></div>
     </div>
   </div>
@@ -692,7 +736,9 @@
       appId: "1:652569201048:web:80bbd8bb452ea5c2f7c3ed"
     };
 
-    const ADMIN_EMAIL = "flexcity.tierlist@gmail.com";
+    const OWNER_EMAIL = "flexcity.tierlist@gmail.com";
+    const DEFAULT_ADMIN_EMAILS = ["prayrpro@gmail.com"];
+    let adminEmails = [...DEFAULT_ADMIN_EMAILS];
 
     const app = initializeApp(firebaseConfig);
     const auth = getAuth(app);
@@ -714,29 +760,19 @@
       }
     };
 
-    // ==================== COUNTRY CODE TO FLAG EMOJI HELPER ====================
     function countryCodeToFlag(code) {
       if (!code || code.length !== 2) return '🌍';
       const upper = code.toUpperCase();
       return String.fromCodePoint(...[...upper].map(c => 127397 + c.charCodeAt(0)));
     }
 
-    // ==================== VISITOR IP GEO & LOCAL LANGUAGE DETECTION ====================
-    let visitorCountry = {
-      code: 'IN',
-      name: 'India',
-      flag: '🇮🇳'
-    };
+    let visitorCountry = { code: 'IN', name: 'India', flag: '🇮🇳' };
 
     const countryLangMap = {
-      IN: 'hi',
-      BR: 'pt', PT: 'pt',
-      RU: 'ru', BY: 'ru', KZ: 'ru',
+      IN: 'hi', BR: 'pt', PT: 'pt', RU: 'ru', BY: 'ru', KZ: 'ru',
       ES: 'es', MX: 'es', AR: 'es', CO: 'es', CL: 'es', PE: 'es',
       SA: 'ar', AE: 'ar', EG: 'ar', IQ: 'ar', MA: 'ar',
-      ID: 'id',
-      TR: 'tr',
-      FR: 'fr'
+      ID: 'id', TR: 'tr', FR: 'fr'
     };
 
     let detectedLocalLangCode = null;
@@ -832,321 +868,6 @@
         faqSub: "टीयर्स, टॉप प्लेयर रैंकिंग और फ्लेक्स सिटी के बारे में त्वरित उत्तर।",
         logoutModalTitle: "क्या आप वाकई लॉग आउट करना चाहते हैं?",
         logoutModalSub: "लॉग आउट करने के बाद, आप Google से दोबारा लॉगिन करने तक मैच स्क्रीनशॉट प्रूफ सबमिट नहीं कर पाएंगे या मैसेज नहीं भेज पाएंगे।"
-      },
-      pt: {
-        toggleLabel: "Ler em Português",
-        navSub: "Tiers 1v1 Globais e Regionais",
-        loginBtn: "Entrar com Google",
-        whatsNewBtn: "Novidades",
-        installPillText: "Instalar App",
-        descTitle: "O que é isso?",
-        descText: "Bem-vindo ao hub oficial da comunidade que acompanha os melhores jogadores de Flex City do mundo todo. Suba no ranking do seu país e desafie os melhores no placar Global!",
-        rulesHeading: "📜 Regras de Envio e Desafios:",
-        rulesHtml: `
-          <li><strong>Print do Chat:</strong> Envie um print claro onde seu oponente concorda com o resultado e pontos do 1v1.</li>
-          <li><strong>Ranking Duplo:</strong> Vencer uma partida coloca seu nome tanto no ranking do seu país quanto no Global!</li>
-          <li><strong>Desafio Direto:</strong> Toque em qualquer jogador ou use o ícone de Chat no canto inferior direito para desafiar.</li>
-        `,
-        tabRanked: "🏆 Ranqueados",
-        tabContenders: "⚔️ Desafiantes",
-        sortTotal: "Geral",
-        sortLong: "Top Longa Distância",
-        sortShort: "Top Curta Distância",
-        colRank: "Rank",
-        colPlayer: "Jogador",
-        colRange: "Pts Alcance",
-        colTotal: "Total",
-        loadingText: "Carregando placar...",
-        footerText1: "© 2026 Flex City Community Leaderboard • Criado por BoomCraze.",
-        footerText2: "Plataforma não oficial feita por fãs • Sem vínculo com a Jarvi Games.",
-        openSubmitBtn: "+ Enviar Prova",
-        modalTitle: "Bem-vindo ao Flex City Leaderboard!",
-        modalSubText: "Digite seu nome oficial no jogo (IGN) para continuar.",
-        modalSubmitBtn: "Continuar para o Placar",
-        editIgnTitle: "Editar seu IGN",
-        editIgnSub: "Atualize seu nome oficial no Flex City.",
-        saveIgnBtn: "Salvar IGN",
-        submitProofTitle: "Enviar Print da Partida",
-        labelIgn: "Seu IGN (Flex City)",
-        labelOpponent: "Nome do Oponente",
-        labelCategory: "Categoria",
-        labelScreenshotFile: "Enviar Print do Chat",
-        submitProofBtn: "Enviar para Verificação",
-        whatsNewModalTitle: "✨ Novidades no Flex City",
-        faqTitle: "Perguntas Frequentes",
-        faqSub: "Respostas rápidas sobre rankings, tiers e pontos no Flex City.",
-        logoutModalTitle: "Tem certeza que deseja sair?",
-        logoutModalSub: "Após sair, você não poderá enviar provas ou mensagens até entrar novamente com o Google."
-      },
-      ru: {
-        toggleLabel: "Читать на русском",
-        navSub: "Глобальные и региональные 1v1 ранги",
-        loginBtn: "Войти через Google",
-        whatsNewBtn: "Что нового",
-        installPillText: "Установить",
-        descTitle: "Что это?",
-        descText: "Официальный рейтинг лучших игроков Flex City со всего мира. Побеждайте в 1v1 дуэлях на дальней и ближней дистанции, поднимайтесь в рейтинге своей страны и сражайтесь за топ в Global!",
-        rulesHeading: "📜 Правила отправки скриншотов:",
-        rulesHtml: `
-          <li><strong>Скриншот чата:</strong> Загрузите четкий скриншот чата, где соперник подтверждает счет и очки 1v1.</li>
-          <li><strong>Двойной рейтинг:</strong> Победа засчитывается сразу в рейтинг вашей страны и в общий Global рейтинг!</li>
-          <li><strong>Прямой вызов:</strong> Нажмите на любого игрока или откройте чат в правом нижнем углу для вызова на 1v1.</li>
-        `,
-        tabRanked: "🏆 Рейтинг",
-        tabContenders: "⚔️ Претенденты",
-        sortTotal: "Общий",
-        sortLong: "Дальний бой",
-        sortShort: "Ближний бой",
-        colRank: "Ранг",
-        colPlayer: "Игрок",
-        colRange: "Очки",
-        colTotal: "Всего",
-        loadingText: "Загрузка таблицы лидеров...",
-        footerText1: "© 2026 Flex City Community Leaderboard • Создано BoomCraze.",
-        footerText2: "Неофициальная фанатская платформа • Не связано с Jarvi Games.",
-        openSubmitBtn: "+ Отправить пруф",
-        modalTitle: "Добро пожаловать в Flex City Leaderboard!",
-        modalSubText: "Введите ваш игровой никнейм (IGN), чтобы продолжить.",
-        modalSubmitBtn: "Перейти к рейтингу",
-        editIgnTitle: "Изменить IGN",
-        editIgnSub: "Обновите ваш игровой никнейм в Flex City.",
-        saveIgnBtn: "Сохранить IGN",
-        submitProofTitle: "Отправить скриншот матча",
-        labelIgn: "Ваш IGN (Flex City)",
-        labelOpponent: "Ник соперника",
-        labelCategory: "Категория",
-        labelScreenshotFile: "Загрузить скриншот чата",
-        submitProofBtn: "Отправить на проверку",
-        whatsNewModalTitle: "✨ Что нового в Flex City",
-        faqTitle: "Частые вопросы (FAQ)",
-        faqSub: "Быстрые ответы о рангах, очках и правилах дуэлей Flex City.",
-        logoutModalTitle: "Вы уверены, что хотите выйти?",
-        logoutModalSub: "После выхода вы не сможете отправлять скриншоты и сообщения до повторного входа."
-      },
-      es: {
-        toggleLabel: "Leer en Español",
-        navSub: "Clasificación 1v1 Global y Regional",
-        loginBtn: "Iniciar con Google",
-        whatsNewBtn: "Novedades",
-        installPillText: "Instalar App",
-        descTitle: "¿Qué es esto?",
-        descText: "Bienvenido al centro oficial de la comunidad con los mejores jugadores de Flex City del mundo. Compite en duelos 1v1, sube en el ranking de tu país y desafía a los mejores en la tabla Global.",
-        rulesHeading: "📜 Reglas para enviar pruebas y retar:",
-        rulesHtml: `
-          <li><strong>Captura del Chat:</strong> Sube una captura clara donde tu rival acepte el resultado y puntos del 1v1.</li>
-          <li><strong>Ranking Doble:</strong> ¡Ganar una partida te posiciona tanto en la tabla de tu país como en la Global!</li>
-          <li><strong>Reto Directo:</strong> Toca cualquier jugador o usa el icono de Chat abajo a la derecha para enviar mensajes.</li>
-        `,
-        tabRanked: "🏆 Clasificados",
-        tabContenders: "⚔️ Contendientes",
-        sortTotal: "General",
-        sortLong: "Top Larga Distancia",
-        sortShort: "Top Corta Distancia",
-        colRank: "Rango",
-        colPlayer: "Jugador",
-        colRange: "Pts Rango",
-        colTotal: "Total",
-        loadingText: "Cargando clasificación...",
-        footerText1: "© 2026 Flex City Community Leaderboard • Creado por BoomCraze.",
-        footerText2: "Plataforma no oficial hecha por fans • No afiliada a Jarvi Games.",
-        openSubmitBtn: "+ Enviar Prueba",
-        modalTitle: "¡Bienvenido a Flex City Leaderboard!",
-        modalSubText: "Ingresa tu nombre oficial en el juego (IGN) para continuar.",
-        modalSubmitBtn: "Continuar al Ranking",
-        editIgnTitle: "Editar tu IGN",
-        editIgnSub: "Actualiza tu nombre oficial en Flex City.",
-        saveIgnBtn: "Guardar IGN",
-        submitProofTitle: "Enviar Captura de Partida",
-        labelIgn: "Tu IGN (Flex City)",
-        labelOpponent: "Nombre del Rival",
-        labelCategory: "Categoría",
-        labelScreenshotFile: "Subir Captura del Chat",
-        submitProofBtn: "Enviar para Verificación",
-        whatsNewModalTitle: "✨ Novedades en Flex City",
-        faqTitle: "Preguntas Frecuentes",
-        faqSub: "Respuestas rápidas sobre rangos, puntos y duelos en Flex City.",
-        logoutModalTitle: "¿Seguro que quieres cerrar sesión?",
-        logoutModalSub: "Al salir no podrás enviar pruebas ni mensajes hasta volver a iniciar sesión con Google."
-      },
-      ar: {
-        toggleLabel: "اقرأ بالعربية",
-        navSub: "تصنيفات 1v1 العالمية والمحلية",
-        loginBtn: "تسجيل الدخول عبر Google",
-        whatsNewBtn: "ما الجديد",
-        installPillText: "تثبيت التطبيق",
-        descTitle: "ما هذا الموقع؟",
-        descText: "مرحبًا بك في لوحة المتصدرين الرسمية لأفضل لاعبي Flex City حول العالم. تنافس في مواجهات 1v1، وتصدر ترتيب بلدك، وتحدَّ الأقوياء في التصنيف العالمي!",
-        rulesHeading: "📜 شروط إرسال الإثبات والتحدي:",
-        rulesHtml: `
-          <li><strong>لقطة شاشة الدردشة:</strong> ارفع صورة واضحة للدردشة يوافق فيها خصمك على نتيجة 1v1 والنقاط.</li>
-          <li><strong>تصنيف مزدوج:</strong> الفوز يضع اسمك في تصنيف بلدك والتصنيف العالمي معًا!</li>
-          <li><strong>تحدي مباشر:</strong> اضغط على أي لاعب أو استخدم أيقونة الدردشة أسفل اليمين لمراسلة الخصوم.</li>
-        `,
-        tabRanked: "🏆 المصنفون",
-        tabContenders: "⚔️ المتنافسون",
-        sortTotal: "الإجمالي",
-        sortLong: "أفضل مدى بعيد",
-        sortShort: "أفضل مدى قريب",
-        colRank: "المركز",
-        colPlayer: "اللاعب",
-        colRange: "نقاط المدى",
-        colTotal: "المجموع",
-        loadingText: "جاري تحميل لوحة المتصدرين...",
-        footerText1: "© 2026 Flex City Community Leaderboard • تطوير BoomCraze.",
-        footerText2: "منصة مجتمعية غير رسمية • غير تابعة لشركة Jarvi Games.",
-        openSubmitBtn: "+ إرسال إثبات",
-        modalTitle: "مرحبًا بك في Flex City Leaderboard!",
-        modalSubText: "يرجى إدخال اسمك الرسمي داخل اللعبة (IGN) للمتابعة.",
-        modalSubmitBtn: "المتابعة إلى التصنيف",
-        editIgnTitle: "تعديل اسم IGN",
-        editIgnSub: "حدّث اسمك الرسمي داخل لعبة Flex City.",
-        saveIgnBtn: "حفظ IGN",
-        submitProofTitle: "إرسال لقطة شاشة المباراة",
-        labelIgn: "اسمك داخل اللعبة (IGN)",
-        labelOpponent: "اسم الخصم",
-        labelCategory: "الفئة",
-        labelScreenshotFile: "رفع صورة الدردشة",
-        submitProofBtn: "إرسال للمراجعة",
-        whatsNewModalTitle: "✨ ما الجديد في Flex City",
-        faqTitle: "الأسئلة الشائعة",
-        faqSub: "إجابات سريعة حول التصنيفات والنقاط في Flex City.",
-        logoutModalTitle: "هل أنت متأكد من تسجيل الخروج؟",
-        logoutModalSub: "بعد تسجيل الخروج لن تتمكن من إرسال الإثباتات أو الرسائل حتى تسجل الدخول مجددًا."
-      },
-      id: {
-        toggleLabel: "Baca dalam Bahasa Indonesia",
-        navSub: "Peringkat 1v1 Global & Regional",
-        loginBtn: "Masuk dengan Google",
-        whatsNewBtn: "Yang Baru",
-        installPillText: "Pasang Aplikasi",
-        descTitle: "Apa ini?",
-        descText: "Selamat datang di papan peringkat komunitas resmi pemain top Flex City di seluruh dunia. Menangkan duel 1v1, naiki peringkat negaramu, dan tantang pemain terbaik di papan peringkat Global!",
-        rulesHeading: "📜 Aturan Kirim Bukti & Tantangan:",
-        rulesHtml: `
-          <li><strong>Screenshot Chat:</strong> Unggah screenshot chat yang jelas saat lawan menyetujui hasil & poin 1v1.</li>
-          <li><strong>Peringkat Ganda:</strong> Menang pertandingan akan menampilkan namamu di Peringkat Negaramu sekaligus Global!</li>
-          <li><strong>Tantang Langsung:</strong> Ketuk pemain mana saja atau gunakan ikon Chat di kanan bawah untuk mengirim pesan.</li>
-        `,
-        tabRanked: "🏆 Peringkat",
-        tabContenders: "⚔️ Penantang",
-        sortTotal: "Keseluruhan",
-        sortLong: "Top Jarak Jauh",
-        sortShort: "Top Jarak Dekat",
-        colRank: "Rank",
-        colPlayer: "Pemain",
-        colRange: "Poin Jarak",
-        colTotal: "Total",
-        loadingText: "Memuat data papan peringkat...",
-        footerText1: "© 2026 Flex City Community Leaderboard • Dibuat oleh BoomCraze.",
-        footerText2: "Platform buatan komunitas tidak resmi • Tidak berafiliasi dengan Jarvi Games.",
-        openSubmitBtn: "+ Kirim Bukti",
-        modalTitle: "Selamat Datang di Flex City Leaderboard!",
-        modalSubText: "Masukkan In-Game Name (IGN) resmimu untuk melanjutkan.",
-        modalSubmitBtn: "Lanjut ke Leaderboard",
-        editIgnTitle: "Ubah IGN",
-        editIgnSub: "Perbarui nama resmi Flex City kamu.",
-        saveIgnBtn: "Simpan IGN",
-        submitProofTitle: "Kirim Screenshot Pertandingan",
-        labelIgn: "IGN Kamu (Flex City)",
-        labelOpponent: "Nama Lawan",
-        labelCategory: "Kategori",
-        labelScreenshotFile: "Unggah Screenshot Chat",
-        submitProofBtn: "Kirim untuk Verifikasi",
-        whatsNewModalTitle: "✨ Yang Baru di Flex City",
-        faqTitle: "Pertanyaan Umum (FAQ)",
-        faqSub: "Jawaban cepat seputar peringkat, tier, dan poin Flex City.",
-        logoutModalTitle: "Yakin ingin keluar?",
-        logoutModalSub: "Setelah keluar, kamu tidak bisa mengirim bukti pertandingan atau pesan sampai masuk kembali."
-      },
-      tr: {
-        toggleLabel: "Türkçe Oku",
-        navSub: "Küresel ve Bölgesel 1v1 Sıralaması",
-        loginBtn: "Google ile Giriş Yap",
-        whatsNewBtn: "Yenilikler",
-        installPillText: "Uygulamayı Yükle",
-        descTitle: "Bu nedir?",
-        descText: "Dünya genelindeki en iyi Flex City oyuncularını takip eden resmi topluluk merkezine hoş geldiniz. Ülke sıralamanızda yükselin ve Küresel Flex City liderlik tablosunda rakiplere meydan okuyun!",
-        rulesHeading: "📜 Kanıt Gönderme ve Meydan Okuma Kuralları:",
-        rulesHtml: `
-          <li><strong>Sohbet Ekran Görüntüsü:</strong> Rakibinizin 1v1 sonucunu ve puanları kabul ettiği net bir sohbet ekran görüntüsü yükleyin.</li>
-          <li><strong>Çift Sıralama:</strong> Maç kazanmak sizi hem Ülke Sıralamasına hem de Küresel Sıralamaya yerleştirir!</li>
-          <li><strong>Doğrudan Meydan Okuma:</strong> 1v1 için herhangi bir oyuncuya dokunun veya sağ alttaki Sohbet simgesini kullanın.</li>
-        `,
-        tabRanked: "🏆 Sıralamalı",
-        tabContenders: "⚔️ Adaylar",
-        sortTotal: "Genel",
-        sortLong: "Uzak Mesafe En İyileri",
-        sortShort: "Yakın Mesafe En İyileri",
-        colRank: "Sıra",
-        colPlayer: "Oyuncu",
-        colRange: "Mesafe Puanı",
-        colTotal: "Toplam",
-        loadingText: "Liderlik tablosu yükleniyor...",
-        footerText1: "© 2026 Flex City Community Leaderboard • BoomCraze tarafından oluşturuldu.",
-        footerText2: "Resmi olmayan hayran platformu • Jarvi Games ile bağlantılı değildir.",
-        openSubmitBtn: "+ Kanıt Gönder",
-        modalTitle: "Flex City Liderlik Tablosuna Hoş Geldiniz!",
-        modalSubText: "Devam etmek için resmi Oyun İçi Adınızı (IGN) girin.",
-        modalSubmitBtn: "Liderlik Tablosuna Git",
-        editIgnTitle: "IGN Düzenle",
-        editIgnSub: "Resmi Flex City oyun içi adınızı güncelleyin.",
-        saveIgnBtn: "IGN Kaydet",
-        submitProofTitle: "Maç Ekran Görüntüsü Gönder",
-        labelIgn: "IGN Adınız (Flex City)",
-        labelOpponent: "Rakip Adı",
-        labelCategory: "Kategori",
-        labelScreenshotFile: "Sohbet Ekran Görüntüsü Yükle",
-        submitProofBtn: "Doğrulama İçin Gönder",
-        whatsNewModalTitle: "✨ Flex City Yenilikleri",
-        faqTitle: "Sıkça Sorulan Sorular",
-        faqSub: "Flex City PvP sıralamaları ve puanları hakkında hızlı cevaplar.",
-        logoutModalTitle: "Çıkış yapmak istediğinize emin misiniz?",
-        logoutModalSub: "Çıkış yaptıktan sonra tekrar giriş yapana kadar kanıt veya mesaj gönderemezsiniz."
-      },
-      fr: {
-        toggleLabel: "Lire en Français",
-        navSub: "Classement 1v1 Mondial et Régional",
-        loginBtn: "Connexion avec Google",
-        whatsNewBtn: "Nouveautés",
-        installPillText: "Installer l'App",
-        descTitle: "Qu'est-ce que c'est ?",
-        descText: "Bienvenue sur le hub officiel de la communauté suivant les meilleurs joueurs de Flex City dans le monde. Grimpez dans le classement de votre pays et défiez l'élite sur le classement Mondial !",
-        rulesHeading: "📜 Règles d'envoi et de défi :",
-        rulesHtml: `
-          <li><strong>Capture du Chat :</strong> Envoyez une capture claire où votre adversaire confirme le résultat et les points du 1v1.</li>
-          <li><strong>Double Classement :</strong> Gagner un match vous classe à la fois dans votre pays et dans le classement Mondial !</li>
-          <li><strong>Défi Direct :</strong> Appuyez sur un joueur ou utilisez l'icône Chat en bas à droite pour envoyer un message.</li>
-        `,
-        tabRanked: "🏆 Classés",
-        tabContenders: "⚔️ Prétendants",
-        sortTotal: "Général",
-        sortLong: "Top Longue Portée",
-        sortShort: "Top Courte Portée",
-        colRank: "Rang",
-        colPlayer: "Joueur",
-        colRange: "Pts Portée",
-        colTotal: "Total",
-        loadingText: "Chargement du classement...",
-        footerText1: "© 2026 Flex City Community Leaderboard • Créé par BoomCraze.",
-        footerText2: "Plateforme communautaire non officielle • Non affiliée à Jarvi Games.",
-        openSubmitBtn: "+ Envoyer Preuve",
-        modalTitle: "Bienvenue sur Flex City Leaderboard !",
-        modalSubText: "Entrez votre pseudo officiel en jeu (IGN) pour continuer.",
-        modalSubmitBtn: "Continuer vers le classement",
-        editIgnTitle: "Modifier votre IGN",
-        editIgnSub: "Mettez à jour votre pseudo officiel Flex City.",
-        saveIgnBtn: "Enregistrer IGN",
-        submitProofTitle: "Envoyer une Capture de Match",
-        labelIgn: "Votre IGN (Flex City)",
-        labelOpponent: "Nom de l'Adversaire",
-        labelCategory: "Catégorie",
-        labelScreenshotFile: "Télécharger la Capture du Chat",
-        submitProofBtn: "Envoyer pour Vérification",
-        whatsNewModalTitle: "✨ Nouveautés sur Flex City",
-        faqTitle: "Questions Fréquentes",
-        faqSub: "Réponses rapides sur les classements et points Flex City.",
-        logoutModalTitle: "Voulez-vous vraiment vous déconnecter ?",
-        logoutModalSub: "Vous ne pourrez plus envoyer de preuves ni de messages avant de vous reconnecter."
       }
     };
 
@@ -1179,11 +900,7 @@
         try {
           const res = await fetcher();
           if (res && res.code) {
-            visitorCountry = {
-              code: res.code,
-              name: res.name,
-              flag: countryCodeToFlag(res.code)
-            };
+            visitorCountry = { code: res.code, name: res.name, flag: countryCodeToFlag(res.code) };
             break;
           }
         } catch (e) {}
@@ -1204,10 +921,6 @@
         document.getElementById('langBtnText').innerText = translations[mappedLang].toggleLabel;
         langBtn.classList.remove('hidden');
         langBtn.classList.add('flex');
-      } else if (langBtn) {
-        detectedLocalLangCode = null;
-        langBtn.classList.add('hidden');
-        langBtn.classList.remove('flex');
       }
 
       if (currentUser) {
@@ -1216,60 +929,32 @@
             countryCode: visitorCountry.code,
             countryName: visitorCountry.name
           });
-          const me = allPlayers.find(p => p.id === currentUser.uid);
-          if (me) {
-            me.countryCode = visitorCountry.code;
-            me.countryName = visitorCountry.name;
-          }
         } catch (e) {}
       }
 
       renderLeaderboard();
     }
 
-    // ==================== OPTIONAL PWA HOME SCREEN INSTALL PILL ====================
     let deferredInstallPrompt = null;
-
     window.addEventListener('beforeinstallprompt', (e) => {
       e.preventDefault();
       deferredInstallPrompt = e;
       if (localStorage.getItem('fc_pwa_dismissed') !== '1') {
         const pill = document.getElementById('pwaInstallPill');
-        if (pill) {
-          pill.classList.remove('hidden');
-          pill.classList.add('flex');
-        }
+        if (pill) { pill.classList.remove('hidden'); pill.classList.add('flex'); }
       }
     });
-
     window.triggerPwaInstall = async () => {
       if (!deferredInstallPrompt) return;
       deferredInstallPrompt.prompt();
-      const { outcome } = await deferredInstallPrompt.userChoice;
+      await deferredInstallPrompt.userChoice;
       deferredInstallPrompt = null;
-      const pill = document.getElementById('pwaInstallPill');
-      if (pill && outcome === 'accepted') {
-        pill.classList.add('hidden');
-        pill.classList.remove('flex');
-      }
+      document.getElementById('pwaInstallPill')?.classList.add('hidden');
     };
-
     window.dismissPwaInstall = () => {
       localStorage.setItem('fc_pwa_dismissed', '1');
-      const pill = document.getElementById('pwaInstallPill');
-      if (pill) {
-        pill.classList.add('hidden');
-        pill.classList.remove('flex');
-      }
+      document.getElementById('pwaInstallPill')?.classList.add('hidden');
     };
-
-    window.addEventListener('appinstalled', () => {
-      const pill = document.getElementById('pwaInstallPill');
-      if (pill) {
-        pill.classList.add('hidden');
-        pill.classList.remove('flex');
-      }
-    });
 
     let currentUser = null;
     let allPlayers = [];
@@ -1280,9 +965,12 @@
     let selectedModalTab = 'long';
     let userIgn = "";
     let currentLang = 'en';
-    let isAdmin = false;
+    let isOwner = false;
+    let isAdmin = false; // True for both Owner and appointed Admins
 
-    // Chat, Notification & Hold-Menu States
+    // Store messages by ID so hold menu never breaks on quotes/special chars
+    const messageStore = {};
+
     let activeChatTab = 'global';
     let activeDmPartner = null;
     let lastMsgSentTime = 0;
@@ -1314,14 +1002,14 @@
 
     const whatsNewData = [
       {
-        version: "v2.8",
-        date: "Nov 25, 2026 • 10:35 AM IST",
-        en: "✨ Redesign: Upgraded the website footer into a clean multi-column layout with minimal social icons, one-click Discord handle copy (boomcraze), and direct support/creator emails."
+        version: "v2.9",
+        date: "Nov 26, 2026 • Live Update",
+        en: "👑 Added Owner & Admin Role System (Owner priority for flexcity.tierlist@gmail.com + Admin controls for prayrpro@gmail.com & added Admins), fixed new-message hold menu, and linked /favicon.svg."
       },
       {
-        version: "v2.7",
-        date: "Nov 25, 2026 • 09:30 AM IST",
-        en: "✨ Idea: Placed your detected Country tab to the left of Global and set it as default view so you see your local ladder first with one-tap access to Global."
+        version: "v2.8",
+        date: "Nov 25, 2026",
+        en: "✨ Upgraded footer into a clean multi-column layout with social icons, one-click Discord copy (boomcraze), and direct support/creator emails."
       }
     ];
 
@@ -1339,7 +1027,6 @@
       const lBtn = document.getElementById('region-local');
       const activeCls = "px-3.5 py-1.5 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-semibold text-xs flex items-center gap-1.5 cursor-pointer transition";
       const idleCls = "px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition";
-
       if (gBtn && lBtn) {
         gBtn.className = region === 'global' ? activeCls : idleCls;
         lBtn.className = region === 'local' ? activeCls : idleCls;
@@ -1352,13 +1039,11 @@
       isLocalLangActive = !isLocalLangActive;
       currentLang = isLocalLangActive ? detectedLocalLangCode : 'en';
       const t = translations[currentLang] || translations.en;
-      
       setSafeText('navSub', t.navSub);
       setSafeText('loginBtn', t.loginBtn);
       setSafeText('whatsNewBtnText', t.whatsNewBtn);
       setSafeText('installPillText', t.installPillText);
       setSafeText('descTitle', t.descTitle);
-      
       if (isLocalLangActive) {
         document.getElementById('langFlag').innerText = '🌐';
         setSafeText('langBtnText', translations.en.toggleLabel);
@@ -1366,13 +1051,10 @@
         document.getElementById('langFlag').innerText = visitorCountry.flag;
         setSafeText('langBtnText', translations[detectedLocalLangCode].toggleLabel);
       }
-
       setSafeText('descText', t.descText);
       setSafeText('rulesHeading', t.rulesHeading);
-      
       const rulesListEl = document.getElementById('rulesList');
       if (rulesListEl) rulesListEl.innerHTML = t.rulesHtml;
-
       setSafeText('tabRanked', t.tabRanked);
       setSafeText('tabContenders', t.tabContenders);
       setSafeText('sort-total', t.sortTotal);
@@ -1403,7 +1085,6 @@
       setSafeText('faqSub', t.faqSub);
       setSafeText('logoutModalTitle', t.logoutModalTitle);
       setSafeText('logoutModalSub', t.logoutModalSub);
-
       renderWhatsNewContent();
       buildLiveTicker();
       renderLeaderboard();
@@ -1420,31 +1101,15 @@
           Notification.requestPermission().then(perm => {
             if (perm === "granted") {
               document.getElementById('notifPromptBanner').classList.add('hidden');
-              checkWhatsNewGuestAlert();
             } else if (perm === "default") {
               document.getElementById('notifPromptBanner').classList.remove('hidden');
             }
           });
-        } catch (e) {
-          document.getElementById('notifPromptBanner').classList.remove('hidden');
-        }
-      } else if (Notification.permission === "granted") {
-        checkWhatsNewGuestAlert();
+        } catch (e) {}
       }
     }
 
-    window.dismissNotifBanner = () => {
-      document.getElementById('notifPromptBanner').classList.add('hidden');
-    };
-
-    function checkWhatsNewGuestAlert() {
-      const latest = whatsNewData[0];
-      const seenLocal = localStorage.getItem('fc_whatsnew_notified');
-      if (seenLocal !== latest.version) {
-        localStorage.setItem('fc_whatsnew_notified', latest.version);
-        triggerSystemNotification(`✨ What's New in Flex City (${latest.version})`, latest.en);
-      }
-    }
+    window.dismissNotifBanner = () => document.getElementById('notifPromptBanner').classList.add('hidden');
 
     setInterval(() => {
       if (tickerMessages.length > 1) {
@@ -1466,66 +1131,165 @@
         const flag = p.countryCode ? countryCodeToFlag(p.countryCode) : '🌍';
         const pts = (p.longPoints || 0) + (p.shortPoints || 0);
         const tabName = pts > 0 ? "Ranked Leaderboard" : "Contenders Queue";
-        
-        if (p.joinedAt) {
-          events.push({
-            time: p.joinedAt,
-            text: `⚔️ Latest: ${flag} ${ign} joined ${tabName}!`
-          });
-        }
-
+        if (p.joinedAt) events.push({ time: p.joinedAt, text: `⚔️ Latest: ${flag} ${ign} joined ${tabName}!` });
         if (p.proofs && p.proofs.length > 0) {
           p.proofs.forEach(pr => {
             if (pr.timestamp) {
               const catName = pr.category === 'long' ? 'Long Range' : 'Short Range';
-              events.push({
-                time: pr.timestamp,
-                text: `🔥 Latest: ${flag} ${ign} defeated ${pr.opponent} in ${catName}!`
-              });
+              events.push({ time: pr.timestamp, text: `🔥 Latest: ${flag} ${ign} defeated ${pr.opponent} in ${catName}!` });
             }
           });
         }
       });
-
       events.sort((a, b) => b.time - a.time);
-      const topThree = events.slice(0, 3);
-
-      if (topThree.length === 0) {
-        tickerMessages = ["⚡ Latest: Flex City Global 1v1 Leaderboard is LIVE!"];
-      } else {
-        tickerMessages = topThree.map(ev => ev.text);
-      }
-
+      tickerMessages = events.length === 0 ? ["⚡ Latest: Flex City Global 1v1 Leaderboard is LIVE!"] : events.slice(0, 3).map(ev => ev.text);
       tickerIndex = 0;
       const el = document.getElementById('liveTickerText');
       if (el && tickerMessages.length > 0) el.innerText = tickerMessages[0];
     }
 
+    // ==================== OWNER & ADMIN ROLES SYSTEM ====================
+    async function loadRolesConfig() {
+      adminEmails = [...DEFAULT_ADMIN_EMAILS];
+      try {
+        const roleSnap = await getDoc(doc(db, "config", "roles"));
+        if (roleSnap.exists() && Array.isArray(roleSnap.data().admins)) {
+          const merged = new Set([...DEFAULT_ADMIN_EMAILS, ...roleSnap.data().admins.map(e => (e || "").toLowerCase().trim())]);
+          adminEmails = [...merged].filter(Boolean);
+        } else if (currentUser && (currentUser.email || "").toLowerCase() === OWNER_EMAIL.toLowerCase()) {
+          await setDoc(doc(db, "config", "roles"), { admins: adminEmails, owner: OWNER_EMAIL }, { merge: true });
+        }
+      } catch (e) {}
+      applyRolePermissions();
+    }
+
+    function applyRolePermissions() {
+      const email = (currentUser?.email || "").toLowerCase();
+      isOwner = Boolean(currentUser && email === OWNER_EMAIL.toLowerCase());
+      isAdmin = Boolean(currentUser && (isOwner || adminEmails.includes(email)));
+
+      const adminBtn = document.getElementById('openAdminBtn');
+      const ownerBtn = document.getElementById('openOwnerBtn');
+      const roleBar = document.getElementById('roleStatusBar');
+
+      if (isOwner) {
+        ownerBtn.classList.remove('hidden');
+        adminBtn.classList.remove('hidden');
+        loadPendingSubmissions();
+        roleBar.className = "rounded-2xl px-4 py-2.5 text-xs flex flex-wrap items-center justify-between gap-2 border bg-purple-950/50 border-purple-500/40 text-purple-200";
+        roleBar.innerHTML = `
+          <div><span class="font-black text-purple-300">👑 OWNER MODE</span> • Full control over Admins, Players, Points & Match Proofs.</div>
+          <button onclick="openOwnerModal()" class="bg-purple-500 hover:bg-purple-400 text-white font-bold px-3 py-1 rounded-lg text-[11px] cursor-pointer">Manage Admins & Players</button>
+        `;
+      } else if (isAdmin) {
+        ownerBtn.classList.add('hidden');
+        adminBtn.classList.remove('hidden');
+        loadPendingSubmissions();
+        roleBar.className = "rounded-2xl px-4 py-2.5 text-xs flex flex-wrap items-center justify-between gap-2 border bg-amber-950/40 border-amber-500/40 text-amber-200";
+        roleBar.innerHTML = `
+          <div><span class="font-black text-amber-300">🛡️ ADMIN MODE</span> • You can verify proofs & edit player IGN/points. Owner has final priority.</div>
+          <button onclick="openAdminModal()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1 rounded-lg text-[11px] cursor-pointer">Open Admin Queue</button>
+        `;
+      } else {
+        ownerBtn.classList.add('hidden');
+        adminBtn.classList.add('hidden');
+        roleBar.classList.add('hidden');
+      }
+
+      renderLeaderboard();
+    }
+
+    window.openOwnerModal = () => {
+      if (!isOwner) return alert("Only Owner (flexcity.tierlist@gmail.com) can open Owner Control Center!");
+      renderOwnerAdminList();
+      renderOwnerPlayersList();
+      document.getElementById('ownerModal').classList.remove('hidden');
+      document.getElementById('ownerModal').classList.add('flex');
+    };
+
+    function renderOwnerAdminList() {
+      const box = document.getElementById('ownerAdminList');
+      if (!box) return;
+      const appointed = adminEmails.filter(e => e.toLowerCase() !== OWNER_EMAIL.toLowerCase());
+      box.innerHTML = `
+        <div class="flex items-center justify-between bg-slate-900 border border-purple-500/30 rounded-xl px-3 py-2 text-xs">
+          <div><span class="text-purple-300 font-bold">👑 ${OWNER_EMAIL}</span> <span class="text-[10px] text-slate-400">(Owner • Priority)</span></div>
+          <span class="text-[10px] bg-purple-500/20 text-purple-300 px-2 py-0.5 rounded font-bold">LOCKED</span>
+        </div>
+        ${appointed.length === 0 ? `<div class="text-xs text-slate-500 py-1">No extra Admins added yet.</div>` : appointed.map(em => `
+          <div class="flex items-center justify-between bg-slate-900 border border-slate-800 rounded-xl px-3 py-2 text-xs">
+            <span class="text-amber-300 font-semibold">🛡️ ${escapeHtml(em)}</span>
+            <button onclick="removeAdminEmailByOwner('${escapeHtml(em)}')" class="bg-rose-500/20 hover:bg-rose-500/40 text-rose-400 px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer">Remove</button>
+          </div>
+        `).join('')}
+      `;
+    }
+
+    window.addAdminEmailByOwner = async (e) => {
+      e.preventDefault();
+      if (!isOwner) return;
+      const inp = document.getElementById('newAdminEmailInput');
+      const email = (inp.value || "").toLowerCase().trim();
+      if (!email) return;
+      if (email === OWNER_EMAIL.toLowerCase()) return alert("That email is already the Owner!");
+      if (!adminEmails.includes(email)) adminEmails.push(email);
+      await setDoc(doc(db, "config", "roles"), { admins: adminEmails, owner: OWNER_EMAIL }, { merge: true });
+      inp.value = "";
+      renderOwnerAdminList();
+      alert(`${email} now has Admin permissions (Proofs + IGN/Points edit).`);
+    };
+
+    window.removeAdminEmailByOwner = async (email) => {
+      if (!isOwner) return;
+      if (!confirm(`Remove Admin access for ${email}?`)) return;
+      adminEmails = adminEmails.filter(e => e.toLowerCase() !== email.toLowerCase());
+      await setDoc(doc(db, "config", "roles"), { admins: adminEmails, owner: OWNER_EMAIL }, { merge: true });
+      renderOwnerAdminList();
+    };
+
+    window.renderOwnerPlayersList = () => {
+      const box = document.getElementById('ownerPlayersList');
+      if (!box) return;
+      const qStr = (document.getElementById('ownerPlayerSearch')?.value || "").toLowerCase().trim();
+      const list = allPlayers.filter(p => (p.ign || p.name || "").toLowerCase().includes(qStr));
+      if (list.length === 0) {
+        box.innerHTML = `<div class="text-xs text-slate-500 py-3 text-center">No players found.</div>`;
+        return;
+      }
+      box.innerHTML = list.map(p => {
+        const total = (p.longPoints || 0) + (p.shortPoints || 0);
+        return `
+          <div class="py-2 flex items-center justify-between gap-2 text-xs">
+            <div class="truncate">
+              <span class="font-bold text-white">${escapeHtml(p.ign || p.name || "Player")}</span>
+              <span class="text-[11px] text-slate-400 ml-1.5">(L:${p.longPoints || 0} / S:${p.shortPoints || 0} • Tot:${total} • 🔥${p.streak || 0})</span>
+            </div>
+            <button onclick="openAdminEditPlayer('${p.id}')" class="bg-cyan-500/20 hover:bg-cyan-500/40 text-cyan-300 border border-cyan-500/30 px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer flex-shrink-0">Edit</button>
+          </div>
+        `;
+      }).join('');
+    };
+
     onAuthStateChanged(auth, async (user) => {
       currentUser = user;
       const authArea = document.getElementById('authArea');
       const submitBtn = document.getElementById('openSubmitBtn');
-      const adminBtn = document.getElementById('openAdminBtn');
 
       if (user) {
-        isAdmin = (user.email === ADMIN_EMAIL);
         const playerRef = doc(db, "players", user.uid);
         const snap = await getDoc(playerRef);
-        
         if (!snap.exists()) {
           document.getElementById('forcedIgnModal').classList.remove('hidden');
           document.getElementById('forcedIgnModal').classList.add('flex');
         } else {
           userIgn = snap.data().ign || user.displayName || "Player";
-          await updateDoc(playerRef, {
-            countryCode: visitorCountry.code,
-            countryName: visitorCountry.name
-          }).catch(() => {});
+          await updateDoc(playerRef, { countryCode: visitorCountry.code, countryName: visitorCountry.name }).catch(() => {});
         }
 
+        const badgeText = (user.email || "").toLowerCase() === OWNER_EMAIL.toLowerCase() ? " 👑" : "";
         authArea.innerHTML = `
           <div class="flex items-center gap-2">
-            <span class="text-xs text-cyan-300 font-semibold hidden sm:inline max-w-[90px] truncate">${userIgn}</span>
+            <span class="text-xs text-cyan-300 font-semibold hidden sm:inline max-w-[100px] truncate">${escapeHtml(userIgn)}${badgeText}</span>
             <button onclick="openIgnModal()" class="bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 border border-cyan-500/30 px-2.5 py-1.5 rounded-xl text-xs font-semibold cursor-pointer">✏️ IGN</button>
             <button onclick="openLogoutModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer">Logout</button>
           </div>
@@ -1533,21 +1297,18 @@
         submitBtn.classList.remove('hidden');
         document.getElementById('ignInput').value = userIgn;
 
-        if (isAdmin) {
-          adminBtn.classList.remove('hidden');
-          loadPendingSubmissions();
-        }
-
+        await loadRolesConfig();
         checkWhatsNewStatus(user.uid);
         startRealtimeDmListener(user.uid);
         checkNotificationPermissionBtn();
       } else {
+        isOwner = false;
         isAdmin = false;
+        applyRolePermissions();
         const loginLabel = (translations[currentLang] || translations.en).loginBtn;
         authArea.innerHTML = `<button id="loginBtn" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold px-3.5 py-1.5 rounded-xl text-xs transition cursor-pointer">${loginLabel}</button>`;
         document.getElementById('loginBtn').onclick = () => signInWithPopup(auth, provider);
         submitBtn.classList.add('hidden');
-        adminBtn.classList.add('hidden');
         document.getElementById('whatsNewDot').classList.add('hidden');
         document.getElementById('unreadChatBadge').classList.add('hidden');
         if (unsubscribeDmListener) unsubscribeDmListener();
@@ -1560,7 +1321,6 @@
       if (!currentUser) return;
       const ign = document.getElementById('forcedIgnInput').value.trim();
       if (!ign) return;
-
       userIgn = ign;
       await setDoc(doc(db, "players", currentUser.uid), {
         uid: currentUser.uid,
@@ -1569,16 +1329,9 @@
         countryCode: visitorCountry.code,
         countryName: visitorCountry.name,
         photo: currentUser.photoURL || "https://api.dicebear.com/7.x/avataaars/svg?seed=" + currentUser.uid,
-        longPoints: 0,
-        shortPoints: 0,
-        longMatches: 0,
-        shortMatches: 0,
-        streak: 0,
-        joinedAt: Date.now(),
-        proofs: [],
-        whatsNewSeenVersion: ""
+        longPoints: 0, shortPoints: 0, longMatches: 0, shortMatches: 0, streak: 0,
+        joinedAt: Date.now(), proofs: [], whatsNewSeenVersion: ""
       }, { merge: true });
-
       closeModal('forcedIgnModal');
       location.reload();
     };
@@ -1590,12 +1343,12 @@
         snap.forEach(d => allPlayers.push({ id: d.id, ...d.data() }));
         buildLiveTicker();
         renderLeaderboard();
+        if (!document.getElementById('ownerModal').classList.contains('hidden')) {
+          renderOwnerPlayersList();
+        }
         if (selectedPlayer) {
           const updated = allPlayers.find(p => p.id === selectedPlayer.id);
-          if (updated) {
-            selectedPlayer = updated;
-            updatePlayerModalView();
-          }
+          if (updated) { selectedPlayer = updated; updatePlayerModalView(); }
         }
         if (currentUser) checkWhatsNewStatus(currentUser.uid);
       } catch (err) {
@@ -1603,7 +1356,7 @@
       }
     }
 
-    // ==================== MESSAGING, ANIMATED DRAWER & HOLD CONTROLS ====================
+    // ==================== MESSAGING & HOLD CONTROLS (FIXED FOR ALL MESSAGES) ====================
 
     function checkNotificationPermissionBtn() {
       const btn = document.getElementById('enableNotifBtn');
@@ -1621,9 +1374,7 @@
       if ("Notification" in window) {
         Notification.requestPermission().then(perm => {
           checkNotificationPermissionBtn();
-          if (perm === "granted") {
-            triggerSystemNotification("Flex City Notifications Active!", "You will now receive instant DM messages & What's New updates.");
-          }
+          if (perm === "granted") triggerSystemNotification("Flex City Notifications Active!", "Instant DM alerts enabled.");
         });
       }
     };
@@ -1631,35 +1382,33 @@
     function triggerSystemNotification(title, body) {
       if (!("Notification" in window) || Notification.permission !== "granted") return;
       try {
-        if (navigator.serviceWorker && navigator.serviceWorker.controller) {
-          navigator.serviceWorker.ready.then(reg => {
-            reg.showNotification(title, {
-              body: body,
-              icon: "https://api.dicebear.com/7.x/avataaars/svg?seed=FlexCity"
-            });
-          });
-        } else {
-          new Notification(title, {
-            body: body,
-            icon: "https://api.dicebear.com/7.x/avataaars/svg?seed=FlexCity"
-          });
-        }
+        new Notification(title, { body, icon: "/favicon.svg" });
       } catch (e) {}
     }
 
-    window.startMsgHold = (el, collectionName, msgId, senderUid, currentText) => {
+    window.handleMsgPressStart = (el, storeKey) => {
+      if (!currentUser) return;
       clearTimeout(holdTimer);
       el.classList.add('msg-holding');
       holdTimer = setTimeout(() => {
         el.classList.remove('msg-holding');
         if (navigator.vibrate) navigator.vibrate(35);
-        openMsgActionMenu(collectionName, msgId, senderUid, currentText);
-      }, 420);
+        const item = messageStore[storeKey];
+        if (item) openMsgActionMenu(item.collectionName, item.msgId, item.senderUid, item.currentText);
+      }, 380);
     };
 
-    window.cancelMsgHold = (el) => {
+    window.handleMsgPressEnd = (el) => {
       clearTimeout(holdTimer);
       if (el) el.classList.remove('msg-holding');
+    };
+
+    window.handleMsgContextMenu = (e, storeKey) => {
+      e.preventDefault();
+      clearTimeout(holdTimer);
+      if (!currentUser) return;
+      const item = messageStore[storeKey];
+      if (item) openMsgActionMenu(item.collectionName, item.msgId, item.senderUid, item.currentText);
     };
 
     window.openMsgActionMenu = (collectionName, msgId, senderUid, currentText) => {
@@ -1696,35 +1445,23 @@
       e.preventDefault();
       if (!selectedActionMsg || !currentUser) return;
       const newText = document.getElementById('rewriteMsgInput').value.trim();
-      if (!newText || newText === selectedActionMsg.currentText) {
-        closeRewriteOverlay();
-        return;
-      }
-
+      if (!newText || newText === selectedActionMsg.currentText) { closeRewriteOverlay(); return; }
       const { collectionName, msgId } = selectedActionMsg;
       closeRewriteOverlay();
-
-      await updateDoc(doc(db, collectionName, msgId), {
-        text: newText,
-        rewritten: true
-      });
+      await updateDoc(doc(db, collectionName, msgId), { text: newText, rewritten: true });
     };
 
     window.triggerMsgHideForMe = async () => {
       if (!selectedActionMsg || !currentUser) return;
       const { collectionName, msgId } = selectedActionMsg;
       closeMsgActionMenu();
-
-      await updateDoc(doc(db, collectionName, msgId), {
-        hiddenFor: arrayUnion(currentUser.uid)
-      });
+      await updateDoc(doc(db, collectionName, msgId), { hiddenFor: arrayUnion(currentUser.uid) });
     };
 
     window.triggerMsgEraseGlobally = async () => {
       if (!selectedActionMsg || !currentUser) return;
       const { collectionName, msgId } = selectedActionMsg;
       closeMsgActionMenu();
-
       await deleteDoc(doc(db, collectionName, msgId));
     };
 
@@ -1741,9 +1478,7 @@
           const msg = { id: d.id, ...d.data() };
           if (msg.hiddenFor && msg.hiddenFor.includes(uid)) return;
           allUserDms.push(msg);
-          if (msg.receiverUid === uid && !msg.read) {
-            unreadCount++;
-          }
+          if (msg.receiverUid === uid && !msg.read) unreadCount++;
         });
 
         allUserDms.sort((a, b) => a.timestamp - b.timestamp);
@@ -1754,10 +1489,7 @@
               const newMsg = change.doc.data();
               if (newMsg.receiverUid === uid && !newMsg.read) {
                 playPingSound();
-                triggerSystemNotification(
-                  `💬 ${newMsg.senderIgn} sent you a message`,
-                  newMsg.text
-                );
+                triggerSystemNotification(`💬 ${newMsg.senderIgn} sent you a message`, newMsg.text);
               }
             }
           });
@@ -1776,11 +1508,8 @@
         }
 
         if (!document.getElementById('chatDrawerModal').classList.contains('hidden')) {
-          if (activeDmPartner) {
-            renderActiveDmConversation();
-          } else if (activeChatTab === 'dms') {
-            renderDmPlayerList();
-          }
+          if (activeDmPartner) renderActiveDmConversation();
+          else if (activeChatTab === 'dms') renderDmPlayerList();
         }
       });
     }
@@ -1808,7 +1537,6 @@
 
     window.openChatDrawer = () => {
       showChatDrawerWithAnimation();
-
       if (!currentUser) {
         document.getElementById('chatLoginWall').classList.remove('hidden');
         document.getElementById('globalChatView').classList.add('hidden');
@@ -1817,16 +1545,11 @@
         document.getElementById('chatModeTabs').classList.add('hidden');
         return;
       }
-
       document.getElementById('chatLoginWall').classList.add('hidden');
       document.getElementById('chatModeTabs').classList.remove('hidden');
-      
       const hasUnread = allUserDms.some(m => m.receiverUid === currentUser.uid && !m.read);
-      if (hasUnread && !activeDmPartner) {
-        switchChatTab('dms');
-      } else if (!activeDmPartner) {
-        switchChatTab(activeChatTab);
-      }
+      if (hasUnread && !activeDmPartner) switchChatTab('dms');
+      else if (!activeDmPartner) switchChatTab(activeChatTab);
     };
 
     window.triggerLoginFromChat = () => {
@@ -1863,7 +1586,7 @@
 
     function listenToGlobalChat() {
       if (unsubscribeGlobalChat) return;
-      const q = query(collection(db, "global_chat"), orderBy("timestamp", "desc"), limit(35));
+      const q = query(collection(db, "global_chat"), orderBy("timestamp", "desc"), limit(40));
       unsubscribeGlobalChat = onSnapshot(q, (snapshot) => {
         latestGlobalMsgs = [];
         snapshot.forEach(d => latestGlobalMsgs.push({ id: d.id, ...d.data() }));
@@ -1877,7 +1600,6 @@
       if (!list) return;
 
       const visibleMsgs = latestGlobalMsgs.filter(m => !(currentUser && m.hiddenFor && m.hiddenFor.includes(currentUser.uid)));
-
       if (visibleMsgs.length === 0) {
         list.innerHTML = `<div class="text-center text-xs text-slate-500 py-8">No messages yet. Say hi or ask for a 1v1!</div>`;
         return;
@@ -1885,18 +1607,19 @@
 
       list.innerHTML = visibleMsgs.map(m => {
         const isMe = currentUser && m.uid === currentUser.uid;
-        const timeStr = new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const timeStr = m.timestamp ? new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
         const rewrittenTag = m.rewritten ? `<span class="text-[9px] opacity-75 italic ml-1">(rewritten)</span>` : '';
-        const safeTextAttr = escapeHtml(m.text).replace(/'/g, "&#39;");
+        const storeKey = `global_${m.id}`;
+        messageStore[storeKey] = { collectionName: 'global_chat', msgId: m.id, senderUid: m.uid, currentText: m.text || '' };
 
         const holdAttrs = `
-          onmousedown="startMsgHold(this, 'global_chat', '${m.id}', '${m.uid}', '${safeTextAttr}')"
-          onmouseup="cancelMsgHold(this)"
-          onmouseleave="cancelMsgHold(this)"
-          ontouchstart="startMsgHold(this, 'global_chat', '${m.id}', '${m.uid}', '${safeTextAttr}')"
-          ontouchend="cancelMsgHold(this)"
-          ontouchmove="cancelMsgHold(this)"
-          oncontextmenu="event.preventDefault(); openMsgActionMenu('global_chat', '${m.id}', '${m.uid}', '${safeTextAttr}')"
+          onmousedown="handleMsgPressStart(this, '${storeKey}')"
+          onmouseup="handleMsgPressEnd(this)"
+          onmouseleave="handleMsgPressEnd(this)"
+          ontouchstart="handleMsgPressStart(this, '${storeKey}')"
+          ontouchend="handleMsgPressEnd(this)"
+          ontouchcancel="handleMsgPressEnd(this)"
+          oncontextmenu="handleMsgContextMenu(event, '${storeKey}')"
         `;
 
         if (isMe) {
@@ -1932,17 +1655,12 @@
       const input = document.getElementById('globalMsgInput');
       const text = input.value.trim();
       if (!text) return;
-
-      if (Date.now() - lastMsgSentTime < 3000) {
-        return alert("Please wait 3 seconds before sending another message.");
-      }
-
+      if (Date.now() - lastMsgSentTime < 1500) return;
       lastMsgSentTime = Date.now();
       input.value = "";
-
       await addDoc(collection(db, "global_chat"), {
         uid: currentUser.uid,
-        ign: userIgn,
+        ign: userIgn || currentUser.displayName || "Player",
         text: text,
         timestamp: Date.now()
       });
@@ -1951,7 +1669,6 @@
     window.renderDmPlayerList = () => {
       const container = document.getElementById('dmPlayersList');
       if (!container || !currentUser) return;
-
       const searchTerm = (document.getElementById('dmSearchInput').value || "").toLowerCase();
       const otherPlayers = allPlayers.filter(p => p.id !== currentUser.uid && (p.ign || p.name || "").toLowerCase().includes(searchTerm));
 
@@ -1959,7 +1676,6 @@
         const aUnread = allUserDms.filter(m => m.senderUid === a.id && m.receiverUid === currentUser.uid && !m.read).length;
         const bUnread = allUserDms.filter(m => m.senderUid === b.id && m.receiverUid === currentUser.uid && !m.read).length;
         if (bUnread !== aUnread) return bUnread - aUnread;
-
         const aLast = allUserDms.filter(m => m.participants.includes(a.id)).pop();
         const bLast = allUserDms.filter(m => m.participants.includes(b.id)).pop();
         return (bLast?.timestamp || 0) - (aLast?.timestamp || 0);
@@ -1994,22 +1710,16 @@
     };
 
     window.openDmWithUser = (targetUid, targetIgn) => {
-      if (!currentUser) {
-        openChatDrawer();
-        return;
-      }
+      if (!currentUser) { openChatDrawer(); return; }
       activeDmPartner = { uid: targetUid, ign: targetIgn };
-      
       showChatDrawerWithAnimation();
       document.getElementById('chatLoginWall').classList.add('hidden');
       document.getElementById('chatModeTabs').classList.add('hidden');
       document.getElementById('globalChatView').classList.add('hidden');
       document.getElementById('dmListView').classList.add('hidden');
       document.getElementById('activeDmView').classList.remove('hidden');
-
       document.getElementById('chatBackBtn').classList.remove('hidden');
       document.getElementById('chatDrawerTitle').innerText = `💬 ${targetIgn}`;
-
       renderActiveDmConversation();
     };
 
@@ -2036,28 +1746,24 @@
 
       list.innerHTML = convo.map(m => {
         const isMe = m.senderUid === currentUser.uid;
-        const timeStr = new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+        const timeStr = m.timestamp ? new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
         const rewrittenTag = m.rewritten ? `<span class="text-[9px] opacity-75 italic ml-1">(rewritten)</span>` : '';
-        const safeTextAttr = escapeHtml(m.text).replace(/'/g, "&#39;");
+        const storeKey = `dm_${m.id}`;
+        messageStore[storeKey] = { collectionName: 'direct_messages', msgId: m.id, senderUid: m.senderUid, currentText: m.text || '' };
 
         const holdAttrs = `
-          onmousedown="startMsgHold(this, 'direct_messages', '${m.id}', '${m.senderUid}', '${safeTextAttr}')"
-          onmouseup="cancelMsgHold(this)"
-          onmouseleave="cancelMsgHold(this)"
-          ontouchstart="startMsgHold(this, 'direct_messages', '${m.id}', '${m.senderUid}', '${safeTextAttr}')"
-          ontouchend="cancelMsgHold(this)"
-          ontouchmove="cancelMsgHold(this)"
-          oncontextmenu="event.preventDefault(); openMsgActionMenu('direct_messages', '${m.id}', '${m.senderUid}', '${safeTextAttr}')"
+          onmousedown="handleMsgPressStart(this, '${storeKey}')"
+          onmouseup="handleMsgPressEnd(this)"
+          onmouseleave="handleMsgPressEnd(this)"
+          ontouchstart="handleMsgPressStart(this, '${storeKey}')"
+          ontouchend="handleMsgPressEnd(this)"
+          ontouchcancel="handleMsgPressEnd(this)"
+          oncontextmenu="handleMsgContextMenu(event, '${storeKey}')"
         `;
 
         if (isMe) {
-          const statusHtml = m.read
-            ? `<span class="text-cyan-400 font-bold">Seen ✓✓</span>`
-            : `<span class="text-slate-500">Sent ✓</span>`;
-          const bubbleStyle = m.read
-            ? "bg-emerald-600/95 border border-cyan-400/50 text-white"
-            : "bg-emerald-600 text-white";
-
+          const statusHtml = m.read ? `<span class="text-cyan-400 font-bold">Seen ✓✓</span>` : `<span class="text-slate-500">Sent ✓</span>`;
+          const bubbleStyle = m.read ? "bg-emerald-600/95 border border-cyan-400/50 text-white" : "bg-emerald-600 text-white";
           return `
             <div class="flex flex-col items-end">
               <div ${holdAttrs} class="msg-bubble ${bubbleStyle} px-3 py-2 rounded-2xl rounded-br-sm max-w-[80%] text-xs shadow-sm cursor-pointer">
@@ -2087,18 +1793,13 @@
       const input = document.getElementById('dmMsgInput');
       const text = input.value.trim();
       if (!text) return;
-
-      if (Date.now() - lastMsgSentTime < 2000) {
-        return alert("Please wait 2 seconds between messages.");
-      }
-
+      if (Date.now() - lastMsgSentTime < 1200) return;
       lastMsgSentTime = Date.now();
       input.value = "";
-
       await addDoc(collection(db, "direct_messages"), {
         participants: [currentUser.uid, activeDmPartner.uid],
         senderUid: currentUser.uid,
-        senderIgn: userIgn,
+        senderIgn: userIgn || currentUser.displayName || "Player",
         receiverUid: activeDmPartner.uid,
         text: text,
         read: false,
@@ -2116,49 +1817,34 @@
 
     function escapeHtml(str) {
       if (!str) return '';
-      return str.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;");
+      return String(str).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#39;");
     }
 
-    // ==================== EXISTING LEADERBOARD & ADMIN LOGIC ====================
+    // ==================== LEADERBOARD, PROOFS & ADMIN/OWNER ACTIONS ====================
 
     async function checkWhatsNewStatus(uid) {
       const me = allPlayers.find(p => p.id === uid);
       const dot = document.getElementById('whatsNewDot');
       if (!dot) return;
-
       const latest = whatsNewData[0];
-      if (me && me.whatsNewSeenVersion === latest.version) {
-        dot.classList.add('hidden');
-      } else {
-        dot.classList.remove('hidden');
-        const notifiedVer = localStorage.getItem('fc_whatsnew_notified');
-        if (notifiedVer !== latest.version) {
-          localStorage.setItem('fc_whatsnew_notified', latest.version);
-          triggerSystemNotification(`✨ What's New in Flex City (${latest.version})`, latest.en);
-        }
-      }
+      if (me && me.whatsNewSeenVersion === latest.version) dot.classList.add('hidden');
+      else dot.classList.remove('hidden');
     }
 
     window.openWhatsNewModal = async () => {
       renderWhatsNewContent();
       document.getElementById('whatsNewModal').classList.remove('hidden');
       document.getElementById('whatsNewModal').classList.add('flex');
-
-      const dot = document.getElementById('whatsNewDot');
-      if (dot) dot.classList.add('hidden');
-
+      document.getElementById('whatsNewDot')?.classList.add('hidden');
       if (currentUser) {
         const latestVersion = whatsNewData[0].version;
-        await updateDoc(doc(db, "players", currentUser.uid), { whatsNewSeenVersion: latestVersion });
-        const me = allPlayers.find(p => p.id === currentUser.uid);
-        if (me) me.whatsNewSeenVersion = latestVersion;
+        await updateDoc(doc(db, "players", currentUser.uid), { whatsNewSeenVersion: latestVersion }).catch(() => {});
       }
     };
 
     function renderWhatsNewContent() {
       const container = document.getElementById('whatsNewContentList');
       if (!container) return;
-
       container.innerHTML = whatsNewData.map(item => `
         <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-800 space-y-1">
           <div class="flex items-center justify-between text-[10px]">
@@ -2176,19 +1862,12 @@
     };
 
     window.executeLogout = () => {
-      signOut(auth).then(() => {
-        closeModal('logoutConfirmModal');
-        location.reload();
-      });
+      signOut(auth).then(() => { closeModal('logoutConfirmModal'); location.reload(); });
     };
 
     window.toggleFaq = (id) => {
       const ans = document.getElementById(`faq${id}Ans`);
-      if (ans.classList.contains('hidden')) {
-        ans.classList.remove('hidden');
-      } else {
-        ans.classList.add('hidden');
-      }
+      ans.classList.toggle('hidden');
     };
 
     window.switchMainTab = (tab) => {
@@ -2196,13 +1875,10 @@
       const rankedBtn = document.getElementById('tabRanked');
       const contendersBtn = document.getElementById('tabContenders');
       const filters = document.getElementById('categoryFilters');
-
       const activeClass = "py-2.5 px-2 rounded-xl text-xs font-bold transition bg-cyan-500 text-slate-950 text-center shadow-sm cursor-pointer";
       const inactiveClass = "py-2.5 px-2 rounded-xl text-xs font-bold transition text-slate-400 hover:text-white text-center cursor-pointer";
-
       rankedBtn.className = tab === 'ranked' ? activeClass : inactiveClass;
       contendersBtn.className = tab === 'contenders' ? activeClass : inactiveClass;
-
       if (tab === 'ranked') filters.classList.remove('hidden');
       else filters.classList.add('hidden');
       renderLeaderboard();
@@ -2222,24 +1898,20 @@
 
     function getStreakBadgeHtml(streak) {
       if (!streak || streak < 2) return '';
-      if (streak >= 5) {
-        return `<span class="bg-amber-500/20 text-amber-300 border border-amber-500/40 px-1.5 py-0.5 rounded text-[9px] font-bold">👑 ${streak} Streak</span>`;
-      }
+      if (streak >= 5) return `<span class="bg-amber-500/20 text-amber-300 border border-amber-500/40 px-1.5 py-0.5 rounded text-[9px] font-bold">👑 ${streak} Streak</span>`;
       return `<span class="bg-orange-500/20 text-orange-400 border border-orange-500/40 px-1.5 py-0.5 rounded text-[9px] font-bold">🔥 ${streak} Streak</span>`;
     }
 
     function renderLeaderboard() {
       const list = document.getElementById('leaderboardList');
       if (!list) return;
-      
+
       const filtered = allPlayers.filter(p => {
         const pts = (p.longPoints || 0) + (p.shortPoints || 0);
         const matchesTab = currentMainTab === 'ranked' ? pts > 0 : pts === 0;
         if (!matchesTab) return false;
-
         if (currentRegion === 'local') {
-          const pCode = (p.countryCode || '').toUpperCase();
-          const effectiveCode = pCode || 'IN';
+          const effectiveCode = (p.countryCode || '').toUpperCase() || 'IN';
           return effectiveCode === visitorCountry.code;
         }
         return true;
@@ -2270,7 +1942,7 @@
         if (isAdmin) {
           adminActionHtml = `
             <div class="col-span-1 text-right">
-              <button onclick="event.stopPropagation(); openAdminEditPlayer('${p.id}')" class="bg-amber-500/20 hover:bg-amber-500/40 text-amber-300 border border-amber-500/40 px-2 py-1 rounded-lg text-xs font-bold cursor-pointer" title="Edit Player">⋮</button>
+              <button onclick="event.stopPropagation(); openAdminEditPlayer('${p.id}')" class="bg-amber-500/20 hover:bg-amber-500/40 text-amber-300 border border-amber-500/40 px-2 py-1 rounded-lg text-xs font-bold cursor-pointer" title="Edit IGN / Points">⋮</button>
             </div>
           `;
         }
@@ -2283,7 +1955,7 @@
               <div class="truncate">
                 <div class="flex items-center gap-1.5 flex-wrap">
                   <span class="text-xs" title="${p.countryName || 'Country'}">${pFlag}</span>
-                  <span class="font-semibold text-xs text-white truncate">${p.ign || p.name}</span>
+                  <span class="font-semibold text-xs text-white truncate">${escapeHtml(p.ign || p.name)}</span>
                   ${streakBadge}
                 </div>
                 <div class="text-[10px] text-slate-400 mt-0.5">${(p.longMatches || 0) + (p.shortMatches || 0)} matches</div>
@@ -2298,6 +1970,7 @@
     }
 
     window.openAdminEditPlayer = (playerId) => {
+      if (!isAdmin) return alert("Admin or Owner permission required!");
       const p = allPlayers.find(x => x.id === playerId);
       if (!p) return;
       document.getElementById('editPlayerId').value = p.id;
@@ -2317,19 +1990,22 @@
       const newLongPts = parseInt(document.getElementById('editLongPts').value) || 0;
       const newShortPts = parseInt(document.getElementById('editShortPts').value) || 0;
       const newStreak = parseInt(document.getElementById('editStreak').value) || 0;
-
       if (!newIgn) return alert("IGN cannot be empty!");
 
-      await updateDoc(doc(db, "players", pid), {
-        ign: newIgn,
-        longPoints: newLongPts,
-        shortPoints: newShortPts,
-        streak: newStreak
-      });
-
-      alert("Player details updated successfully!");
-      closeModal('adminEditPlayerModal');
-      loadLeaderboard();
+      try {
+        await updateDoc(doc(db, "players", pid), {
+          ign: newIgn,
+          longPoints: newLongPts,
+          shortPoints: newShortPts,
+          streak: newStreak
+        });
+        alert("Player IGN, points & streak updated!");
+        closeModal('adminEditPlayerModal');
+        await loadLeaderboard();
+      } catch (err) {
+        console.error(err);
+        alert("Permission denied or network error. Check Firestore rules.");
+      }
     };
 
     window.openIgnModal = () => {
@@ -2343,7 +2019,6 @@
       if (!currentUser) return;
       const newIgn = document.getElementById('newIgnInput').value.trim();
       if (!newIgn) return;
-
       await updateDoc(doc(db, "players", currentUser.uid), { ign: newIgn });
       userIgn = newIgn;
       closeModal('ignModal');
@@ -2356,19 +2031,13 @@
       if (!selectedPlayer) return;
       document.getElementById('modalAvatar').src = selectedPlayer.photo;
       document.getElementById('modalName').innerText = selectedPlayer.ign || selectedPlayer.name;
-      
       const pFlag = selectedPlayer.countryCode ? countryCodeToFlag(selectedPlayer.countryCode) : '🇮🇳';
       const pCountry = selectedPlayer.countryName || 'India';
       document.getElementById('modalCountryBadge').innerHTML = `<span class="bg-slate-800 border border-slate-700 text-slate-300 px-1.5 py-0.5 rounded text-[9px] font-semibold">${pFlag} ${pCountry}</span>`;
       document.getElementById('modalStreakBadge').innerHTML = getStreakBadgeHtml(selectedPlayer.streak);
-      
       const dmBox = document.getElementById('playerDmTriggerBox');
-      if (currentUser && currentUser.uid !== id) {
-        dmBox.classList.remove('hidden');
-      } else {
-        dmBox.classList.add('hidden');
-      }
-
+      if (currentUser && currentUser.uid !== id) dmBox.classList.remove('hidden');
+      else dmBox.classList.add('hidden');
       updatePlayerModalView();
       document.getElementById('playerModal').classList.remove('hidden');
       document.getElementById('playerModal').classList.add('flex');
@@ -2379,7 +2048,6 @@
       const total1v1 = (selectedPlayer.longMatches || 0) + (selectedPlayer.shortMatches || 0);
       const totalPts = (selectedPlayer.longPoints || 0) + (selectedPlayer.shortPoints || 0);
       document.getElementById('modalSub').innerText = `Total 1v1s: ${total1v1} • Total Pts: ${totalPts}`;
-      
       const rivalryMap = {};
       (selectedPlayer.proofs || []).forEach(pr => {
         if (pr.opponent) {
@@ -2387,22 +2055,19 @@
           rivalryMap[oppName] = (rivalryMap[oppName] || 0) + 1;
         }
       });
-
       const rivalryEntries = Object.entries(rivalryMap);
       const rivalrySec = document.getElementById('rivalrySection');
       const rivalryList = document.getElementById('rivalryList');
-
       if (rivalryEntries.length > 0) {
         rivalrySec.classList.remove('hidden');
         rivalryList.innerHTML = rivalryEntries.map(([opp, wins]) => `
           <span class="bg-slate-900 border border-slate-700 text-slate-200 px-2.5 py-1 rounded-lg text-[10px] font-semibold">
-            vs <span class="text-cyan-400">${opp}</span>: <span class="text-emerald-400">${wins} ${wins > 1 ? 'Wins' : 'Win'}</span>
+            vs <span class="text-cyan-400">${escapeHtml(opp)}</span>: <span class="text-emerald-400">${wins} ${wins > 1 ? 'Wins' : 'Win'}</span>
           </span>
         `).join('');
       } else {
         rivalrySec.classList.add('hidden');
       }
-
       switchPlayerTab(selectedModalTab);
     }
 
@@ -2417,7 +2082,6 @@
         shortBtn.className = "py-1.5 rounded-lg text-xs font-semibold bg-cyan-500 text-slate-950 cursor-pointer";
         longBtn.className = "py-1.5 rounded-lg text-xs font-semibold text-slate-400 cursor-pointer";
       }
-
       if (!selectedPlayer) return;
       const pts = tab === 'long' ? (selectedPlayer.longPoints || 0) : (selectedPlayer.shortPoints || 0);
       const matches = tab === 'long' ? (selectedPlayer.longMatches || 0) : (selectedPlayer.shortMatches || 0);
@@ -2431,7 +2095,6 @@
           <div class="text-base font-bold text-emerald-400 mt-0.5">${matches}</div>
         </div>
       `;
-
       const proofs = (selectedPlayer.proofs || []).map((p, idx) => ({ ...p, originalIndex: idx })).filter(p => p.category === tab);
       const proofContainer = document.getElementById('modalProofs');
       if (proofs.length === 0) {
@@ -2440,7 +2103,7 @@
         proofContainer.innerHTML = proofs.map(pr => `
           <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 space-y-2">
             <div class="flex justify-between items-center text-[11px]">
-              <span class="text-white font-semibold">vs ${pr.opponent} <span class="text-emerald-400 ml-1">+${pr.pointsAdded} pts</span></span>
+              <span class="text-white font-semibold">vs ${escapeHtml(pr.opponent)} <span class="text-emerald-400 ml-1">+${pr.pointsAdded} pts</span></span>
               ${isAdmin ? `<button onclick="deletePlayerProof('${selectedPlayer.id}', ${pr.originalIndex})" class="bg-red-500/20 hover:bg-red-500/40 text-red-400 border border-red-500/30 px-2 py-0.5 rounded text-[10px] font-bold cursor-pointer">🗑️ Delete SS</button>` : ''}
             </div>
             <img src="${pr.url}" class="w-full h-36 rounded-lg object-cover border border-slate-800" alt="Match Screenshot Proof" />
@@ -2451,37 +2114,30 @@
 
     window.deletePlayerProof = async (playerId, proofIndex) => {
       if (!isAdmin) return;
-      if (!confirm("Are you sure you want to delete this screenshot and recalculate player stats?")) return;
-
+      if (!confirm("Delete this screenshot and recalculate player stats?")) return;
       try {
         const playerRef = doc(db, "players", playerId);
         const pSnap = await getDoc(playerRef);
         if (!pSnap.exists()) return;
-
         const data = pSnap.data();
         let proofs = data.proofs || [];
         const targetProof = proofs[proofIndex];
         if (!targetProof) return;
-
         proofs.splice(proofIndex, 1);
         const isLong = targetProof.category === 'long';
         const ptsToRemove = targetProof.pointsAdded || 0;
-        const newStreak = Math.max(0, proofs.length);
-
-        const updateData = {
-          proofs: proofs,
-          streak: newStreak,
+        await updateDoc(playerRef, {
+          proofs,
+          streak: Math.max(0, proofs.length),
           longPoints: isLong ? Math.max(0, (data.longPoints || 0) - ptsToRemove) : (data.longPoints || 0),
           shortPoints: !isLong ? Math.max(0, (data.shortPoints || 0) - ptsToRemove) : (data.shortPoints || 0),
           longMatches: isLong ? Math.max(0, (data.longMatches || 0) - 1) : (data.longMatches || 0),
           shortMatches: !isLong ? Math.max(0, (data.shortMatches || 0) - 1) : (data.shortMatches || 0)
-        };
-
-        await updateDoc(playerRef, updateData);
-        alert("Screenshot deleted and stats updated successfully!");
+        });
+        alert("Screenshot deleted and stats updated!");
         await loadLeaderboard();
       } catch (err) {
-        console.error("Error deleting proof:", err);
+        console.error(err);
         alert("Failed to delete screenshot.");
       }
     };
@@ -2513,6 +2169,7 @@
     };
 
     window.openAdminModal = () => {
+      if (!isAdmin) return alert("Admin or Owner access required!");
       loadPendingSubmissions();
       document.getElementById('adminModal').classList.remove('hidden');
       document.getElementById('adminModal').classList.add('flex');
@@ -2525,11 +2182,7 @@
       const opponent = document.getElementById('opponentInput').value.trim();
       const category = document.getElementById('categoryInput').value;
       const fileInput = document.getElementById('screenshotFileInput');
-
-      if (ign.toLowerCase() === opponent.toLowerCase()) {
-        return alert("You cannot submit a match against yourself!");
-      }
-
+      if (ign.toLowerCase() === opponent.toLowerCase()) return alert("You cannot submit a match against yourself!");
       if (fileInput.files.length === 0) return alert("Please select a screenshot image!");
       const btn = document.getElementById('submitProofBtn');
       btn.disabled = true;
@@ -2537,26 +2190,16 @@
 
       compressImage(fileInput.files[0], async (compressedBase64) => {
         await updateDoc(doc(db, "players", currentUser.uid), {
-          ign,
-          countryCode: visitorCountry.code,
-          countryName: visitorCountry.name
+          ign, countryCode: visitorCountry.code, countryName: visitorCountry.name
         });
         userIgn = ign;
         await addDoc(collection(db, "submissions"), {
-          uid: currentUser.uid,
-          ign,
-          countryCode: visitorCountry.code,
-          countryName: visitorCountry.name,
-          opponent,
-          category,
-          screenshotUrl: compressedBase64,
-          status: "pending",
-          createdAt: Date.now()
+          uid: currentUser.uid, ign, countryCode: visitorCountry.code, countryName: visitorCountry.name,
+          opponent, category, screenshotUrl: compressedBase64, status: "pending", createdAt: Date.now()
         });
-
         btn.disabled = false;
         btn.innerText = (translations[currentLang] || translations.en).submitProofBtn;
-        alert(`Screenshot submitted! Your country (${visitorCountry.name}) is tagged so you will rank on both ${visitorCountry.name} and Global boards.`);
+        alert(`Screenshot submitted! Tagged with ${visitorCountry.name}.`);
         closeModal('submitModal');
         e.target.reset();
         loadLeaderboard();
@@ -2566,6 +2209,7 @@
     let pendingCache = {};
 
     async function loadPendingSubmissions() {
+      if (!isAdmin) return;
       const q = query(collection(db, "submissions"), where("status", "==", "pending"));
       const snap = await getDocs(q);
       document.getElementById('pendingCount').innerText = snap.size;
@@ -2588,12 +2232,12 @@
         div.innerHTML = `
           <div class="flex justify-between items-start gap-2">
             <div>
-              <div class="text-[10px] text-slate-400 mb-0.5">Player IGN (${sFlag} ${s.countryName || 'Global'}):</div>
+              <div class="text-[10px] text-slate-400 mb-0.5">Player IGN (${sFlag} ${escapeHtml(s.countryName || 'Global')}):</div>
               <div class="flex items-center gap-2">
-                <input type="text" id="admin-ign-${sid}" value="${s.ign}" class="bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1 text-xs font-bold text-white" />
+                <input type="text" id="admin-ign-${sid}" value="${escapeHtml(s.ign)}" class="bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1 text-xs font-bold text-white" />
                 <button onclick="updatePlayerIgnByAdmin('${s.uid}', '${sid}')" class="bg-cyan-500/20 text-cyan-400 text-[10px] px-2.5 py-1 rounded-lg border border-cyan-500/30 font-semibold cursor-pointer">Update</button>
               </div>
-              <div class="text-[10px] text-slate-400 mt-2">vs <span class="text-cyan-300 font-semibold">${s.opponent}</span> • <span class="text-amber-400 uppercase">${s.category}</span></div>
+              <div class="text-[10px] text-slate-400 mt-2">vs <span class="text-cyan-300 font-semibold">${escapeHtml(s.opponent)}</span> • <span class="text-amber-400 uppercase">${escapeHtml(s.category)}</span></div>
             </div>
             <img onclick="window.open().document.write('<img src=\\'${s.screenshotUrl}\\' style=\\'max-width:100%\\'/>')" src="${s.screenshotUrl}" class="w-16 h-16 rounded-lg border border-slate-700 object-cover cursor-pointer flex-shrink-0 shadow-sm" title="Click to view full screenshot" />
           </div>
@@ -2613,6 +2257,7 @@
     }
 
     window.updatePlayerIgnByAdmin = async (uid, sid) => {
+      if (!isAdmin) return;
       const newIgn = document.getElementById('admin-ign-' + sid).value.trim();
       if (!newIgn) return alert("IGN cannot be empty!");
       await updateDoc(doc(db, "players", uid), { ign: newIgn });
@@ -2623,46 +2268,30 @@
     };
 
     window.approveSub = async (sid) => {
+      if (!isAdmin) return;
       const s = pendingCache[sid];
       if (!s) return;
-
       const approveBtn = document.getElementById('approve-btn-' + sid);
       if (approveBtn) {
         approveBtn.disabled = true;
         approveBtn.innerText = "Processing...";
         approveBtn.classList.add('opacity-55', 'cursor-not-allowed');
       }
-
       try {
         const subRef = doc(db, "submissions", sid);
         const subSnap = await getDoc(subRef);
-        if (!subSnap.exists()) {
-          alert("This submission has already been processed or deleted!");
-          loadPendingSubmissions();
-          return;
-        }
-
+        if (!subSnap.exists()) { loadPendingSubmissions(); return; }
         const pts = parseInt(document.getElementById('pts-' + sid).value) || 0;
         const playerRef = doc(db, "players", s.uid);
         const pSnap = await getDoc(playerRef);
-        
         if (pSnap.exists()) {
           const data = pSnap.data();
           let proofs = data.proofs || [];
-          proofs.unshift({ 
-            category: s.category, 
-            opponent: s.opponent, 
-            url: s.screenshotUrl || "", 
-            pointsAdded: pts,
-            timestamp: Date.now()
-          });
+          proofs.unshift({ category: s.category, opponent: s.opponent, url: s.screenshotUrl || "", pointsAdded: pts, timestamp: Date.now() });
           if (proofs.length > 15) proofs = proofs.slice(0, 15);
-
-          const newStreak = proofs.length;
-
-          const updateData = { 
+          const updateData = {
             proofs,
-            streak: newStreak,
+            streak: proofs.length,
             countryCode: s.countryCode || data.countryCode || 'IN',
             countryName: s.countryName || data.countryName || 'India'
           };
@@ -2674,36 +2303,25 @@
             updateData.shortMatches = (data.shortMatches || 0) + 1;
           }
           await updateDoc(playerRef, updateData);
-
-          const oppPlayer = allPlayers.find(p => (p.ign || "").toLowerCase() === s.opponent.toLowerCase());
-          if (oppPlayer && oppPlayer.streak > 0) {
-            await updateDoc(doc(db, "players", oppPlayer.id), { streak: 0 });
-          }
+          const oppPlayer = allPlayers.find(p => (p.ign || "").toLowerCase() === (s.opponent || "").toLowerCase());
+          if (oppPlayer && oppPlayer.streak > 0) await updateDoc(doc(db, "players", oppPlayer.id), { streak: 0 });
         }
-        
         await deleteDoc(subRef);
-        alert("Proof approved! Player is now ranked on both their Country board and Global board.");
+        alert("Proof approved!");
         loadPendingSubmissions();
         loadLeaderboard();
       } catch (err) {
-        console.error("Error approving proof:", err);
+        console.error(err);
         alert("Failed to approve proof.");
-        if (approveBtn) {
-          approveBtn.disabled = false;
-          approveBtn.innerText = "Approve";
-          approveBtn.classList.remove('opacity-55', 'cursor-not-allowed');
-        }
+        if (approveBtn) { approveBtn.disabled = false; approveBtn.innerText = "Approve"; approveBtn.classList.remove('opacity-55', 'cursor-not-allowed'); }
       }
     };
 
     window.rejectSub = async (sid) => {
+      if (!isAdmin) return;
       if (confirm("Permanently reject and delete this proof?")) {
-        try {
-          await deleteDoc(doc(db, "submissions", sid));
-          loadPendingSubmissions();
-        } catch (err) {
-          console.error("Error rejecting proof:", err);
-        }
+        await deleteDoc(doc(db, "submissions", sid));
+        loadPendingSubmissions();
       }
     };
 
