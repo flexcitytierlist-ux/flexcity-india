@@ -154,7 +154,7 @@
         </button>
       </div>
       <p id="descText" class="text-xs sm:text-sm text-slate-300 leading-relaxed">
-        Welcome to the official community hub tracking every Flex City top player worldwide. Compete in 1v1 PvP duels, climb your country's local ladder, and challenge top contenders on the Global Flex City leaderboard.
+        Welcome to the official community hub tracking every Flex City top player worldwide. Compete in 1v1 PvP duels across Long Range and Short Range, climb your country's local ladder, and challenge top contenders on the Global Flex City leaderboard.
       </p>
 
       <div class="bg-slate-950/80 border border-amber-500/30 rounded-xl p-3 space-y-1.5">
@@ -632,7 +632,7 @@
     </div>
   </div>
 
-  <!-- Submit Proof Modal (Only Your IGN, Opponent IGN, and Chat Screenshot) -->
+  <!-- Submit Proof Modal (Your IGN, Opponent IGN, Country, Long/Short Range, Chat Screenshot) -->
   <div id="submitModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
     <div class="card-bg neon-border rounded-2xl max-w-md w-full p-5 relative max-h-[90vh] overflow-y-auto shadow-2xl">
       <button onclick="closeModal('submitModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg cursor-pointer">&times;</button>
@@ -674,6 +674,20 @@
             </div>
           </div>
           <p id="oppMatchedInfoText" class="hidden text-[10px] text-emerald-400 mt-1 font-medium"></p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-2.5">
+          <div>
+            <label id="labelCountry" class="text-[11px] text-slate-300 block mb-1">Country</label>
+            <input type="text" id="countryInput" required placeholder="India" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-500" />
+          </div>
+          <div>
+            <label id="labelCategory" class="text-[11px] text-slate-300 block mb-1">Range / Mode</label>
+            <select id="categoryInput" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-500">
+              <option value="Long Range">Long Range</option>
+              <option value="Short Range">Short Range</option>
+            </select>
+          </div>
         </div>
 
         <div>
@@ -762,6 +776,48 @@
       return String.fromCodePoint(...[...upper].map(c => 127397 + c.charCodeAt(0)));
     }
 
+    const COUNTRY_NAME_TO_CODE = {
+      "india": { code: "IN", name: "India" },
+      "united states": { code: "US", name: "United States" },
+      "usa": { code: "US", name: "United States" },
+      "united kingdom": { code: "GB", name: "United Kingdom" },
+      "uk": { code: "GB", name: "United Kingdom" },
+      "canada": { code: "CA", name: "Canada" },
+      "australia": { code: "AU", name: "Australia" },
+      "germany": { code: "DE", name: "Germany" },
+      "france": { code: "FR", name: "France" },
+      "japan": { code: "JP", name: "Japan" },
+      "brazil": { code: "BR", name: "Brazil" },
+      "pakistan": { code: "PK", name: "Pakistan" },
+      "bangladesh": { code: "BD", name: "Bangladesh" },
+      "nepal": { code: "NP", name: "Nepal" },
+      "uae": { code: "AE", name: "United Arab Emirates" },
+      "united arab emirates": { code: "AE", name: "United Arab Emirates" },
+      "saudi arabia": { code: "SA", name: "Saudi Arabia" },
+      "singapore": { code: "SG", name: "Singapore" },
+      "indonesia": { code: "ID", name: "Indonesia" },
+      "philippines": { code: "PH", name: "Philippines" },
+      "mexico": { code: "MX", name: "Mexico" },
+      "russia": { code: "RU", name: "Russia" }
+    };
+
+    function resolveCountryInput(rawCountry) {
+      const cleaned = (rawCountry || "").trim();
+      if (!cleaned) return { code: visitorCountry.code, name: visitorCountry.name };
+      if (cleaned.length === 2 && /^[a-zA-Z]{2}$/.test(cleaned)) {
+        const code = cleaned.toUpperCase();
+        try {
+          const regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
+          return { code, name: regionNames.of(code) || code };
+        } catch (e) {
+          return { code, name: code };
+        }
+      }
+      const mapped = COUNTRY_NAME_TO_CODE[cleaned.toLowerCase()];
+      if (mapped) return mapped;
+      return { code: visitorCountry.code, name: cleaned };
+    }
+
     let visitorCountry = { code: 'IN', name: 'India', flag: '🇮🇳' };
     let currentLang = 'en';
     let userPickedHinglish = false;
@@ -775,7 +831,7 @@
         installPillText: isIosDevice ? "Add to Home Screen" : "Install App",
         notifBannerText: "DM aur updates ke liye notifications allow kar dijiye!",
         descTitle: "Yeh Kya Hai?",
-        descText: "Yeh Flex City ka community leaderboard hai jahan 1v1 duels, match scores, rank swaps aur country/global rankings track hote hain.",
+        descText: "Yeh Flex City ka community leaderboard hai jahan Long Range aur Short Range 1v1 duels, match scores, rank swaps aur country/global rankings track hote hain.",
         rulesHeading: "📜 Proof & Challenge Rules:",
         rulesHtml: `
           <li><strong>Chat Screenshot:</strong> Aisa chat screenshot daalein jisme opponent match result par agree kare.</li>
@@ -800,11 +856,13 @@
         submitProofTitle: "Match Proof Bhejein",
         labelIgn: "Aapka IGN",
         labelOpponent: "Opponent IGN",
+        labelCountry: "Country",
+        labelCategory: "Range / Mode",
         labelScreenshotFile: "Chat Screenshot",
         submitProofBtn: "Proof Bhejein",
         whatsNewModalTitle: "✨ What's New",
         faqTitle: "FAQ",
-        faqSub: "Rank swaps aur scores ke baare mein quick answers.",
+        faqSub: "Rank swaps, Long/Short Range aur scores ke baare mein quick answers.",
         logoutModalTitle: "Logout karna hai?",
         logoutModalSub: "Logout ke baad aap proof submit ya chat nahi kar payenge jab tak wapas login na karein.",
         adminModalTitle: "🛡️ Admin Panel",
@@ -837,7 +895,7 @@
         installPillText: isIosDevice ? "Add to Home Screen" : "Install App",
         notifBannerText: "Enable notifications for instant DM & match request alerts!",
         descTitle: "What is this?",
-        descText: "Official Flex City community leaderboard tracking 1v1 PvP duels, match scores, rank swaps, and regional/global rankings.",
+        descText: "Official Flex City community leaderboard tracking Long Range and Short Range 1v1 PvP duels, match scores, rank swaps, and regional/global rankings.",
         rulesHeading: "📜 Proof & Challenge Rules:",
         rulesHtml: `
           <li><strong>Chat Screenshot:</strong> Upload a chat screenshot showing opponent agreement on the match result.</li>
@@ -862,11 +920,13 @@
         submitProofTitle: "Submit Match Proof",
         labelIgn: "Your IGN",
         labelOpponent: "Opponent IGN",
+        labelCountry: "Country",
+        labelCategory: "Range / Mode",
         labelScreenshotFile: "Chat Screenshot",
         submitProofBtn: "Submit Proof",
         whatsNewModalTitle: "✨ What's New",
         faqTitle: "FAQ",
-        faqSub: "Quick answers about rank swaps and match scores.",
+        faqSub: "Quick answers about rank swaps, modes, and match scores.",
         logoutModalTitle: "Log out?",
         logoutModalSub: "You won't be able to submit proofs or send messages until you log back in.",
         adminModalTitle: "🛡️ Admin Panel",
@@ -895,12 +955,12 @@
 
     const whatsNewData = {
       hinglish: [
-        { version: "v1.3", date: "26 Nov 2026", text: "• Points ke bajay Score system, Rank Swap & opponent streak reset\n• Submit modal mein sirf Your IGN, Opponent IGN aur Chat Screenshot\n• Admin score input + player modal aur ticker mein score display" },
+        { version: "v1.3", date: "26 Nov 2026", text: "• Points ke bajay Score system, Rank Swap & opponent streak reset\n• Submit modal mein Your IGN, Opponent IGN, Country, Long/Short Range aur Chat Screenshot\n• Admin score input + player modal aur ticker mein score display" },
         { version: "v1.2", date: "26 Nov 2026", text: "• Owner & Admin role management panel aur live Global/DM chat" },
         { version: "v1.0", date: "Nov 2026", text: "• Flex City Global & Regional 1v1 Leaderboard launch" }
       ],
       en: [
-        { version: "v1.3", date: "Nov 26, 2026", text: "• Score-based matches with rank swaps and defeated opponent streak reset\n• Streamlined Submit Proof form (Your IGN, Opponent IGN, Chat Screenshot)\n• Admin match score input shown on player proofs and live ticker" },
+        { version: "v1.3", date: "Nov 26, 2026", text: "• Score-based matches with rank swaps and defeated opponent streak reset\n• Submit Proof form with Your IGN, Opponent IGN, Country, Long/Short Range, and Chat Screenshot\n• Admin match score input shown on player proofs and live ticker" },
         { version: "v1.2", date: "Nov 26, 2026", text: "• Owner & Admin management panels with live Global & Direct Messaging" },
         { version: "v1.0", date: "Nov 2026", text: "• Initial launch of Flex City Global & Regional 1v1 Leaderboard" }
       ]
@@ -942,6 +1002,8 @@
       setSafeText('submitProofTitle', t.submitProofTitle);
       setSafeText('labelIgn', t.labelIgn);
       setSafeText('labelOpponent', t.labelOpponent);
+      setSafeText('labelCountry', t.labelCountry);
+      setSafeText('labelCategory', t.labelCategory);
       setSafeText('labelScreenshotFile', t.labelScreenshotFile);
       setSafeText('submitProofBtn', t.submitProofBtn);
       setSafeText('whatsNewModalTitle', t.whatsNewModalTitle);
@@ -1036,6 +1098,9 @@
       const nameEl = document.getElementById('detectedCountryName');
       if (flagEl) flagEl.innerText = visitorCountry.flag;
       if (nameEl) nameEl.innerText = visitorCountry.name;
+
+      const countryInp = document.getElementById('countryInput');
+      if (countryInp && !countryInp.value) countryInp.value = visitorCountry.name;
 
       if (visitorCountry.code !== 'IN' || !userPickedHinglish) {
         currentLang = 'en';
@@ -1196,7 +1261,8 @@
         if (p.proofs && p.proofs.length > 0) {
           p.proofs.forEach(pr => {
             if (pr.timestamp) {
-              const scoreText = pr.score ? ` (Score: ${pr.score})` : "";
+              const modeStr = pr.category ? ` • ${pr.category}` : "";
+              const scoreText = pr.score ? ` (Score: ${pr.score}${modeStr})` : (modeStr ? ` (${pr.category})` : "");
               events.push({ time: pr.timestamp, text: `🔥 ${flag} ${ign} beat ${pr.opponent}${scoreText}` });
             }
           });
@@ -2032,7 +2098,6 @@
       return `<span class="bg-orange-500/20 text-orange-400 border border-orange-500/40 px-1.5 py-0.5 rounded text-[9px] font-bold">🔥 ${streak}</span>`;
     }
 
-    // Returns ranked players sorted by rankOrder (lower rankOrder = higher rank #1, #2...)
     function getOrderedRankedPlayers(regionMode = 'global') {
       return allPlayers
         .filter(p => {
@@ -2230,10 +2295,11 @@
       } else {
         proofContainer.innerHTML = proofs.map(pr => `
           <div class="bg-slate-900 border border-slate-800 rounded-xl p-3 space-y-2">
-            <div class="flex justify-between items-center text-[11px] gap-2">
-              <div class="text-white font-semibold">
-                vs <span class="text-cyan-300">${escapeHtml(pr.opponent)}</span>
-                ${pr.score ? `<span class="ml-1.5 bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded text-[10px] font-bold">Score: ${escapeHtml(pr.score)}</span>` : ''}
+            <div class="flex justify-between items-center text-[11px] gap-2 flex-wrap">
+              <div class="text-white font-semibold flex items-center gap-1.5 flex-wrap">
+                <span>vs <span class="text-cyan-300">${escapeHtml(pr.opponent)}</span></span>
+                ${pr.category ? `<span class="bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 px-1.5 py-0.5 rounded text-[9px] font-bold">${escapeHtml(pr.category)}</span>` : ''}
+                ${pr.score ? `<span class="bg-emerald-500/15 text-emerald-300 border border-emerald-500/30 px-2 py-0.5 rounded text-[10px] font-bold">Score: ${escapeHtml(pr.score)}</span>` : ''}
               </div>
               ${isAdmin ? `<button onclick="deletePlayerProof('${selectedPlayer.id}', ${pr.originalIndex})" class="bg-red-500/20 hover:bg-red-500/40 text-red-400 border border-red-500/30 px-2 py-0.5 rounded text-[10px] font-bold cursor-pointer">Delete</button>` : ''}
             </div>
@@ -2385,6 +2451,8 @@
     window.openSubmitProofModal = async () => {
       document.getElementById('ignInput').value = userIgn || (currentUser?.displayName || "Player");
       document.getElementById('opponentInput').value = "";
+      document.getElementById('countryInput').value = visitorCountry.name || "India";
+      document.getElementById('categoryInput').value = "Long Range";
       resetOpponentCheckUI();
       document.getElementById('submitModal').classList.remove('hidden');
       document.getElementById('submitModal').classList.add('flex');
@@ -2414,6 +2482,8 @@
 
       const ign = (userIgn || document.getElementById('ignInput').value || currentUser.displayName || "Player").trim();
       const rawOpponent = document.getElementById('opponentInput').value.trim();
+      const countryResolved = resolveCountryInput(document.getElementById('countryInput').value);
+      const category = document.getElementById('categoryInput').value || "Long Range";
       const fileInput = document.getElementById('screenshotFileInput');
 
       if (!ign || !rawOpponent) return;
@@ -2445,8 +2515,8 @@
 
           await updateDoc(doc(db, "players", currentUser.uid), {
             ign,
-            countryCode: visitorCountry.code,
-            countryName: visitorCountry.name,
+            countryCode: countryResolved.code,
+            countryName: countryResolved.name,
             submissionTimestamps: updatedTimestamps
           });
           userIgn = ign;
@@ -2454,8 +2524,9 @@
           await addDoc(collection(db, "submissions"), {
             uid: currentUser.uid,
             ign,
-            countryCode: visitorCountry.code,
-            countryName: visitorCountry.name,
+            countryCode: countryResolved.code,
+            countryName: countryResolved.name,
+            category,
             opponent: canonicalOpponentIgn,
             opponentUid,
             screenshotUrl: compressedBase64,
@@ -2468,6 +2539,7 @@
           closeModal('submitModal');
           e.target.reset();
           document.getElementById('ignInput').value = userIgn;
+          document.getElementById('countryInput').value = visitorCountry.name || "India";
           resetOpponentCheckUI();
           loadLeaderboard();
         } catch (err) {
@@ -2514,7 +2586,7 @@
         div.innerHTML = `
           <div class="flex justify-between items-start gap-2">
             <div>
-              <div class="text-[10px] text-slate-400 mb-0.5">${sFlag} ${escapeHtml(s.countryName || 'Global')}:</div>
+              <div class="text-[10px] text-slate-400 mb-0.5">${sFlag} ${escapeHtml(s.countryName || 'Global')} • <span class="text-cyan-400 font-bold">${escapeHtml(s.category || 'Long Range')}</span>:</div>
               <div class="flex items-center gap-2">
                 <input type="text" id="admin-ign-${sid}" value="${escapeHtml(s.ign)}" class="bg-slate-950 border border-slate-700 rounded-lg px-2.5 py-1 text-xs font-bold text-white" />
                 <button onclick="updatePlayerIgnByAdmin('${s.uid}', '${sid}')" class="bg-cyan-500/20 text-cyan-400 text-[10px] px-2.5 py-1 rounded-lg border border-cyan-500/30 font-semibold cursor-pointer">Update</button>
@@ -2597,6 +2669,7 @@
         let proofs = winner.proofs || [];
         proofs.unshift({
           opponent: s.opponent,
+          category: s.category || "Long Range",
           score: matchScore,
           url: s.screenshotUrl || "",
           timestamp: Date.now()
@@ -2606,8 +2679,6 @@
         const winnerOrder = typeof winner.rankOrder === 'number' ? winner.rankOrder : (winner.joinedAt || Date.now());
         let nextWinnerOrder = winnerOrder;
 
-        // If winner was below loser (higher rankOrder number), swap ranks:
-        // winner takes loser's rankOrder, and loser moves down 1 rank (higher rankOrder)
         if (loser) {
           const loserOrder = typeof loser.rankOrder === 'number' ? loser.rankOrder : (loser.joinedAt || Date.now());
           if (winnerOrder > loserOrder) {
