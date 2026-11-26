@@ -632,7 +632,7 @@
     </div>
   </div>
 
-  <!-- Submit Proof Modal (Your IGN, Opponent IGN, Country, Long/Short Range, Chat Screenshot) -->
+  <!-- Submit Proof Modal (Your IGN, Opponent IGN, Long/Short Range, Chat Screenshot) -->
   <div id="submitModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
     <div class="card-bg neon-border rounded-2xl max-w-md w-full p-5 relative max-h-[90vh] overflow-y-auto shadow-2xl">
       <button onclick="closeModal('submitModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg cursor-pointer">&times;</button>
@@ -676,18 +676,12 @@
           <p id="oppMatchedInfoText" class="hidden text-[10px] text-emerald-400 mt-1 font-medium"></p>
         </div>
 
-        <div class="grid grid-cols-2 gap-2.5">
-          <div>
-            <label id="labelCountry" class="text-[11px] text-slate-300 block mb-1">Country</label>
-            <input type="text" id="countryInput" required placeholder="India" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-500" />
-          </div>
-          <div>
-            <label id="labelCategory" class="text-[11px] text-slate-300 block mb-1">Range / Mode</label>
-            <select id="categoryInput" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-500">
-              <option value="Long Range">Long Range</option>
-              <option value="Short Range">Short Range</option>
-            </select>
-          </div>
+        <div>
+          <label id="labelCategory" class="text-[11px] text-slate-300 block mb-1">Range / Mode</label>
+          <select id="categoryInput" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-xs text-white focus:outline-none focus:border-cyan-500">
+            <option value="Long Range">Long Range</option>
+            <option value="Short Range">Short Range</option>
+          </select>
         </div>
 
         <div>
@@ -776,48 +770,6 @@
       return String.fromCodePoint(...[...upper].map(c => 127397 + c.charCodeAt(0)));
     }
 
-    const COUNTRY_NAME_TO_CODE = {
-      "india": { code: "IN", name: "India" },
-      "united states": { code: "US", name: "United States" },
-      "usa": { code: "US", name: "United States" },
-      "united kingdom": { code: "GB", name: "United Kingdom" },
-      "uk": { code: "GB", name: "United Kingdom" },
-      "canada": { code: "CA", name: "Canada" },
-      "australia": { code: "AU", name: "Australia" },
-      "germany": { code: "DE", name: "Germany" },
-      "france": { code: "FR", name: "France" },
-      "japan": { code: "JP", name: "Japan" },
-      "brazil": { code: "BR", name: "Brazil" },
-      "pakistan": { code: "PK", name: "Pakistan" },
-      "bangladesh": { code: "BD", name: "Bangladesh" },
-      "nepal": { code: "NP", name: "Nepal" },
-      "uae": { code: "AE", name: "United Arab Emirates" },
-      "united arab emirates": { code: "AE", name: "United Arab Emirates" },
-      "saudi arabia": { code: "SA", name: "Saudi Arabia" },
-      "singapore": { code: "SG", name: "Singapore" },
-      "indonesia": { code: "ID", name: "Indonesia" },
-      "philippines": { code: "PH", name: "Philippines" },
-      "mexico": { code: "MX", name: "Mexico" },
-      "russia": { code: "RU", name: "Russia" }
-    };
-
-    function resolveCountryInput(rawCountry) {
-      const cleaned = (rawCountry || "").trim();
-      if (!cleaned) return { code: visitorCountry.code, name: visitorCountry.name };
-      if (cleaned.length === 2 && /^[a-zA-Z]{2}$/.test(cleaned)) {
-        const code = cleaned.toUpperCase();
-        try {
-          const regionNames = new Intl.DisplayNames(['en'], { type: 'region' });
-          return { code, name: regionNames.of(code) || code };
-        } catch (e) {
-          return { code, name: code };
-        }
-      }
-      const mapped = COUNTRY_NAME_TO_CODE[cleaned.toLowerCase()];
-      if (mapped) return mapped;
-      return { code: visitorCountry.code, name: cleaned };
-    }
-
     let visitorCountry = { code: 'IN', name: 'India', flag: '🇮🇳' };
     let currentLang = 'en';
     let userPickedHinglish = false;
@@ -856,7 +808,6 @@
         submitProofTitle: "Match Proof Bhejein",
         labelIgn: "Aapka IGN",
         labelOpponent: "Opponent IGN",
-        labelCountry: "Country",
         labelCategory: "Range / Mode",
         labelScreenshotFile: "Chat Screenshot",
         submitProofBtn: "Proof Bhejein",
@@ -920,7 +871,6 @@
         submitProofTitle: "Submit Match Proof",
         labelIgn: "Your IGN",
         labelOpponent: "Opponent IGN",
-        labelCountry: "Country",
         labelCategory: "Range / Mode",
         labelScreenshotFile: "Chat Screenshot",
         submitProofBtn: "Submit Proof",
@@ -955,12 +905,12 @@
 
     const whatsNewData = {
       hinglish: [
-        { version: "v1.3", date: "26 Nov 2026", text: "• Points ke bajay Score system, Rank Swap & opponent streak reset\n• Submit modal mein Your IGN, Opponent IGN, Country, Long/Short Range aur Chat Screenshot\n• Admin score input + player modal aur ticker mein score display" },
+        { version: "v1.3", date: "26 Nov 2026", text: "• Points ke bajay Score system, Rank Swap & opponent streak reset\n• Submit modal mein Your IGN, Opponent IGN, Long/Short Range aur Chat Screenshot\n• Admin score input + player modal aur ticker mein score display" },
         { version: "v1.2", date: "26 Nov 2026", text: "• Owner & Admin role management panel aur live Global/DM chat" },
         { version: "v1.0", date: "Nov 2026", text: "• Flex City Global & Regional 1v1 Leaderboard launch" }
       ],
       en: [
-        { version: "v1.3", date: "Nov 26, 2026", text: "• Score-based matches with rank swaps and defeated opponent streak reset\n• Submit Proof form with Your IGN, Opponent IGN, Country, Long/Short Range, and Chat Screenshot\n• Admin match score input shown on player proofs and live ticker" },
+        { version: "v1.3", date: "Nov 26, 2026", text: "• Score-based matches with rank swaps and defeated opponent streak reset\n• Submit Proof form with Your IGN, Opponent IGN, Long/Short Range, and Chat Screenshot\n• Admin match score input shown on player proofs and live ticker" },
         { version: "v1.2", date: "Nov 26, 2026", text: "• Owner & Admin management panels with live Global & Direct Messaging" },
         { version: "v1.0", date: "Nov 2026", text: "• Initial launch of Flex City Global & Regional 1v1 Leaderboard" }
       ]
@@ -1002,7 +952,6 @@
       setSafeText('submitProofTitle', t.submitProofTitle);
       setSafeText('labelIgn', t.labelIgn);
       setSafeText('labelOpponent', t.labelOpponent);
-      setSafeText('labelCountry', t.labelCountry);
       setSafeText('labelCategory', t.labelCategory);
       setSafeText('labelScreenshotFile', t.labelScreenshotFile);
       setSafeText('submitProofBtn', t.submitProofBtn);
@@ -1098,9 +1047,6 @@
       const nameEl = document.getElementById('detectedCountryName');
       if (flagEl) flagEl.innerText = visitorCountry.flag;
       if (nameEl) nameEl.innerText = visitorCountry.name;
-
-      const countryInp = document.getElementById('countryInput');
-      if (countryInp && !countryInp.value) countryInp.value = visitorCountry.name;
 
       if (visitorCountry.code !== 'IN' || !userPickedHinglish) {
         currentLang = 'en';
@@ -2451,7 +2397,6 @@
     window.openSubmitProofModal = async () => {
       document.getElementById('ignInput').value = userIgn || (currentUser?.displayName || "Player");
       document.getElementById('opponentInput').value = "";
-      document.getElementById('countryInput').value = visitorCountry.name || "India";
       document.getElementById('categoryInput').value = "Long Range";
       resetOpponentCheckUI();
       document.getElementById('submitModal').classList.remove('hidden');
@@ -2482,7 +2427,6 @@
 
       const ign = (userIgn || document.getElementById('ignInput').value || currentUser.displayName || "Player").trim();
       const rawOpponent = document.getElementById('opponentInput').value.trim();
-      const countryResolved = resolveCountryInput(document.getElementById('countryInput').value);
       const category = document.getElementById('categoryInput').value || "Long Range";
       const fileInput = document.getElementById('screenshotFileInput');
 
@@ -2515,8 +2459,8 @@
 
           await updateDoc(doc(db, "players", currentUser.uid), {
             ign,
-            countryCode: countryResolved.code,
-            countryName: countryResolved.name,
+            countryCode: visitorCountry.code,
+            countryName: visitorCountry.name,
             submissionTimestamps: updatedTimestamps
           });
           userIgn = ign;
@@ -2524,8 +2468,8 @@
           await addDoc(collection(db, "submissions"), {
             uid: currentUser.uid,
             ign,
-            countryCode: countryResolved.code,
-            countryName: countryResolved.name,
+            countryCode: visitorCountry.code,
+            countryName: visitorCountry.name,
             category,
             opponent: canonicalOpponentIgn,
             opponentUid,
@@ -2539,7 +2483,6 @@
           closeModal('submitModal');
           e.target.reset();
           document.getElementById('ignInput').value = userIgn;
-          document.getElementById('countryInput').value = visitorCountry.name || "India";
           resetOpponentCheckUI();
           loadLeaderboard();
         } catch (err) {
@@ -2598,7 +2541,7 @@
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2.5 border-t border-slate-800">
             <div class="flex items-center gap-2 flex-1">
               <span class="text-[10px] text-amber-300 font-semibold whitespace-nowrap">Type score of this match:</span>
-              <input type="text" id="score-${sid}" placeholder="e.g. 10-7" required class="w-24 bg-slate-950 border border-slate-700 focus:border-cyan-500 rounded-lg px-2.5 py-1 text-xs text-white text-center font-bold" />
+              <input type="text" id="score-${sid}" placeholder="Score" required class="w-24 bg-slate-950 border border-slate-700 focus:border-cyan-500 rounded-lg px-2.5 py-1 text-xs text-white text-center font-bold" />
             </div>
             <div class="flex gap-2 justify-end">
               <button id="approve-btn-${sid}" onclick="approveSub('${sid}')" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-3 py-1.5 rounded-xl text-xs transition shadow-sm cursor-pointer">Approve</button>
