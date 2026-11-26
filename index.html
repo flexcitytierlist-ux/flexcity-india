@@ -1,6 +1,6 @@
 <!DOCTYPE html><html lang="en"><head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   
   <title>Flex City Leaderboard — Global & Regional 1v1 Tiers</title>
   <meta name="description" content="Official Flex City community leaderboard featuring global and country-wise top player rankings, 1v1 PvP tiers, verified match proofs, and live rank swaps." />
@@ -33,7 +33,13 @@
 
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
-    body { background-color: #0b0e14; color: #e2e8f0; font-family: 'Inter', system-ui, sans-serif; }
+    html, body {
+      background-color: #0b0e14;
+      color: #e2e8f0;
+      font-family: 'Inter', system-ui, sans-serif;
+      overflow-x: hidden;
+      touch-action: manipulation;
+    }
     .neon-border { border: 1px solid rgba(56, 189, 248, 0.2); box-shadow: 0 0 12px rgba(56, 189, 248, 0.08); }
     .card-bg { background: linear-gradient(145deg, #131824, #0f131d); }
     @keyframes pulse-slow { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
@@ -102,39 +108,39 @@
   </div>
 
   <!-- Shown ONLY to users who haven't allowed notifications yet -->
-  <div id="notifPromptBanner" class="hidden bg-gradient-to-r from-cyan-600 to-blue-700 text-white px-3 py-2.5 text-xs flex items-center justify-between gap-2 shadow-md">
-    <div class="flex items-center gap-2 font-medium">
+  <div id="notifPromptBanner" class="hidden bg-gradient-to-r from-cyan-600 to-blue-700 text-white px-3 py-2 text-xs flex items-center justify-between gap-2 shadow-md">
+    <div class="flex items-center gap-2 font-medium truncate">
       <span>🔔</span>
-      <span id="notifBannerText">Enable notifications for instant DM & match request alerts!</span>
+      <span id="notifBannerText" class="truncate">Enable notifications for instant DM & match alerts!</span>
     </div>
     <div class="flex items-center gap-1.5 flex-shrink-0">
-      <button onclick="requestBrowserNotifications()" class="bg-white text-slate-950 font-bold px-3 py-1 rounded-lg text-xs hover:bg-slate-100 transition cursor-pointer">Allow</button>
-      <button onclick="dismissNotifBanner()" class="text-white/80 hover:text-white px-1.5 text-base font-bold cursor-pointer">&times;</button>
+      <button onclick="requestBrowserNotifications()" class="bg-white text-slate-950 font-bold px-2.5 py-1 rounded-lg text-[11px] hover:bg-slate-100 transition cursor-pointer">Allow</button>
+      <button onclick="dismissNotifBanner()" class="text-white/80 hover:text-white px-1 text-sm font-bold cursor-pointer">&times;</button>
     </div>
   </div>
 
-  <div class="bg-gradient-to-r from-cyan-950/90 via-slate-900 to-cyan-950/90 border-b border-cyan-500/25 px-3 py-2 text-center flex items-center justify-center gap-2">
-    <div id="liveTickerText" class="ticker-fade text-xs font-semibold text-cyan-300 tracking-wide">
+  <div class="bg-gradient-to-r from-cyan-950/90 via-slate-900 to-cyan-950/90 border-b border-cyan-500/25 px-3 py-1.5 text-center flex items-center justify-center gap-2">
+    <div id="liveTickerText" class="ticker-fade text-[11px] sm:text-xs font-semibold text-cyan-300 tracking-wide truncate">
       ⚡ Latest: Loading live community activity...
     </div>
   </div>
 
   <nav class="border-b border-slate-800/80 bg-[#0d111a]/95 backdrop-blur sticky top-0 z-40">
-    <div class="max-w-4xl mx-auto px-4 py-3 flex items-center justify-between gap-2">
-      <div class="flex items-center gap-2.5">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center font-black text-white text-sm shadow-md">FC</div>
-        <div>
-          <h1 class="font-bold text-sm sm:text-base tracking-wide text-white">FLEX CITY <span class="text-cyan-400">LEADERBOARD</span></h1>
-          <p id="navSub" class="text-[10px] text-slate-400 -mt-0.5">Global & Regional 1v1 Tiers</p>
+    <div class="max-w-4xl mx-auto px-3 sm:px-4 py-2.5 flex items-center justify-between gap-2">
+      <div class="flex items-center gap-2 min-w-0">
+        <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center font-black text-white text-xs shadow-md flex-shrink-0">FC</div>
+        <div class="min-w-0">
+          <h1 class="font-bold text-xs sm:text-base tracking-wide text-white truncate">FLEX CITY <span class="text-cyan-400">LEADERBOARD</span></h1>
+          <p id="navSub" class="text-[10px] text-slate-400 -mt-0.5 truncate">Global & Regional 1v1 Tiers</p>
         </div>
       </div>
 
-      <div class="flex items-center gap-2">
-        <button onclick="openWhatsNewModal()" class="bg-slate-800/90 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3 py-1.5 rounded-xl text-xs font-semibold transition flex items-center gap-1.5 cursor-pointer shadow-sm">
-          <span>✨ <span id="whatsNewBtnText">What's New</span></span>
+      <div class="flex items-center gap-1.5 flex-shrink-0">
+        <button type="button" onclick="openWhatsNewModal()" class="bg-slate-800/90 hover:bg-slate-700 text-slate-200 border border-slate-700 px-2.5 py-1.5 rounded-xl text-[11px] font-semibold transition flex items-center gap-1 cursor-pointer whitespace-nowrap">
+          <span>✨</span> <span id="whatsNewBtnText">What's New</span>
         </button>
-        <div id="authArea" class="flex items-center gap-2">
-          <button id="loginBtn" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold px-3.5 py-1.5 rounded-xl text-xs transition">
+        <div id="authArea" class="flex items-center gap-1.5">
+          <button id="loginBtn" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold px-3 py-1.5 rounded-xl text-[11px] transition whitespace-nowrap">
             Login with Google
           </button>
         </div>
@@ -142,14 +148,14 @@
     </div>
   </nav>
 
-  <main class="max-w-4xl w-full mx-auto px-3 py-5 flex-1 space-y-4">
+  <main class="max-w-4xl w-full mx-auto px-3 py-4 flex-1 space-y-3.5">
 
-    <div id="roleStatusBar" class="hidden rounded-2xl px-4 py-2.5 text-xs flex flex-wrap items-center justify-between gap-2 border"></div>
+    <div id="roleStatusBar" class="hidden rounded-xl px-3.5 py-2 text-xs flex items-center justify-between gap-2 border"></div>
 
-    <div class="card-bg rounded-2xl neon-border p-4 sm:p-5 relative space-y-3 shadow-lg">
+    <div class="card-bg rounded-2xl neon-border p-3.5 sm:p-5 relative space-y-3 shadow-lg">
       <div class="flex items-center justify-between gap-2">
-        <h2 id="descTitle" class="text-xs font-bold text-cyan-400 uppercase tracking-wider">What is this?</h2>
-        <button type="button" id="langToggleBtn" onclick="toggleLanguage()" class="hidden bg-slate-800/90 hover:bg-slate-700 active:scale-95 text-slate-200 border border-slate-700 px-3 py-1.5 rounded-xl text-xs font-semibold transition items-center gap-1.5 cursor-pointer">
+        <h2 id="descTitle" class="text-[11px] font-bold text-cyan-400 uppercase tracking-wider">What is this?</h2>
+        <button type="button" id="langToggleBtn" onclick="toggleLanguage()" class="hidden bg-slate-800/90 hover:bg-slate-700 active:scale-95 text-slate-200 border border-slate-700 px-2.5 py-1 rounded-lg text-[11px] font-semibold transition items-center gap-1 cursor-pointer">
           <span id="langFlag">🇮🇳</span> <span id="langBtnText">Hinglish</span>
         </button>
       </div>
@@ -167,13 +173,13 @@
       </div>
     </div>
 
-    <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
-      <div class="flex items-center flex-wrap gap-2">
-        <div class="flex items-center gap-1.5 bg-slate-900/90 p-1.5 rounded-xl border border-slate-800">
-          <button onclick="setRegionFilter('local')" id="region-local" class="px-3.5 py-1.5 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-semibold text-xs flex items-center gap-1.5 cursor-pointer transition">
+    <div class="flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-2.5">
+      <div class="flex items-center justify-between sm:justify-start flex-wrap gap-2">
+        <div class="flex items-center gap-1 bg-slate-900/90 p-1 rounded-xl border border-slate-800">
+          <button onclick="setRegionFilter('local')" id="region-local" class="px-3 py-1.5 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-semibold text-xs flex items-center gap-1.5 cursor-pointer transition">
             <span id="detectedCountryFlag">📍</span> <span id="detectedCountryName">Detecting...</span>
           </button>
-          <button onclick="setRegionFilter('global')" id="region-global" class="px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition">
+          <button onclick="setRegionFilter('global')" id="region-global" class="px-3 py-1.5 rounded-lg text-slate-400 hover:text-white text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition">
             🌍 <span id="globalTabLabel">Global</span>
           </button>
         </div>
@@ -186,40 +192,39 @@
         </div>
       </div>
 
-      <div class="flex items-center flex-wrap gap-2">
-        <button onclick="openSubmitProofModal()" id="openSubmitBtn" class="hidden flex-1 sm:flex-none bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-xs transition text-center shadow-md cursor-pointer">
+      <div class="flex items-center gap-2">
+        <button onclick="openSubmitProofModal()" id="openSubmitBtn" class="hidden flex-1 sm:flex-none bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-3.5 py-2 rounded-xl text-xs transition text-center shadow-md cursor-pointer whitespace-nowrap">
           + Submit Proof
         </button>
 
         <!-- Admin Button + Floating Animated Request Popup right above it -->
         <div id="adminBtnWrapper" class="relative hidden flex-1 sm:flex-none">
-          <div id="adminRequestPopup" onclick="openAdminModal()" class="hidden animate-mini-popup cursor-pointer absolute -top-9 right-0 z-30 whitespace-nowrap bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 text-[10px] font-extrabold px-2.5 py-1 rounded-lg shadow-lg border border-amber-200/70 flex items-center gap-1">
+          <div id="adminRequestPopup" onclick="openAdminModal()" class="hidden animate-mini-popup cursor-pointer absolute -top-8 right-0 z-30 whitespace-nowrap bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 text-[10px] font-extrabold px-2 py-0.5 rounded-lg shadow-lg border border-amber-200/70 flex items-center gap-1">
             <span>🔔</span>
-            <span id="adminRequestPopupText">Someone has requested!</span>
-            <span class="absolute -bottom-1 right-5 w-2 h-2 bg-amber-400 rotate-45"></span>
+            <span id="adminRequestPopupText">New request!</span>
           </div>
-          <button onclick="openAdminModal()" id="openAdminBtn" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-4 py-2.5 rounded-xl text-xs transition text-center shadow-md cursor-pointer">
+          <button onclick="openAdminModal()" id="openAdminBtn" class="w-full bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3.5 py-2 rounded-xl text-xs transition text-center shadow-md cursor-pointer whitespace-nowrap">
             🛡️ Admin (<span id="pendingCount">0</span>)
           </button>
         </div>
 
-        <button onclick="openOwnerModal()" id="openOwnerBtn" class="hidden flex-1 sm:flex-none bg-purple-500 hover:bg-purple-400 text-white font-bold px-4 py-2.5 rounded-xl text-xs transition text-center shadow-md cursor-pointer">
+        <button onclick="openOwnerModal()" id="openOwnerBtn" class="hidden flex-1 sm:flex-none bg-purple-500 hover:bg-purple-400 text-white font-bold px-3.5 py-2 rounded-xl text-xs transition text-center shadow-md cursor-pointer whitespace-nowrap">
           👑 Owner
         </button>
       </div>
     </div>
 
     <div class="grid grid-cols-2 gap-2 bg-slate-900/80 p-1.5 rounded-2xl border border-slate-800 shadow-md">
-      <button onclick="switchMainTab('ranked')" id="tabRanked" class="py-2.5 px-2 rounded-xl text-xs font-bold transition bg-cyan-500 text-slate-950 text-center shadow-sm cursor-pointer">
+      <button onclick="switchMainTab('ranked')" id="tabRanked" class="py-2 px-2 rounded-xl text-xs font-bold transition bg-cyan-500 text-slate-950 text-center shadow-sm cursor-pointer">
         🏆 Ranked
       </button>
-      <button onclick="switchMainTab('contenders')" id="tabContenders" class="py-2.5 px-2 rounded-xl text-xs font-bold transition text-slate-400 hover:text-white text-center cursor-pointer">
+      <button onclick="switchMainTab('contenders')" id="tabContenders" class="py-2 px-2 rounded-xl text-xs font-bold transition text-slate-400 hover:text-white text-center cursor-pointer">
         ⚔️ Contenders
       </button>
     </div>
 
     <div id="leaderboardCard" class="card-bg rounded-2xl neon-border overflow-hidden shadow-lg">
-      <div class="grid grid-cols-12 px-4 py-3 border-b border-slate-800/80 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
+      <div class="grid grid-cols-12 px-3.5 py-2.5 border-b border-slate-800/80 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
         <div id="colRank" class="col-span-2">Rank</div>
         <div id="colPlayer" class="col-span-7">Player</div>
         <div id="colMatches" class="col-span-3 text-right">Matches</div>
@@ -229,49 +234,49 @@
       </div>
     </div>
 
-    <div class="card-bg rounded-2xl neon-border p-4 sm:p-6 space-y-4 shadow-lg">
+    <div class="card-bg rounded-2xl neon-border p-4 sm:p-6 space-y-3.5 shadow-lg">
       <div>
         <h3 id="faqTitle" class="text-sm font-bold text-cyan-400 uppercase tracking-wider">Frequently Asked Questions</h3>
         <p id="faqSub" class="text-xs text-slate-400 mt-0.5">Quick answers about Flex City PvP tiers, rankings, and match scores.</p>
       </div>
 
-      <div class="space-y-2.5">
+      <div class="space-y-2">
         <div class="bg-slate-900/80 border border-slate-800 rounded-xl overflow-hidden transition">
-          <button onclick="toggleFaq(1)" class="w-full px-4 py-3 text-left flex items-center justify-between text-xs font-bold text-white cursor-pointer">
+          <button onclick="toggleFaq(1)" class="w-full px-3.5 py-2.5 text-left flex items-center justify-between gap-2 text-xs font-bold text-white cursor-pointer">
             <span id="faq1Q">01. How do Global & Country rankings work?</span>
-            <span class="text-cyan-400 text-sm font-black">+</span>
+            <span class="text-cyan-400 text-sm font-black flex-shrink-0">+</span>
           </button>
-          <div id="faq1Ans" class="hidden px-4 pb-3 text-xs text-slate-300 leading-relaxed border-t border-slate-800/60 pt-2">
+          <div id="faq1Ans" class="hidden px-3.5 pb-3 text-xs text-slate-300 leading-relaxed border-t border-slate-800/60 pt-2">
             Your country is automatically detected when you join or submit a match proof. Your rank applies to both your national leaderboard and the Global leaderboard.
           </div>
         </div>
 
         <div class="bg-slate-900/80 border border-slate-800 rounded-xl overflow-hidden transition">
-          <button onclick="toggleFaq(2)" class="w-full px-4 py-3 text-left flex items-center justify-between text-xs font-bold text-white cursor-pointer">
+          <button onclick="toggleFaq(2)" class="w-full px-3.5 py-2.5 text-left flex items-center justify-between gap-2 text-xs font-bold text-white cursor-pointer">
             <span id="faq2Q">02. How does Rank Swap work?</span>
-            <span class="text-cyan-400 text-sm font-black">+</span>
+            <span class="text-cyan-400 text-sm font-black flex-shrink-0">+</span>
           </button>
-          <div id="faq2Ans" class="hidden px-4 pb-3 text-xs text-slate-300 leading-relaxed border-t border-slate-800/60 pt-2">
-            When a lower-ranked player defeats a higher-ranked player and an admin approves the proof, the winner takes the defeated player's rank and the defeated player moves down one rank with their streak reset.
+          <div id="faq2Ans" class="hidden px-3.5 pb-3 text-xs text-slate-300 leading-relaxed border-t border-slate-800/60 pt-2">
+            When a lower-ranked player defeats a higher-ranked player and an admin approves the proof, the winner takes the defeated player's rank and the defeated player moves down with their streak reset.
           </div>
         </div>
 
         <div class="bg-slate-900/80 border border-slate-800 rounded-xl overflow-hidden transition">
-          <button onclick="toggleFaq(3)" class="w-full px-4 py-3 text-left flex items-center justify-between text-xs font-bold text-white cursor-pointer">
+          <button onclick="toggleFaq(3)" class="w-full px-3.5 py-2.5 text-left flex items-center justify-between gap-2 text-xs font-bold text-white cursor-pointer">
             <span id="faq3Q">03. How does Submission Limit work?</span>
-            <span class="text-cyan-400 text-sm font-black">+</span>
+            <span class="text-cyan-400 text-sm font-black flex-shrink-0">+</span>
           </button>
-          <div id="faq3Ans" class="hidden px-4 pb-3 text-xs text-slate-300 leading-relaxed border-t border-slate-800/60 pt-2">
+          <div id="faq3Ans" class="hidden px-3.5 pb-3 text-xs text-slate-300 leading-relaxed border-t border-slate-800/60 pt-2">
             You can submit up to 5 match proofs every 8 hours.
           </div>
         </div>
 
         <div class="bg-slate-900/80 border border-slate-800 rounded-xl overflow-hidden transition">
-          <button onclick="toggleFaq(4)" class="w-full px-4 py-3 text-left flex items-center justify-between text-xs font-bold text-white cursor-pointer">
+          <button onclick="toggleFaq(4)" class="w-full px-3.5 py-2.5 text-left flex items-center justify-between gap-2 text-xs font-bold text-white cursor-pointer">
             <span id="faq4Q">04. Where are match scores shown?</span>
-            <span class="text-cyan-400 text-sm font-black">+</span>
+            <span class="text-cyan-400 text-sm font-black flex-shrink-0">+</span>
           </button>
-          <div id="faq4Ans" class="hidden px-4 pb-3 text-xs text-slate-300 leading-relaxed border-t border-slate-800/60 pt-2">
+          <div id="faq4Ans" class="hidden px-3.5 pb-3 text-xs text-slate-300 leading-relaxed border-t border-slate-800/60 pt-2">
             Admins enter the match score when approving a proof, and it appears on the player's verified match screenshots as well as the top live ticker.
           </div>
         </div>
@@ -280,18 +285,18 @@
 
   </main>
 
-  <footer class="bg-[#090c12] border-t border-slate-800/80 mt-10 pb-20 sm:pb-10">
-    <div class="max-w-4xl mx-auto px-4 pt-8 pb-6 space-y-7">
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800/70 pb-6">
+  <footer class="bg-[#090c12] border-t border-slate-800/80 mt-8 pb-20 sm:pb-10">
+    <div class="max-w-4xl mx-auto px-4 pt-7 pb-6 space-y-6">
+      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-slate-800/70 pb-5">
         <div class="flex items-center gap-2.5">
           <div class="w-8 h-8 rounded-lg bg-gradient-to-tr from-cyan-500 to-blue-600 flex items-center justify-center font-black text-white text-xs shadow-sm">FC</div>
           <div>
-            <div class="font-bold text-xs tracking-wide text-white">FLEX CITY <span class="text-cyan-400">LEADERBOARD</span> <span class="text-[10px] text-cyan-400/80 font-semibold ml-1">v1.3</span></div>
+            <div class="font-bold text-xs tracking-wide text-white">FLEX CITY <span class="text-cyan-400">LEADERBOARD</span></div>
             <div class="text-[11px] text-slate-500">Maintained by <span class="text-slate-300 font-semibold">BoomCraze</span></div>
           </div>
         </div>
 
-        <div class="flex items-center gap-4 text-slate-400">
+        <div class="flex items-center gap-3 text-slate-400">
           <a href="https://ig.me/m/boomcrraze" target="_blank" rel="noopener" class="hover:text-white transition p-1.5 rounded-lg hover:bg-slate-800/70" title="Instagram: @boomcrraze" aria-label="Instagram">
             <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2.163c3.204 0 3.584.012 4.85.07 3.252.148 4.771 1.691 4.919 4.919.058 1.265.069 1.645.069 4.849 0 3.205-.012 3.584-.069 4.849-.149 3.225-1.664 4.771-4.919 4.919-1.266.058-1.644.07-4.85.07-3.204 0-3.584-.012-4.849-.07-3.26-.149-4.771-1.699-4.919-4.92-.058-1.265-.07-1.644-.07-4.849 0-3.204.013-3.583.07-4.849.149-3.227 1.664-4.771 4.919-4.919 1.266-.057 1.645-.069 4.849-.069zm0-2.163c-3.259 0-3.667.014-4.947.072-4.358.2-6.78 2.618-6.98 6.98-.059 1.281-.073 1.689-.073 4.948 0 3.259.014 3.668.072 4.948.2 4.358 2.618 6.78 6.98 6.98 1.281.058 1.689.072 4.948.072 3.259 0 3.668-.014 4.948-.072 4.354-.2 6.782-2.618 6.979-6.98.059-1.28.073-1.689.073-4.948 0-3.259-.014-3.667-.072-4.947-.196-4.354-2.617-6.78-6.979-6.98-1.281-.059-1.69-.073-4.949-.073zm0 5.838c-3.403 0-6.162 2.759-6.162 6.162s2.759 6.163 6.162 6.163 6.162-2.759 6.162-6.163c0-3.403-2.759-6.162-6.162-6.162zm0 10.162c-2.209 0-4-1.79-4-4 0-2.209 1.791-4 4-4s4 1.791 4 4c0 2.21-1.791 4-4 4zm6.406-11.845c-.796 0-1.441.645-1.441 1.44s.645 1.44 1.441 1.44c.795 0 1.439-.645 1.439-1.44s-.644-1.44-1.439-1.44z"/></svg>
           </a>
@@ -306,20 +311,20 @@
         </div>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-6 text-xs">
-        <div class="space-y-2.5">
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-5 text-xs">
+        <div class="space-y-2">
           <h4 id="footerCol1Title" class="font-bold text-slate-200 tracking-wide">Leaderboard</h4>
-          <ul class="space-y-2 text-slate-400">
+          <ul class="space-y-1.5 text-slate-400">
             <li><button type="button" onclick="setRegionFilter('local'); window.scrollTo({top:0, behavior:'smooth'})" class="hover:text-cyan-400 transition cursor-pointer">Regional Rankings</button></li>
             <li><button type="button" onclick="setRegionFilter('global'); window.scrollTo({top:0, behavior:'smooth'})" class="hover:text-cyan-400 transition cursor-pointer">Global Top Players</button></li>
             <li><button type="button" onclick="switchMainTab('contenders'); window.scrollTo({top:0, behavior:'smooth'})" class="hover:text-cyan-400 transition cursor-pointer">Contenders Queue</button></li>
-            <li><button type="button" onclick="openWhatsNewModal()" class="hover:text-cyan-400 transition cursor-pointer">Changelog & Updates</button></li>
+            <li><button type="button" onclick="openWhatsNewModal()" class="hover:text-cyan-400 transition cursor-pointer">Recent Updates</button></li>
           </ul>
         </div>
 
-        <div class="space-y-2.5">
+        <div class="space-y-2">
           <h4 id="footerCol2Title" class="font-bold text-slate-200 tracking-wide">Connect</h4>
-          <ul class="space-y-2 text-slate-400">
+          <ul class="space-y-1.5 text-slate-400">
             <li>
               <a href="https://ig.me/m/boomcrraze" target="_blank" rel="noopener" class="hover:text-cyan-400 transition inline-flex items-center gap-1.5">
                 <span>Instagram:</span> <span class="text-slate-300">@boomcrraze</span>
@@ -336,9 +341,9 @@
           </ul>
         </div>
 
-        <div class="space-y-2.5">
+        <div class="space-y-2">
           <h4 id="footerCol3Title" class="font-bold text-slate-200 tracking-wide">Support & Inquiries</h4>
-          <ul class="space-y-2 text-slate-400">
+          <ul class="space-y-1.5 text-slate-400">
             <li>
               <a href="mailto:flexcity.tierlist@gmail.com" class="hover:text-cyan-400 transition break-all">flexcity.tierlist@gmail.com</a>
               <span class="block text-[10px] text-slate-500">Match proofs & leaderboard</span>
@@ -351,32 +356,30 @@
         </div>
       </div>
 
-      <div class="border-t border-slate-800/70 pt-5 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-slate-500">
+      <div class="border-t border-slate-800/70 pt-4 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-slate-500">
         <p id="footerText1">© 2026 Flex City Community Leaderboard • Created by BoomCraze.</p>
         <p id="footerText2">Fan-made platform • Not affiliated with Jarvi Games.</p>
       </div>
     </div>
   </footer>
 
-  <!-- In-App Proof Zoom Viewer Modal (Prevents about:blank trap on iPad Home Screen) -->
-  <div id="proofViewerModal" onclick="closeProofViewer()" class="fixed inset-0 bg-black/90 backdrop-blur-sm hidden flex-col items-center justify-center p-3 sm:p-5 z-[60]">
-    <div onclick="event.stopPropagation()" class="card-bg neon-border rounded-2xl max-w-2xl w-full p-3.5 sm:p-4 flex flex-col gap-3 shadow-2xl max-h-[92vh]">
-      <div class="flex items-center justify-between gap-2 border-b border-slate-800 pb-2.5">
-        <div class="text-xs font-bold text-cyan-400 truncate">🔍 Screenshot Viewer (<span id="zoomLevelLabel">1x</span>)</div>
-        <div class="flex items-center gap-1.5 flex-wrap">
-          <button type="button" onclick="setProofZoom(1)" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer">1x</button>
-          <button type="button" onclick="setProofZoom(2)" class="bg-cyan-500/20 hover:bg-cyan-500/35 text-cyan-300 border border-cyan-500/40 px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer">2x</button>
-          <button type="button" onclick="setProofZoom(3)" class="bg-cyan-500/20 hover:bg-cyan-500/35 text-cyan-300 border border-cyan-500/40 px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer">3x</button>
+  <!-- In-App Free Pinch/Pan Image Viewer Modal (No Page Zoom, Free Scale & Pan) -->
+  <div id="proofViewerModal" onclick="closeProofViewer()" class="fixed inset-0 bg-black/90 backdrop-blur-sm hidden flex-col items-center justify-center p-3 sm:p-5 z-[60] select-none">
+    <div onclick="event.stopPropagation()" class="card-bg neon-border rounded-2xl max-w-2xl w-full p-3 sm:p-4 flex flex-col gap-2.5 shadow-2xl max-h-[90vh]">
+      <div class="flex items-center justify-between gap-2 border-b border-slate-800 pb-2">
+        <div class="text-xs font-bold text-cyan-400 truncate">🔍 Proof Viewer (<span id="zoomLevelLabel">100%</span>)</div>
+        <div class="flex items-center gap-1.5">
+          <button type="button" onclick="resetProofTransform()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer">Reset</button>
           <button type="button" onclick="closeProofViewer()" class="bg-rose-500/20 hover:bg-rose-500/35 text-rose-300 border border-rose-500/40 px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer">Close &times;</button>
         </div>
       </div>
 
-      <div id="proofZoomScrollArea" class="overflow-auto bg-slate-950/90 border border-slate-800/80 rounded-xl flex-1 min-h-[260px] max-h-[72vh] flex items-center justify-center p-2">
-        <img id="proofViewerImg" src="" alt="Proof Screenshot" onclick="cycleProofZoom()" class="max-w-full max-h-[66vh] object-contain rounded-lg transition-transform duration-200 origin-center cursor-zoom-in select-none" />
+      <div id="proofCanvasStage" class="relative overflow-hidden bg-slate-950/95 border border-slate-800/80 rounded-xl flex-1 min-h-[280px] h-[66vh] flex items-center justify-center" style="touch-action: none;">
+        <img id="proofViewerImg" src="" alt="Proof Screenshot" draggable="false" class="max-w-full max-h-full object-contain rounded-lg will-change-transform select-none" style="transform: translate3d(0px, 0px, 0px) scale(1);" />
       </div>
 
       <div class="text-[11px] text-slate-400 text-center">
-        Tap image to zoom • Drag/scroll freely to inspect chat details • Tap Close to return
+        Pinch with 2 fingers or scroll to zoom anywhere • Drag image to move around
       </div>
     </div>
   </div>
@@ -400,11 +403,11 @@
     </div>
   </div>
 
-  <button onclick="openChatDrawer()" id="floatingChatBtn" class="fixed bottom-5 right-5 z-40 w-13 h-13 p-3.5 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white shadow-xl shadow-cyan-500/25 flex items-center justify-center transition transform hover:scale-105 active:scale-90 cursor-pointer" title="Messages & Global Chat">
-    <svg xmlns="http://www.w3.org/2000/svg" class="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+  <button onclick="openChatDrawer()" id="floatingChatBtn" class="fixed bottom-4 right-4 z-40 w-12 h-12 p-3 rounded-full bg-gradient-to-tr from-cyan-500 to-blue-600 hover:from-cyan-400 hover:to-blue-500 text-white shadow-xl shadow-cyan-500/25 flex items-center justify-center transition transform hover:scale-105 active:scale-90 cursor-pointer" title="Messages & Global Chat">
+    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
       <path stroke-linecap="round" stroke-linejoin="round" d="M12 19l9 2-9-18-9 18 9-2zm0 0v-8" />
     </svg>
-    <span id="unreadChatBadge" class="hidden absolute -top-1 -right-1 min-w-[20px] h-5 px-1 rounded-full bg-red-500 text-white text-[10px] font-black flex items-center justify-center border-2 border-[#0b0e14] animate-bounce">1</span>
+    <span id="unreadChatBadge" class="hidden absolute -top-1 -right-1 min-w-[18px] h-[18px] px-1 rounded-full bg-red-500 text-white text-[10px] font-black flex items-center justify-center border-2 border-[#0b0e14] animate-bounce">1</span>
   </button>
 
   <div id="chatDrawerModal" onclick="closeChatDrawerAnimated()" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-end sm:items-center justify-center p-0 sm:p-4 z-50">
@@ -529,12 +532,11 @@
   </div>
 
   <!-- What's New Modal -->
-  <div id="whatsNewModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
-    <div class="card-bg neon-border rounded-2xl max-w-md w-full p-5 relative space-y-3.5 shadow-2xl">
+  <div id="whatsNewModal" onclick="closeModal('whatsNewModal')" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
+    <div onclick="event.stopPropagation()" class="card-bg neon-border rounded-2xl max-w-md w-full p-5 relative space-y-3.5 shadow-2xl">
       <button onclick="closeModal('whatsNewModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg cursor-pointer">&times;</button>
       <div class="flex items-center justify-between pr-6">
         <h2 id="whatsNewModalTitle" class="text-base font-bold text-cyan-400">✨ What's New</h2>
-        <span class="bg-cyan-500/15 text-cyan-300 border border-cyan-500/30 px-2 py-0.5 rounded-lg text-[11px] font-bold">v1.3</span>
       </div>
       <div id="whatsNewContentList" class="space-y-2.5 text-xs text-slate-300 max-h-64 overflow-y-auto pr-1"></div>
       <button onclick="closeModal('whatsNewModal')" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs transition shadow-md cursor-pointer">
@@ -778,34 +780,44 @@
       navigator.serviceWorker.register('/firebase-messaging-sw.js').catch(() => {});
     }
 
-    let currentProofZoom = 1;
-    window.setProofZoom = (scale) => {
-      currentProofZoom = scale;
-      const img = document.getElementById('proofViewerImg');
-      const label = document.getElementById('zoomLevelLabel');
-      if (label) label.innerText = `${scale}x`;
-      if (img) {
-        img.style.transform = `scale(${scale})`;
-        img.style.margin = scale > 1 ? `${(scale - 1) * 90}px auto` : '0 auto';
-        img.className = scale > 1
-          ? "max-w-full max-h-[66vh] object-contain rounded-lg transition-transform duration-200 origin-center cursor-zoom-out select-none"
-          : "max-w-full max-h-[66vh] object-contain rounded-lg transition-transform duration-200 origin-center cursor-zoom-in select-none";
-      }
-    };
+    /* Free Pinch-to-Zoom + Pan + Wheel Zoom inside Proof Viewer (Zero page zoom) */
+    let pvScale = 1;
+    let pvTx = 0;
+    let pvTy = 0;
+    let isDraggingImg = false;
+    let dragStartX = 0;
+    let dragStartY = 0;
+    let pinchStartDist = 0;
+    let pinchStartScale = 1;
+    let pinchMidX = 0;
+    let pinchMidY = 0;
 
-    window.cycleProofZoom = () => {
-      const next = currentProofZoom === 1 ? 2 : currentProofZoom === 2 ? 3 : 1;
-      setProofZoom(next);
+    function applyProofTransform() {
+      const img = document.getElementById('proofViewerImg');
+      const lbl = document.getElementById('zoomLevelLabel');
+      if (img) {
+        img.style.transform = `translate3d(${pvTx}px, ${pvTy}px, 0px) scale(${pvScale})`;
+      }
+      if (lbl) {
+        lbl.innerText = `${Math.round(pvScale * 100)}%`;
+      }
+    }
+
+    window.resetProofTransform = () => {
+      pvScale = 1;
+      pvTx = 0;
+      pvTy = 0;
+      pinchStartDist = 0;
+      isDraggingImg = false;
+      applyProofTransform();
     };
 
     window.openProofViewer = (imgSrc) => {
       if (!imgSrc) return;
       const modal = document.getElementById('proofViewerModal');
       const img = document.getElementById('proofViewerImg');
-      const scrollArea = document.getElementById('proofZoomScrollArea');
       if (img) img.src = imgSrc;
-      setProofZoom(1);
-      if (scrollArea) { scrollArea.scrollTop = 0; scrollArea.scrollLeft = 0; }
+      resetProofTransform();
       if (modal) {
         modal.classList.remove('hidden');
         modal.classList.add('flex');
@@ -828,13 +840,100 @@
     };
 
     window.closeProofViewer = () => {
-      setProofZoom(1);
+      resetProofTransform();
       const modal = document.getElementById('proofViewerModal');
       if (modal) {
         modal.classList.add('hidden');
         modal.classList.remove('flex');
       }
     };
+
+    (function initProofGestureListeners() {
+      const stage = document.getElementById('proofCanvasStage');
+      if (!stage) return;
+
+      stage.addEventListener('wheel', (e) => {
+        e.preventDefault();
+        const rect = stage.getBoundingClientRect();
+        const cx = e.clientX - rect.left - rect.width / 2;
+        const cy = e.clientY - rect.top - rect.height / 2;
+        const factor = e.deltaY < 0 ? 1.18 : 0.85;
+        const nextScale = Math.min(5, Math.max(1, pvScale * factor));
+        const ratio = nextScale / pvScale;
+        pvTx = nextScale === 1 ? 0 : (pvTx - cx) * ratio + cx;
+        pvTy = nextScale === 1 ? 0 : (pvTy - cy) * ratio + cy;
+        pvScale = nextScale;
+        applyProofTransform();
+      }, { passive: false });
+
+      stage.addEventListener('pointerdown', (e) => {
+        if (e.pointerType === 'mouse' && pvScale > 1) {
+          isDraggingImg = true;
+          dragStartX = e.clientX - pvTx;
+          dragStartY = e.clientY - pvTy;
+        }
+      });
+
+      window.addEventListener('pointermove', (e) => {
+        if (!isDraggingImg || pvScale <= 1) return;
+        pvTx = e.clientX - dragStartX;
+        pvTy = e.clientY - dragStartY;
+        applyProofTransform();
+      });
+
+      window.addEventListener('pointerup', () => {
+        isDraggingImg = false;
+      });
+
+      stage.addEventListener('touchstart', (e) => {
+        if (e.touches.length === 2) {
+          e.preventDefault();
+          isDraggingImg = false;
+          const t1 = e.touches[0];
+          const t2 = e.touches[1];
+          pinchStartDist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+          pinchStartScale = pvScale;
+          const rect = stage.getBoundingClientRect();
+          pinchMidX = ((t1.clientX + t2.clientX) / 2) - rect.left - rect.width / 2;
+          pinchMidY = ((t1.clientY + t2.clientY) / 2) - rect.top - rect.height / 2;
+        } else if (e.touches.length === 1 && pvScale > 1) {
+          isDraggingImg = true;
+          dragStartX = e.touches[0].clientX - pvTx;
+          dragStartY = e.touches[0].clientY - pvTy;
+        }
+      }, { passive: false });
+
+      stage.addEventListener('touchmove', (e) => {
+        if (e.touches.length === 2 && pinchStartDist > 0) {
+          e.preventDefault();
+          const t1 = e.touches[0];
+          const t2 = e.touches[1];
+          const dist = Math.hypot(t2.clientX - t1.clientX, t2.clientY - t1.clientY);
+          const nextScale = Math.min(5, Math.max(1, pinchStartScale * (dist / pinchStartDist)));
+          const ratio = nextScale / pvScale;
+          pvTx = nextScale === 1 ? 0 : (pvTx - pinchMidX) * ratio + pinchMidX;
+          pvTy = nextScale === 1 ? 0 : (pvTy - pinchMidY) * ratio + pinchMidY;
+          pvScale = nextScale;
+          applyProofTransform();
+        } else if (e.touches.length === 1 && isDraggingImg && pvScale > 1) {
+          e.preventDefault();
+          pvTx = e.touches[0].clientX - dragStartX;
+          pvTy = e.touches[0].clientY - dragStartY;
+          applyProofTransform();
+        }
+      }, { passive: false });
+
+      stage.addEventListener('touchend', (e) => {
+        if (e.touches.length < 2) pinchStartDist = 0;
+        if (e.touches.length === 0) isDraggingImg = false;
+        if (pvScale <= 1.02) {
+          pvScale = 1;
+          pvTx = 0;
+          pvTy = 0;
+          applyProofTransform();
+        }
+      });
+    })();
 
     window.copyDiscordHandle = () => {
       if (navigator.clipboard) navigator.clipboard.writeText('boomcraze').catch(() => {});
@@ -859,7 +958,7 @@
       hinglish: {
         toggleLabel: "English",
         navSub: "Global & Regional 1v1 Tiers",
-        loginBtn: "Login with Google",
+        loginBtn: "Login",
         whatsNewBtn: "What's New",
         installPillText: isIosDevice ? "Add to Home Screen" : "Install App",
         notifBannerText: "DM aur updates ke liye notifications allow kar dijiye!",
@@ -922,10 +1021,10 @@
       en: {
         toggleLabel: "Hinglish",
         navSub: "Global & Regional 1v1 Tiers",
-        loginBtn: "Login with Google",
+        loginBtn: "Login",
         whatsNewBtn: "What's New",
         installPillText: isIosDevice ? "Add to Home Screen" : "Install App",
-        notifBannerText: "Enable notifications for instant DM & match request alerts!",
+        notifBannerText: "Enable notifications for instant DM & match alerts!",
         descTitle: "What is this?",
         descText: "Official Flex City community leaderboard tracking Long Range and Short Range 1v1 PvP duels, match scores, rank swaps, and regional/global rankings.",
         rulesHeading: "📜 Proof & Challenge Rules:",
@@ -986,14 +1085,14 @@
 
     const whatsNewData = {
       hinglish: [
-        { version: "v1.3", date: "26 Nov 2026", text: "• iPad Home Screen ke liye in-app proof zoom viewer (about:blank tab fix)\n• Points ke bajay Score system, Rank Swap & opponent streak reset\n• Admin score input + player modal aur ticker mein score display" },
-        { version: "v1.2", date: "26 Nov 2026", text: "• Owner & Admin role management panel aur live Global/DM chat" },
-        { version: "v1.0", date: "Nov 2026", text: "• Flex City Global & Regional 1v1 Leaderboard launch" }
+        { date: "26 Nov 2026", title: "In-App Free Pinch/Pan Proof Viewer", text: "• Screenshot ab website ke andar hi pinch/pan zoom ke saath khulta hai (naya tab nahi khulta)\n• Pure page ka automatic zoom aur center lock band" },
+        { date: "26 Nov 2026", title: "Score System, Rank Swap & Clean Proof Form", text: "• Match scores player profile aur live ticker par show hote hain\n• Rank swap aur opponent streak reset system\n• Submit form mein country selector hata kar auto-detect rakha gaya" },
+        { date: "26 Nov 2026", title: "Owner Role Panel & Direct Messaging", text: "• Owner panel se Admins add/remove aur players manage kiye ja sakte hain\n• Global chat aur personal DMs live alerts ke saath" }
       ],
       en: [
-        { version: "v1.3", date: "Nov 26, 2026", text: "• In-app proof zoom viewer for iPad Home Screen (fixes about:blank tab)\n• Score-based matches with rank swaps and defeated opponent streak reset\n• Admin match score input shown on player proofs and live ticker" },
-        { version: "v1.2", date: "Nov 26, 2026", text: "• Owner & Admin management panels with live Global & Direct Messaging" },
-        { version: "v1.0", date: "Nov 2026", text: "• Initial launch of Flex City Global & Regional 1v1 Leaderboard" }
+        { date: "Nov 26, 2026", title: "In-App Pinch & Pan Proof Viewer", text: "• Screenshots open inside the app with free pinch/pan zoom instead of opening a separate tab\n• Prevents unwanted full-page zoom and fixed center scaling" },
+        { date: "Nov 26, 2026", title: "Match Scores, Rank Swaps & Streamlined Proof Form", text: "• Approved match scores appear on player proofs and the live ticker\n• Rank swaps and defeated opponent streak resets on verified wins\n• Country dropdown removed in favor of automatic country detection" },
+        { date: "Nov 26, 2026", title: "Owner Role Controls & Live Messaging", text: "• Owner panel to appoint/remove Admins and edit player records\n• Real-time Global Chat and Personal DMs" }
       ]
     };
 
@@ -1227,8 +1326,8 @@
       currentRegion = region;
       const gBtn = document.getElementById('region-global');
       const lBtn = document.getElementById('region-local');
-      const activeCls = "px-3.5 py-1.5 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-semibold text-xs flex items-center gap-1.5 cursor-pointer transition";
-      const idleCls = "px-3.5 py-1.5 rounded-lg text-slate-400 hover:text-white text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition";
+      const activeCls = "px-3 py-1.5 rounded-lg bg-cyan-500/20 text-cyan-300 border border-cyan-500/30 font-semibold text-xs flex items-center gap-1.5 cursor-pointer transition";
+      const idleCls = "px-3 py-1.5 rounded-lg text-slate-400 hover:text-white text-xs font-semibold flex items-center gap-1.5 cursor-pointer transition";
       if (gBtn && lBtn) {
         gBtn.className = region === 'global' ? activeCls : idleCls;
         lBtn.className = region === 'local' ? activeCls : idleCls;
@@ -1340,7 +1439,7 @@
         ownerBtn.classList.remove('hidden');
         adminWrapper.classList.remove('hidden');
         startAdminPendingListener();
-        roleBar.className = "rounded-2xl px-4 py-2.5 text-xs flex flex-wrap items-center justify-between gap-2 border bg-purple-950/50 border-purple-500/40 text-purple-200";
+        roleBar.className = "rounded-xl px-3.5 py-2 text-xs flex items-center justify-between gap-2 border bg-purple-950/50 border-purple-500/40 text-purple-200";
         roleBar.innerHTML = `
           <div><span class="font-black text-purple-300">👑 Owner</span></div>
           <button onclick="openOwnerModal()" class="bg-purple-500 hover:bg-purple-400 text-white font-bold px-3 py-1 rounded-lg text-[11px] cursor-pointer">Owner Panel</button>
@@ -1349,7 +1448,7 @@
         ownerBtn.classList.add('hidden');
         adminWrapper.classList.remove('hidden');
         startAdminPendingListener();
-        roleBar.className = "rounded-2xl px-4 py-2.5 text-xs flex flex-wrap items-center justify-between gap-2 border bg-amber-950/40 border-amber-500/40 text-amber-200";
+        roleBar.className = "rounded-xl px-3.5 py-2 text-xs flex items-center justify-between gap-2 border bg-amber-950/40 border-amber-500/40 text-amber-200";
         roleBar.innerHTML = `
           <div><span class="font-black text-amber-300">🛡️ Admin</span></div>
           <button onclick="openAdminModal()" class="bg-amber-500 hover:bg-amber-400 text-slate-950 font-bold px-3 py-1 rounded-lg text-[11px] cursor-pointer">Admin Queue</button>
@@ -1383,8 +1482,8 @@
         if (snap.size > 0) {
           if (popupText) {
             popupText.innerText = snap.size === 1
-              ? "Someone has requested!"
-              : `${snap.size} new requests waiting!`;
+              ? "New request!"
+              : `${snap.size} requests!`;
           }
           if (popupEl) popupEl.classList.remove('hidden');
         } else {
@@ -1529,10 +1628,10 @@
 
         const badgeText = (user.email || "").toLowerCase() === OWNER_EMAIL.toLowerCase() ? " 👑" : "";
         authArea.innerHTML = `
-          <div class="flex items-center gap-2">
-            <span class="text-xs text-cyan-300 font-semibold hidden sm:inline max-w-[100px] truncate">${escapeHtml(userIgn)}${badgeText}</span>
-            <button onclick="openIgnModal()" class="bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 border border-cyan-500/30 px-2.5 py-1.5 rounded-xl text-xs font-semibold cursor-pointer">✏️ IGN</button>
-            <button onclick="openLogoutModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-3 py-1.5 rounded-xl text-xs font-semibold transition cursor-pointer">Logout</button>
+          <div class="flex items-center gap-1.5">
+            <span class="text-xs text-cyan-300 font-semibold hidden md:inline max-w-[90px] truncate">${escapeHtml(userIgn)}${badgeText}</span>
+            <button onclick="openIgnModal()" class="bg-cyan-500/20 hover:bg-cyan-500/30 text-cyan-400 border border-cyan-500/30 px-2 py-1.5 rounded-xl text-[11px] font-semibold cursor-pointer whitespace-nowrap">✏️ IGN</button>
+            <button onclick="openLogoutModal()" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-2.5 py-1.5 rounded-xl text-[11px] font-semibold transition cursor-pointer whitespace-nowrap">Logout</button>
           </div>
         `;
         submitBtn.classList.remove('hidden');
@@ -1546,7 +1645,7 @@
         isAdmin = false;
         applyRolePermissions();
         const loginLabel = (uiText[currentLang] || uiText.en).loginBtn;
-        authArea.innerHTML = `<button id="loginBtn" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold px-3.5 py-1.5 rounded-xl text-xs transition cursor-pointer">${loginLabel}</button>`;
+        authArea.innerHTML = `<button id="loginBtn" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-semibold px-3 py-1.5 rounded-xl text-[11px] transition cursor-pointer whitespace-nowrap">${loginLabel}</button>`;
         document.getElementById('loginBtn').onclick = () => signInWithPopup(auth, provider);
         submitBtn.classList.add('hidden');
         document.getElementById('unreadChatBadge').classList.add('hidden');
@@ -2075,8 +2174,11 @@
 
     window.openWhatsNewModal = () => {
       renderWhatsNewContent();
-      document.getElementById('whatsNewModal').classList.remove('hidden');
-      document.getElementById('whatsNewModal').classList.add('flex');
+      const modal = document.getElementById('whatsNewModal');
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
     };
 
     function renderWhatsNewContent() {
@@ -2086,8 +2188,8 @@
       container.innerHTML = list.map(item => `
         <div class="bg-slate-900/90 p-3 rounded-xl border border-slate-800 space-y-1">
           <div class="flex items-center justify-between text-[10px]">
-            <span class="text-cyan-400 font-bold">${item.date}</span>
-            <span class="bg-cyan-500/15 text-cyan-300 px-1.5 py-0.5 rounded font-bold">${item.version}</span>
+            <span class="text-cyan-400 font-bold">${escapeHtml(item.title)}</span>
+            <span class="text-slate-400">${escapeHtml(item.date)}</span>
           </div>
           <div class="text-xs text-slate-300 leading-relaxed whitespace-pre-line">${escapeHtml(item.text)}</div>
         </div>
@@ -2112,8 +2214,8 @@
       currentMainTab = tab;
       const rankedBtn = document.getElementById('tabRanked');
       const contendersBtn = document.getElementById('tabContenders');
-      const activeClass = "py-2.5 px-2 rounded-xl text-xs font-bold transition bg-cyan-500 text-slate-950 text-center shadow-sm cursor-pointer";
-      const inactiveClass = "py-2.5 px-2 rounded-xl text-xs font-bold transition text-slate-400 hover:text-white text-center cursor-pointer";
+      const activeClass = "py-2 px-2 rounded-xl text-xs font-bold transition bg-cyan-500 text-slate-950 text-center shadow-sm cursor-pointer";
+      const inactiveClass = "py-2 px-2 rounded-xl text-xs font-bold transition text-slate-400 hover:text-white text-center cursor-pointer";
       rankedBtn.className = tab === 'ranked' ? activeClass : inactiveClass;
       contendersBtn.className = tab === 'contenders' ? activeClass : inactiveClass;
       renderLeaderboard();
@@ -2188,9 +2290,9 @@
         }
 
         return `
-          <div onclick="openPlayer('${p.id}')" class="grid grid-cols-12 items-center px-4 py-3.5 hover:bg-slate-800/40 cursor-pointer transition">
+          <div onclick="openPlayer('${p.id}')" class="grid grid-cols-12 items-center px-3.5 py-3 hover:bg-slate-800/40 cursor-pointer transition">
             <div class="col-span-2 font-bold text-xs ${i < 3 && currentMainTab === 'ranked' ? 'text-cyan-400' : 'text-slate-400'}">${rankBadge}</div>
-            <div class="${isAdmin ? 'col-span-6' : 'col-span-7'} flex items-center gap-2.5">
+            <div class="${isAdmin ? 'col-span-6' : 'col-span-7'} flex items-center gap-2 min-w-0">
               <img src="${p.photo}" class="w-8 h-8 rounded-full border border-slate-700 object-cover flex-shrink-0 shadow-sm" />
               <div class="truncate">
                 <div class="flex items-center gap-1.5 flex-wrap">
@@ -2330,7 +2432,7 @@
               </div>
               ${isAdmin ? `<button onclick="deletePlayerProof('${selectedPlayer.id}', ${pr.originalIndex})" class="bg-red-500/20 hover:bg-red-500/40 text-red-400 border border-red-500/30 px-2 py-0.5 rounded text-[10px] font-bold cursor-pointer">Delete</button>` : ''}
             </div>
-            <img onclick="openPlayerProofByIndex('${selectedPlayer.id}', ${pr.originalIndex})" src="${pr.url}" class="w-full h-36 rounded-lg object-cover border border-slate-800 cursor-zoom-in" alt="Match Proof (Tap to zoom)" />
+            <img onclick="openPlayerProofByIndex('${selectedPlayer.id}', ${pr.originalIndex})" src="${pr.url}" class="w-full h-36 rounded-lg object-cover border border-slate-800 cursor-pointer" alt="Match Proof" />
           </div>
         `).join('');
       }
@@ -2617,9 +2719,9 @@
               </div>
               <div class="text-[10px] text-slate-400 mt-2">vs <span class="text-cyan-300 font-semibold">${escapeHtml(s.opponent)}</span>${oppStatusTag}</div>
             </div>
-            <button type="button" onclick="openPendingProofById('${sid}')" class="relative group w-16 h-16 rounded-lg border border-slate-700 overflow-hidden flex-shrink-0 shadow-sm cursor-zoom-in" title="Tap to zoom inside app">
+            <button type="button" onclick="openPendingProofById('${sid}')" class="relative w-16 h-16 rounded-lg border border-slate-700 overflow-hidden flex-shrink-0 shadow-sm cursor-pointer" title="Open proof viewer">
               <img src="${s.screenshotUrl}" class="w-full h-full object-cover" alt="Proof" />
-              <span class="absolute bottom-0 inset-x-0 bg-black/75 text-[9px] text-cyan-300 font-bold text-center py-0.5">🔍 Zoom</span>
+              <span class="absolute bottom-0 inset-x-0 bg-black/75 text-[9px] text-cyan-300 font-bold text-center py-0.5">🔍 View</span>
             </button>
           </div>
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2.5 border-t border-slate-800">
