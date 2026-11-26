@@ -358,6 +358,29 @@
     </div>
   </footer>
 
+  <!-- In-App Proof Zoom Viewer Modal (Prevents about:blank trap on iPad Home Screen) -->
+  <div id="proofViewerModal" onclick="closeProofViewer()" class="fixed inset-0 bg-black/90 backdrop-blur-sm hidden flex-col items-center justify-center p-3 sm:p-5 z-[60]">
+    <div onclick="event.stopPropagation()" class="card-bg neon-border rounded-2xl max-w-2xl w-full p-3.5 sm:p-4 flex flex-col gap-3 shadow-2xl max-h-[92vh]">
+      <div class="flex items-center justify-between gap-2 border-b border-slate-800 pb-2.5">
+        <div class="text-xs font-bold text-cyan-400 truncate">🔍 Screenshot Viewer (<span id="zoomLevelLabel">1x</span>)</div>
+        <div class="flex items-center gap-1.5 flex-wrap">
+          <button type="button" onclick="setProofZoom(1)" class="bg-slate-800 hover:bg-slate-700 text-slate-200 border border-slate-700 px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer">1x</button>
+          <button type="button" onclick="setProofZoom(2)" class="bg-cyan-500/20 hover:bg-cyan-500/35 text-cyan-300 border border-cyan-500/40 px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer">2x</button>
+          <button type="button" onclick="setProofZoom(3)" class="bg-cyan-500/20 hover:bg-cyan-500/35 text-cyan-300 border border-cyan-500/40 px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer">3x</button>
+          <button type="button" onclick="closeProofViewer()" class="bg-rose-500/20 hover:bg-rose-500/35 text-rose-300 border border-rose-500/40 px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer">Close &times;</button>
+        </div>
+      </div>
+
+      <div id="proofZoomScrollArea" class="overflow-auto bg-slate-950/90 border border-slate-800/80 rounded-xl flex-1 min-h-[260px] max-h-[72vh] flex items-center justify-center p-2">
+        <img id="proofViewerImg" src="" alt="Proof Screenshot" onclick="cycleProofZoom()" class="max-w-full max-h-[66vh] object-contain rounded-lg transition-transform duration-200 origin-center cursor-zoom-in select-none" />
+      </div>
+
+      <div class="text-[11px] text-slate-400 text-center">
+        Tap image to zoom • Drag/scroll freely to inspect chat details • Tap Close to return
+      </div>
+    </div>
+  </div>
+
   <!-- iOS / iPadOS Safari Add to Home Screen Modal -->
   <div id="iosHomeModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
     <div class="card-bg neon-border rounded-2xl max-w-sm w-full p-5 relative space-y-3.5 shadow-2xl">
@@ -755,6 +778,64 @@
       navigator.serviceWorker.register('/firebase-messaging-sw.js').catch(() => {});
     }
 
+    let currentProofZoom = 1;
+    window.setProofZoom = (scale) => {
+      currentProofZoom = scale;
+      const img = document.getElementById('proofViewerImg');
+      const label = document.getElementById('zoomLevelLabel');
+      if (label) label.innerText = `${scale}x`;
+      if (img) {
+        img.style.transform = `scale(${scale})`;
+        img.style.margin = scale > 1 ? `${(scale - 1) * 90}px auto` : '0 auto';
+        img.className = scale > 1
+          ? "max-w-full max-h-[66vh] object-contain rounded-lg transition-transform duration-200 origin-center cursor-zoom-out select-none"
+          : "max-w-full max-h-[66vh] object-contain rounded-lg transition-transform duration-200 origin-center cursor-zoom-in select-none";
+      }
+    };
+
+    window.cycleProofZoom = () => {
+      const next = currentProofZoom === 1 ? 2 : currentProofZoom === 2 ? 3 : 1;
+      setProofZoom(next);
+    };
+
+    window.openProofViewer = (imgSrc) => {
+      if (!imgSrc) return;
+      const modal = document.getElementById('proofViewerModal');
+      const img = document.getElementById('proofViewerImg');
+      const scrollArea = document.getElementById('proofZoomScrollArea');
+      if (img) img.src = imgSrc;
+      setProofZoom(1);
+      if (scrollArea) { scrollArea.scrollTop = 0; scrollArea.scrollLeft = 0; }
+      if (modal) {
+        modal.classList.remove('hidden');
+        modal.classList.add('flex');
+      }
+    };
+
+    window.openPendingProofById = (sid) => {
+      const item = pendingCache[sid];
+      if (item && item.screenshotUrl) {
+        openProofViewer(item.screenshotUrl);
+      }
+    };
+
+    window.openPlayerProofByIndex = (playerId, proofIndex) => {
+      const pl = allPlayers.find(p => p.id === playerId);
+      const pr = pl && Array.isArray(pl.proofs) ? pl.proofs[proofIndex] : null;
+      if (pr && pr.url) {
+        openProofViewer(pr.url);
+      }
+    };
+
+    window.closeProofViewer = () => {
+      setProofZoom(1);
+      const modal = document.getElementById('proofViewerModal');
+      if (modal) {
+        modal.classList.add('hidden');
+        modal.classList.remove('flex');
+      }
+    };
+
     window.copyDiscordHandle = () => {
       if (navigator.clipboard) navigator.clipboard.writeText('boomcraze').catch(() => {});
       const tag = document.getElementById('discordCopiedTag');
@@ -905,12 +986,12 @@
 
     const whatsNewData = {
       hinglish: [
-        { version: "v1.3", date: "26 Nov 2026", text: "• Points ke bajay Score system, Rank Swap & opponent streak reset\n• Submit modal mein Your IGN, Opponent IGN, Long/Short Range aur Chat Screenshot\n• Admin score input + player modal aur ticker mein score display" },
+        { version: "v1.3", date: "26 Nov 2026", text: "• iPad Home Screen ke liye in-app proof zoom viewer (about:blank tab fix)\n• Points ke bajay Score system, Rank Swap & opponent streak reset\n• Admin score input + player modal aur ticker mein score display" },
         { version: "v1.2", date: "26 Nov 2026", text: "• Owner & Admin role management panel aur live Global/DM chat" },
         { version: "v1.0", date: "Nov 2026", text: "• Flex City Global & Regional 1v1 Leaderboard launch" }
       ],
       en: [
-        { version: "v1.3", date: "Nov 26, 2026", text: "• Score-based matches with rank swaps and defeated opponent streak reset\n• Submit Proof form with Your IGN, Opponent IGN, Long/Short Range, and Chat Screenshot\n• Admin match score input shown on player proofs and live ticker" },
+        { version: "v1.3", date: "Nov 26, 2026", text: "• In-app proof zoom viewer for iPad Home Screen (fixes about:blank tab)\n• Score-based matches with rank swaps and defeated opponent streak reset\n• Admin match score input shown on player proofs and live ticker" },
         { version: "v1.2", date: "Nov 26, 2026", text: "• Owner & Admin management panels with live Global & Direct Messaging" },
         { version: "v1.0", date: "Nov 2026", text: "• Initial launch of Flex City Global & Regional 1v1 Leaderboard" }
       ]
@@ -2249,7 +2330,7 @@
               </div>
               ${isAdmin ? `<button onclick="deletePlayerProof('${selectedPlayer.id}', ${pr.originalIndex})" class="bg-red-500/20 hover:bg-red-500/40 text-red-400 border border-red-500/30 px-2 py-0.5 rounded text-[10px] font-bold cursor-pointer">Delete</button>` : ''}
             </div>
-            <img src="${pr.url}" class="w-full h-36 rounded-lg object-cover border border-slate-800" alt="Match Proof" />
+            <img onclick="openPlayerProofByIndex('${selectedPlayer.id}', ${pr.originalIndex})" src="${pr.url}" class="w-full h-36 rounded-lg object-cover border border-slate-800 cursor-zoom-in" alt="Match Proof (Tap to zoom)" />
           </div>
         `).join('');
       }
@@ -2536,7 +2617,10 @@
               </div>
               <div class="text-[10px] text-slate-400 mt-2">vs <span class="text-cyan-300 font-semibold">${escapeHtml(s.opponent)}</span>${oppStatusTag}</div>
             </div>
-            <img onclick="window.open().document.write('<img src=\\'${s.screenshotUrl}\\' style=\\'max-width:100%\\'/>')" src="${s.screenshotUrl}" class="w-16 h-16 rounded-lg border border-slate-700 object-cover cursor-pointer flex-shrink-0 shadow-sm" />
+            <button type="button" onclick="openPendingProofById('${sid}')" class="relative group w-16 h-16 rounded-lg border border-slate-700 overflow-hidden flex-shrink-0 shadow-sm cursor-zoom-in" title="Tap to zoom inside app">
+              <img src="${s.screenshotUrl}" class="w-full h-full object-cover" alt="Proof" />
+              <span class="absolute bottom-0 inset-x-0 bg-black/75 text-[9px] text-cyan-300 font-bold text-center py-0.5">🔍 Zoom</span>
+            </button>
           </div>
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2.5 border-t border-slate-800">
             <div class="flex items-center gap-2 flex-1">
