@@ -136,8 +136,9 @@
     <div class="card-bg rounded-2xl neon-border p-4 sm:p-5 relative space-y-3 shadow-lg">
       <div class="flex items-center justify-between gap-2">
         <h2 id="descTitle" class="text-xs font-bold text-cyan-400 uppercase tracking-wider">What is this?</h2>
+        <!-- Shown ONLY for India (IN) -->
         <button type="button" id="langToggleBtn" onclick="toggleLanguage()" class="hidden bg-slate-800/90 hover:bg-slate-700 active:scale-95 text-slate-200 border border-slate-700 px-3 py-1.5 rounded-xl text-xs font-semibold transition items-center gap-1.5 cursor-pointer">
-          <span id="langFlag">🇮🇳</span> <span id="langBtnText">Hinglish</span>
+          <span id="langFlag">🌐</span> <span id="langBtnText">English</span>
         </button>
       </div>
       <p id="descText" class="text-xs sm:text-sm text-slate-300 leading-relaxed">
@@ -337,7 +338,7 @@
 
       <div class="border-t border-slate-800/70 pt-5 flex flex-col sm:flex-row items-center justify-between gap-2 text-[11px] text-slate-500">
         <p id="footerText1">© 2026 Flex City Community Leaderboard • Created by BoomCraze.</p>
-        <p id="footerText2">Unofficial fan-made platform • Not affiliated with Jarvi Games.</p>
+        <p id="footerText2">Fan-made platform • Not affiliated with Jarvi Games.</p>
       </div>
     </div>
   </footer>
@@ -447,7 +448,7 @@
       
       <div class="border-b border-slate-800 pb-3">
         <h2 class="text-base font-bold text-purple-400">👑 Owner Panel</h2>
-        <p id="ownerSubText" class="text-xs text-slate-400 mt-0.5">Manage Admins & player stats.</p>
+        <p id="ownerSubText" class="text-xs text-slate-400 mt-0.5">Admins aur players manage kijiye.</p>
       </div>
 
       <div class="bg-slate-950/80 border border-purple-500/30 rounded-xl p-3.5 space-y-3">
@@ -456,6 +457,7 @@
           <input type="email" id="newAdminEmailInput" required placeholder="prayrpro@gmail.com" class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-purple-500" />
           <button type="submit" id="addAdminBtn" class="bg-purple-500 hover:bg-purple-400 text-white font-bold px-3.5 py-2 rounded-xl text-xs transition cursor-pointer">+ Add</button>
         </form>
+        <div id="ownerAdminFeedback" class="hidden text-xs font-semibold px-3 py-2 rounded-xl"></div>
         <div id="ownerAdminList" class="space-y-2"></div>
       </div>
 
@@ -485,9 +487,9 @@
   <div id="logoutConfirmModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
     <div class="card-bg neon-border rounded-2xl max-w-sm w-full p-5 relative space-y-3 text-center shadow-2xl">
       <div class="w-12 h-12 rounded-full bg-rose-500/20 text-rose-400 border border-rose-500/40 flex items-center justify-center mx-auto text-xl font-bold">⚠️</div>
-      <h2 id="logoutModalTitle" class="text-base font-bold text-white">Log out?</h2>
+      <h2 id="logoutModalTitle" class="text-base font-bold text-white">Logout karna hai?</h2>
       <p id="logoutModalSub" class="text-xs text-slate-400 leading-relaxed">
-        You won't be able to submit proofs or send messages until you log back in.
+        Logout ke baad aap proof submit ya chat nahi kar payenge jab tak wapas login na karein.
       </p>
       <div class="grid grid-cols-2 gap-2.5 pt-2">
         <button onclick="closeModal('logoutConfirmModal')" class="bg-slate-800 hover:bg-slate-700 text-slate-200 font-semibold py-2.5 rounded-xl text-xs transition cursor-pointer">
@@ -503,8 +505,8 @@
   <!-- Forced IGN Modal -->
   <div id="forcedIgnModal" class="fixed inset-0 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
     <div class="card-bg neon-border rounded-2xl max-w-sm w-full p-6 relative shadow-2xl">
-      <h2 id="modalTitle" class="text-base font-bold text-white mb-1">Welcome to Flex City!</h2>
-      <p id="modalSubText" class="text-xs text-slate-400 mb-4">Enter your In-Game Name (IGN) to continue.</p>
+      <h2 id="modalTitle" class="text-base font-bold text-white mb-1">Flex City Mein Welcome!</h2>
+      <p id="modalSubText" class="text-xs text-slate-400 mb-4">Aage badhne ke liye apna In-Game Name (IGN) darj kijiye.</p>
       <form id="forcedIgnForm" class="space-y-3">
         <input type="text" id="forcedIgnInput" required placeholder="e.g. BoomCraze" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500" />
         <button type="submit" id="modalSubmitBtn" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs transition shadow-md cursor-pointer">
@@ -596,7 +598,7 @@
     <div class="card-bg neon-border rounded-2xl max-w-sm w-full p-5 relative shadow-2xl">
       <button onclick="closeModal('ignModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg">&times;</button>
       <h2 id="editIgnTitle" class="text-base font-bold text-white mb-1">Edit IGN</h2>
-      <p id="editIgnSub" class="text-xs text-slate-400 mb-3">Update your In-Game Name.</p>
+      <p id="editIgnSub" class="text-xs text-slate-400 mb-3">Apna In-Game Name update kijiye.</p>
       <form id="ignForm" class="space-y-3">
         <input type="text" id="newIgnInput" required placeholder="e.g. BoomCraze" class="w-full bg-slate-900 border border-slate-700 rounded-xl px-3.5 py-2.5 text-sm text-white focus:outline-none focus:border-cyan-500" />
         <button type="submit" id="saveIgnBtn" class="w-full bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold py-2.5 rounded-xl text-xs transition shadow-md cursor-pointer">
@@ -656,7 +658,7 @@
         <div id="adminRulesHeading" class="text-[11px] font-bold text-amber-400">📜 Admin Rules:</div>
         <ul id="adminRulesList" class="text-[11px] text-slate-300 space-y-1 list-disc list-inside leading-relaxed">
           <li>Approve only clear chat screenshots with opponent agreement.</li>
-          <li>Edit IGN, points, or streak only for valid matches or fixes.</li>
+          <li>Edit IGN, points, or streak only for valid matches or corrections.</li>
         </ul>
       </div>
 
@@ -712,7 +714,6 @@
     }
 
     let visitorCountry = { code: 'IN', name: 'India', flag: '🇮🇳' };
-    // 'hinglish' for India (IN), 'en' for all foreign countries
     let currentLang = 'hinglish';
     let userPickedEnglish = false;
 
@@ -723,14 +724,14 @@
         loginBtn: "Login with Google",
         whatsNewBtn: "What's New",
         installPillText: "Install App",
-        notifBannerText: "DM aur updates ke liye notifications allow kar de!",
+        notifBannerText: "DM aur updates ke liye notifications allow kar dijiye!",
         descTitle: "Yeh Kya Hai?",
         descText: "Yeh Flex City ka community leaderboard hai jahan Long Range aur Short Range 1v1 tiers, match proofs aur country/global rankings track hote hain.",
         rulesHeading: "📜 Proof & Challenge Rules:",
         rulesHtml: `
-          <li><strong>Chat Screenshot:</strong> Aisa chat screenshot daal jisme opponent 1v1 result aur points par agree kare.</li>
-          <li><strong>Country + Global:</strong> Win karne par tu apni country aur Global dono leaderboard par aayega.</li>
-          <li><strong>Challenge:</strong> Kisi player par tap kar ya neeche right chat icon se direct message bhej.</li>
+          <li><strong>Chat Screenshot:</strong> Aisa chat screenshot daalein jisme opponent 1v1 result aur points par agree kare.</li>
+          <li><strong>Country + Global:</strong> Win karne par aap apni country aur Global dono leaderboard par aayenge.</li>
+          <li><strong>Challenge:</strong> Kisi player par tap karein ya neeche right chat icon se direct message bhejein.</li>
         `,
         tabRanked: "🏆 Ranked",
         tabContenders: "⚔️ Contenders",
@@ -746,36 +747,36 @@
         footerText2: "Fan-made platform • Not affiliated with Jarvi Games.",
         openSubmitBtn: "+ Submit Proof",
         modalTitle: "Flex City Mein Welcome!",
-        modalSubText: "Aage badhne ke liye apna In-Game Name (IGN) daal.",
+        modalSubText: "Aage badhne ke liye apna In-Game Name (IGN) darj kijiye.",
         modalSubmitBtn: "Continue",
-        editIgnTitle: "IGN Badal",
-        editIgnSub: "Apna In-Game Name update kar.",
+        editIgnTitle: "IGN Badlein",
+        editIgnSub: "Apna In-Game Name update kijiye.",
         saveIgnBtn: "Save IGN",
-        submitProofTitle: "Match Screenshot Bhej",
-        labelIgn: "Tera IGN",
+        submitProofTitle: "Match Screenshot Bhejein",
+        labelIgn: "Aapka IGN",
         labelOpponent: "Opponent IGN",
         labelCategory: "Category",
         labelScreenshotFile: "Chat Screenshot",
-        submitProofBtn: "Proof Bhej",
+        submitProofBtn: "Proof Bhejein",
         whatsNewModalTitle: "✨ What's New",
         faqTitle: "FAQ",
         faqSub: "Tiers aur points ke baare mein quick answers.",
         logoutModalTitle: "Logout karna hai?",
-        logoutModalSub: "Logout ke baad proof submit ya chat nahi kar payega jab tak wapas login na kare.",
+        logoutModalSub: "Logout ke baad aap proof submit ya chat nahi kar payenge jab tak wapas login na karein.",
         adminModalTitle: "🛡️ Admin Panel",
-        adminModalSub: "Proofs verify kar aur player IGN ya points edit kar.",
+        adminModalSub: "Proofs verify kijiye aur player IGN ya points edit kijiye.",
         adminRulesHeading: "📜 Admin Rules:",
         adminRulesHtml: `
-          <li>Sirf clear chat screenshot aur opponent agreement wale proof approve kar.</li>
-          <li>IGN, points ya streak sirf genuine fix ya match ke liye edit kar.</li>
+          <li>Sirf clear chat screenshot aur opponent agreement wale proof approve karein.</li>
+          <li>IGN, points ya streak sirf genuine fix ya match ke liye edit karein.</li>
         `,
-        ownerSubText: "Admins aur players manage kar.",
+        ownerSubText: "Admins aur players manage kijiye.",
         manageAdminsTitle: "🛡️ Admins",
         allPlayersTitle: "🎮 Players",
         editPlayerModalTitle: "⚡ Edit Player",
         savePlayerEditBtn: "Save Changes",
-        globalTipText: "Tip: Kisi message par press & hold kar options ke liye",
-        dmTipText: "Tip: Kisi message par press & hold kar options ke liye"
+        globalTipText: "Tip: Kisi message par press & hold karein options ke liye",
+        dmTipText: "Tip: Kisi message par press & hold karein options ke liye"
       },
       en: {
         toggleLabel: "Hinglish",
@@ -839,15 +840,14 @@
       }
     };
 
-    // Short, simple changelog items (no long explanations)
     const whatsNewData = {
       hinglish: [
-        { version: "v2.9", date: "26 Nov 2026", text: "• /favicon.svg add kiya\n• Naye messages hold karne ka fix\n• Owner & Admin panel add kiya\n• India mein Hinglish aur foreign IP pe English auto-set" },
-        { version: "v2.8", date: "25 Nov 2026", text: "• Footer aur Discord copy button update kiya" }
+        { version: "v2.10", date: "26 Nov 2026", text: "• Foreign IP/VPN par Hinglish toggle hide kar diya\n• Admin add karne par instant feedback add kiya\n• Respectful Hinglish ('aap') update kiya" },
+        { version: "v2.9", date: "26 Nov 2026", text: "• /favicon.svg aur message hold menu fix add kiya" }
       ],
       en: [
-        { version: "v2.9", date: "Nov 26, 2026", text: "• Added /favicon.svg\n• Fixed hold menu on new messages\n• Added Owner & Admin panels\n• Hinglish for India, English for other countries" },
-        { version: "v2.8", date: "Nov 25, 2026", text: "• Updated footer and Discord copy button" }
+        { version: "v2.10", date: "Nov 26, 2026", text: "• Hidden Hinglish toggle for non-India visitors\n• Added instant confirmation feedback when adding Admins" },
+        { version: "v2.9", date: "Nov 26, 2026", text: "• Added /favicon.svg and fixed message hold menu" }
       ]
     };
 
@@ -912,16 +912,22 @@
       setSafeText('globalTipText', t.globalTipText);
       setSafeText('dmTipText', t.dmTipText);
 
+      // Show Hinglish toggle ONLY if country is India (IN)
       const langBtn = document.getElementById('langToggleBtn');
       if (langBtn) {
-        langBtn.classList.remove('hidden');
-        langBtn.classList.add('flex');
-        if (currentLang === 'hinglish') {
-          document.getElementById('langFlag').innerText = '🌐';
-          setSafeText('langBtnText', 'English');
+        if (visitorCountry.code === 'IN') {
+          langBtn.classList.remove('hidden');
+          langBtn.classList.add('flex');
+          if (currentLang === 'hinglish') {
+            document.getElementById('langFlag').innerText = '🌐';
+            setSafeText('langBtnText', 'English');
+          } else {
+            document.getElementById('langFlag').innerText = '🇮🇳';
+            setSafeText('langBtnText', 'Hinglish');
+          }
         } else {
-          document.getElementById('langFlag').innerText = '🇮🇳';
-          setSafeText('langBtnText', 'Hinglish');
+          langBtn.classList.add('hidden');
+          langBtn.classList.remove('flex');
         }
       }
 
@@ -931,6 +937,7 @@
     }
 
     window.toggleLanguage = () => {
+      if (visitorCountry.code !== 'IN') return;
       userPickedEnglish = true;
       currentLang = currentLang === 'hinglish' ? 'en' : 'hinglish';
       applyLanguageUI();
@@ -978,9 +985,12 @@
       if (nameEl) nameEl.innerText = visitorCountry.name;
       if (subCountryEl) subCountryEl.innerText = `${visitorCountry.flag} ${visitorCountry.name}`;
 
-      // India -> Hinglish, Foreign country -> English
-      if (!userPickedEnglish) {
-        currentLang = visitorCountry.code === 'IN' ? 'hinglish' : 'en';
+      if (visitorCountry.code === 'IN') {
+        if (!userPickedEnglish) currentLang = 'hinglish';
+      } else {
+        // Non-India / VPN always defaults to English and hides Hinglish button
+        currentLang = 'en';
+        userPickedEnglish = false;
       }
       applyLanguageUI();
 
@@ -1132,6 +1142,17 @@
       if (el && tickerMessages.length > 0) el.innerText = tickerMessages[0];
     }
 
+    function showOwnerFeedback(msg, isError = false) {
+      const box = document.getElementById('ownerAdminFeedback');
+      if (!box) return;
+      box.innerText = msg;
+      box.className = isError
+        ? "text-xs font-semibold px-3 py-2 rounded-xl bg-rose-500/15 border border-rose-500/40 text-rose-300"
+        : "text-xs font-semibold px-3 py-2 rounded-xl bg-emerald-500/15 border border-emerald-500/40 text-emerald-300";
+      box.classList.remove('hidden');
+      setTimeout(() => box.classList.add('hidden'), 3500);
+    }
+
     async function loadRolesConfig() {
       adminEmails = [...DEFAULT_ADMIN_EMAILS];
       try {
@@ -1182,8 +1203,10 @@
       renderLeaderboard();
     }
 
-    window.openOwnerModal = () => {
+    window.openOwnerModal = async () => {
       if (!isOwner) return;
+      document.getElementById('ownerAdminFeedback')?.classList.add('hidden');
+      await loadRolesConfig();
       renderOwnerAdminList();
       renderOwnerPlayersList();
       document.getElementById('ownerModal').classList.remove('hidden');
@@ -1212,19 +1235,45 @@
       e.preventDefault();
       if (!isOwner) return;
       const inp = document.getElementById('newAdminEmailInput');
+      const btn = document.getElementById('addAdminBtn');
       const email = (inp.value || "").toLowerCase().trim();
-      if (!email || email === OWNER_EMAIL.toLowerCase()) return;
-      if (!adminEmails.includes(email)) adminEmails.push(email);
-      await setDoc(doc(db, "config", "roles"), { admins: adminEmails, owner: OWNER_EMAIL }, { merge: true });
-      inp.value = "";
-      renderOwnerAdminList();
+      if (!email) return;
+      if (email === OWNER_EMAIL.toLowerCase()) {
+        showOwnerFeedback("Yeh email pehle se Owner hai.", true);
+        return;
+      }
+      if (adminEmails.includes(email)) {
+        showOwnerFeedback(`${email} pehle se Admin list mein hai.`, true);
+        return;
+      }
+      if (btn) { btn.disabled = true; btn.innerText = "Adding..."; }
+      try {
+        const nextList = [...adminEmails, email];
+        await setDoc(doc(db, "config", "roles"), { admins: nextList, owner: OWNER_EMAIL }, { merge: true });
+        adminEmails = nextList;
+        inp.value = "";
+        renderOwnerAdminList();
+        showOwnerFeedback(`✓ ${email} Admin add ho gaye hain.`);
+      } catch (err) {
+        console.error(err);
+        showOwnerFeedback("Add karne mein error aaya. Firestore rules check kijiye.", true);
+      } finally {
+        if (btn) { btn.disabled = false; btn.innerText = "+ Add"; }
+      }
     };
 
     window.removeAdminEmailByOwner = async (email) => {
       if (!isOwner) return;
-      adminEmails = adminEmails.filter(e => e.toLowerCase() !== email.toLowerCase());
-      await setDoc(doc(db, "config", "roles"), { admins: adminEmails, owner: OWNER_EMAIL }, { merge: true });
-      renderOwnerAdminList();
+      try {
+        const nextList = adminEmails.filter(e => e.toLowerCase() !== email.toLowerCase());
+        await setDoc(doc(db, "config", "roles"), { admins: nextList, owner: OWNER_EMAIL }, { merge: true });
+        adminEmails = nextList;
+        renderOwnerAdminList();
+        showOwnerFeedback(`✓ ${email} Admin list se hata diye gaye hain.`);
+      } catch (err) {
+        console.error(err);
+        showOwnerFeedback("Remove karne mein error aaya.", true);
+      }
     };
 
     window.renderOwnerPlayersList = () => {
@@ -1904,7 +1953,7 @@
 
       if (sorted.length === 0) {
         const emptyMsg = currentLang === 'hinglish'
-          ? (currentMainTab === 'ranked' ? "Abhi yahan koi ranked player nahi hai. Proof bhej ke #1 ban." : "Abhi queue khali hai.")
+          ? (currentMainTab === 'ranked' ? "Abhi yahan koi ranked player nahi hai. Proof bhej ke #1 baniye." : "Abhi queue khali hai.")
           : (currentMainTab === 'ranked' ? "No ranked players here yet. Submit a proof to claim #1." : "No contenders in queue yet.");
         list.innerHTML = `<div class="p-8 text-center text-slate-400 text-xs">${emptyMsg}</div>`;
         return;
