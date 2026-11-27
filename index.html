@@ -23,7 +23,7 @@
     "@type": "WebSite",
     "name": "Flex City Leaderboard",
     "alternateName": ["Flex City Global Top Players", "Flex City 1v1 Leaderboard"],
-    "url": "https://flexcity-leaderboard.vercel.app/"
+    "url": "https://flexcity-leaderboard.work.gd/"
   }
   </script>
 
@@ -197,7 +197,6 @@
           + Submit Proof
         </button>
 
-        <!-- Admin Button + Floating Animated Request Popup right above it -->
         <div id="adminBtnWrapper" class="relative hidden flex-1 sm:flex-none">
           <div id="adminRequestPopup" onclick="openAdminModal()" class="hidden animate-mini-popup cursor-pointer absolute -top-8 right-0 z-30 whitespace-nowrap bg-gradient-to-r from-amber-400 to-orange-500 text-slate-950 text-[10px] font-extrabold px-2 py-0.5 rounded-lg shadow-lg border border-amber-200/70 flex items-center gap-1">
             <span>🔔</span>
@@ -223,11 +222,24 @@
       </button>
     </div>
 
+    <!-- 3-Category Range Filter Tabs (Overall / Long Range / Short Range) -->
+    <div class="grid grid-cols-3 gap-1.5 bg-slate-900/90 p-1 rounded-xl border border-slate-800">
+      <button type="button" onclick="setRangeFilter('overall')" id="rangeTab-overall" class="py-1.5 px-2 rounded-lg text-[11px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 transition cursor-pointer">
+        ⚡ Overall
+      </button>
+      <button type="button" onclick="setRangeFilter('long')" id="rangeTab-long" class="py-1.5 px-2 rounded-lg text-[11px] font-semibold text-slate-400 hover:text-white transition cursor-pointer">
+        🎯 Long Range
+      </button>
+      <button type="button" onclick="setRangeFilter('short')" id="rangeTab-short" class="py-1.5 px-2 rounded-lg text-[11px] font-semibold text-slate-400 hover:text-white transition cursor-pointer">
+        ⚔️ Short Range
+      </button>
+    </div>
+
     <div id="leaderboardCard" class="card-bg rounded-2xl neon-border overflow-hidden shadow-lg">
       <div class="grid grid-cols-12 px-3.5 py-2.5 border-b border-slate-800/80 text-[11px] font-semibold text-slate-400 uppercase tracking-wider">
         <div id="colRank" class="col-span-2">Rank</div>
         <div id="colPlayer" class="col-span-7">Player</div>
-        <div id="colMatches" class="col-span-3 text-right">Matches</div>
+        <div id="colMatches" class="col-span-3 text-right">Diff / W</div>
       </div>
       <div id="leaderboardList" class="divide-y divide-slate-800/50">
         <div id="loadingText" class="p-8 text-center text-slate-400 text-xs animate-pulse-slow">Loading fresh leaderboard data...</div>
@@ -253,11 +265,11 @@
 
         <div class="bg-slate-900/80 border border-slate-800 rounded-xl overflow-hidden transition">
           <button onclick="toggleFaq(2)" class="w-full px-3.5 py-2.5 text-left flex items-center justify-between gap-2 text-xs font-bold text-white cursor-pointer">
-            <span id="faq2Q">02. How does Rank Swap work?</span>
+            <span id="faq2Q">02. How does Score Differential & Rank Swap work?</span>
             <span class="text-cyan-400 text-sm font-black flex-shrink-0">+</span>
           </button>
           <div id="faq2Ans" class="hidden px-3.5 pb-3 text-xs text-slate-300 leading-relaxed border-t border-slate-800/60 pt-2">
-            When a lower-ranked player defeats a higher-ranked player and an admin approves the proof, the winner takes the defeated player's rank and the defeated player moves down with their streak reset.
+            Matches are scored by score differential (Winner Score minus Loser Score) across Overall, Long Range, and Short Range. Lower-ranked winners can also swap ranks and reset the loser's streak upon approval.
           </div>
         </div>
 
@@ -657,7 +669,7 @@
     </div>
   </div>
 
-  <!-- Submit Proof Modal (Your IGN, Opponent IGN, Long/Short Range, Chat Screenshot) -->
+  <!-- Submit Proof Modal -->
   <div id="submitModal" class="fixed inset-0 bg-black/80 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
     <div class="card-bg neon-border rounded-2xl max-w-md w-full p-5 relative max-h-[90vh] overflow-y-auto shadow-2xl">
       <button onclick="closeModal('submitModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg cursor-pointer">&times;</button>
@@ -667,7 +679,6 @@
         Upload a chat screenshot where your opponent agrees to the match result.
       </div>
 
-      <!-- 5 Matches / 8 Hours Quota Pill -->
       <div id="submissionQuotaBox" class="bg-slate-900/90 border border-slate-800 rounded-xl px-3 py-2 mb-3 flex items-center justify-between text-[11px]">
         <span class="text-slate-400">8-Hour Limit:</span>
         <span id="submissionQuotaText" class="font-bold text-emerald-400">0 / 5 matches used</span>
@@ -734,7 +745,7 @@
         <div id="adminRulesHeading" class="text-[11px] font-bold text-amber-400">📜 Admin Rules:</div>
         <ul id="adminRulesList" class="text-[11px] text-slate-300 space-y-1 list-disc list-inside leading-relaxed">
           <li>Approve only clear chat screenshots with opponent agreement.</li>
-          <li>If the winner is below the defeated player, their ranks swap and the loser's streak resets.</li>
+          <li>Score differential (Winner - Loser) updates Overall, Long Range, and Short Range scores.</li>
         </ul>
       </div>
 
@@ -963,7 +974,7 @@
         installPillText: isIosDevice ? "Add to Home Screen" : "Install App",
         notifBannerText: "DM aur updates ke liye notifications allow kar dijiye!",
         descTitle: "Yeh Kya Hai?",
-        descText: "Yeh Flex City ka community leaderboard hai jahan Long Range aur Short Range 1v1 duels, match scores, rank swaps aur country/global rankings track hote hain.",
+        descText: "Yeh Flex City ka community leaderboard hai jahan Long Range aur Short Range 1v1 duels, score differential, rank swaps aur country/global rankings track hote hain.",
         rulesHeading: "📜 Proof & Challenge Rules:",
         rulesHtml: `
           <li><strong>Chat Screenshot:</strong> Aisa chat screenshot daalein jisme opponent match result par agree kare.</li>
@@ -974,7 +985,7 @@
         tabContenders: "⚔️ Contenders",
         colRank: "Rank",
         colPlayer: "Player",
-        colMatches: "Matches",
+        colMatches: "Diff / W",
         loadingText: "Leaderboard load ho raha hai...",
         footerText1: "© 2026 Flex City Community Leaderboard • Created by BoomCraze.",
         footerText2: "Fan-made platform • Not affiliated with Jarvi Games.",
@@ -993,7 +1004,7 @@
         submitProofBtn: "Proof Bhejein",
         whatsNewModalTitle: "✨ What's New",
         faqTitle: "FAQ",
-        faqSub: "Rank swaps, Long/Short Range aur scores ke baare mein quick answers.",
+        faqSub: "Score differential, Long/Short Range aur rank swaps ke baare mein quick answers.",
         logoutModalTitle: "Logout karna hai?",
         logoutModalSub: "Logout ke baad aap proof submit ya chat nahi kar payenge jab tak wapas login na karein.",
         adminModalTitle: "🛡️ Admin Panel",
@@ -1001,7 +1012,7 @@
         adminRulesHeading: "📜 Admin Rules:",
         adminRulesHtml: `
           <li>Sirf clear chat screenshot aur opponent agreement wale proof approve karein.</li>
-          <li>Approve karne par rank swap aur haare hue opponent ki streak reset hogi.</li>
+          <li>Score differential (Winner - Loser) Overall, Long Range aur Short Range mein jurega.</li>
         `,
         ownerSubText: "Admins aur players manage kijiye.",
         manageAdminsTitle: "🛡️ Admins",
@@ -1026,7 +1037,7 @@
         installPillText: isIosDevice ? "Add to Home Screen" : "Install App",
         notifBannerText: "Enable notifications for instant DM & match alerts!",
         descTitle: "What is this?",
-        descText: "Official Flex City community leaderboard tracking Long Range and Short Range 1v1 PvP duels, match scores, rank swaps, and regional/global rankings.",
+        descText: "Official Flex City community leaderboard tracking Long Range and Short Range 1v1 PvP duels, score differentials, rank swaps, and regional/global rankings.",
         rulesHeading: "📜 Proof & Challenge Rules:",
         rulesHtml: `
           <li><strong>Chat Screenshot:</strong> Upload a chat screenshot showing opponent agreement on the match result.</li>
@@ -1037,7 +1048,7 @@
         tabContenders: "⚔️ Contenders",
         colRank: "Rank",
         colPlayer: "Player",
-        colMatches: "Matches",
+        colMatches: "Diff / W",
         loadingText: "Loading leaderboard...",
         footerText1: "© 2026 Flex City Community Leaderboard • Created by BoomCraze.",
         footerText2: "Fan-made platform • Not affiliated with Jarvi Games.",
@@ -1056,7 +1067,7 @@
         submitProofBtn: "Submit Proof",
         whatsNewModalTitle: "✨ What's New",
         faqTitle: "FAQ",
-        faqSub: "Quick answers about rank swaps, modes, and match scores.",
+        faqSub: "Quick answers about score differentials, modes, and rank swaps.",
         logoutModalTitle: "Log out?",
         logoutModalSub: "You won't be able to submit proofs or send messages until you log back in.",
         adminModalTitle: "🛡️ Admin Panel",
@@ -1064,7 +1075,7 @@
         adminRulesHeading: "📜 Admin Rules:",
         adminRulesHtml: `
           <li>Approve only clear chat screenshots with opponent agreement.</li>
-          <li>Approving swaps ranks when a lower player beats a higher one and resets the loser's streak.</li>
+          <li>Score differential (Winner - Loser) updates Overall, Long Range, and Short Range stats.</li>
         `,
         ownerSubText: "Manage Admins and player stats.",
         manageAdminsTitle: "🛡️ Admins",
@@ -1085,13 +1096,13 @@
 
     const whatsNewData = {
       hinglish: [
-        { date: "26 Nov 2026", title: "In-App Free Pinch/Pan Proof Viewer", text: "• Screenshot ab website ke andar hi pinch/pan zoom ke saath khulta hai (naya tab nahi khulta)\n• Pure page ka automatic zoom aur center lock band" },
-        { date: "26 Nov 2026", title: "Score System, Rank Swap & Clean Proof Form", text: "• Match scores player profile aur live ticker par show hote hain\n• Rank swap aur opponent streak reset system\n• Submit form mein country selector hata kar auto-detect rakha gaya" },
+        { date: "27 Nov 2026", title: "Overall / Long / Short Range + Score Diff", text: "• 3 range tabs jode gaye hain aur Winner - Loser score differential se stats calculate hote hain\n• Upload hone wale screenshot par chhota sa real photo date watermark aur Admin/Owner review note joda gaya" },
+        { date: "26 Nov 2026", title: "In-App Free Pinch/Pan Proof Viewer", text: "• Screenshot ab website ke andar hi pinch/pan zoom ke saath khulta hai\n• Pure page ka automatic zoom aur center lock band" },
         { date: "26 Nov 2026", title: "Owner Role Panel & Direct Messaging", text: "• Owner panel se Admins add/remove aur players manage kiye ja sakte hain\n• Global chat aur personal DMs live alerts ke saath" }
       ],
       en: [
+        { date: "Nov 27, 2026", title: "3 Range Tiers, Score Diff & Date Verification", text: "• Added Overall, Long Range, and Short Range tabs using Winner - Loser score differentials\n• Added subtle real-date stamp on uploaded screenshots and Admin/Owner review note" },
         { date: "Nov 26, 2026", title: "In-App Pinch & Pan Proof Viewer", text: "• Screenshots open inside the app with free pinch/pan zoom instead of opening a separate tab\n• Prevents unwanted full-page zoom and fixed center scaling" },
-        { date: "Nov 26, 2026", title: "Match Scores, Rank Swaps & Streamlined Proof Form", text: "• Approved match scores appear on player proofs and the live ticker\n• Rank swaps and defeated opponent streak resets on verified wins\n• Country dropdown removed in favor of automatic country detection" },
         { date: "Nov 26, 2026", title: "Owner Role Controls & Live Messaging", text: "• Owner panel to appoint/remove Admins and edit player records\n• Real-time Global Chat and Personal DMs" }
       ]
     };
@@ -1281,10 +1292,12 @@
     let allPlayers = [];
     let currentRegion = 'local';
     let currentMainTab = 'ranked';
+    let currentRange = 'overall'; // 'overall' | 'long' | 'short'
     let selectedPlayer = null;
     let userIgn = "";
     let isOwner = false;
     let isAdmin = false;
+    let latestDetectedPhotoDate = "";
 
     const messageStore = {};
 
@@ -1301,6 +1314,52 @@
 
     let holdTimer = null;
     let selectedActionMsg = null;
+
+    function formatDateDDMMYYYY(ts) {
+      const d = new Date(ts || Date.now());
+      const dd = String(d.getDate()).padStart(2, '0');
+      const mm = String(d.getMonth() + 1).padStart(2, '0');
+      const yyyy = d.getFullYear();
+      return `${dd}/${mm}/${yyyy}`;
+    }
+
+    function parseScoreDiff(rawScore) {
+      const cleaned = String(rawScore || "").trim();
+      const parts = cleaned.split(/[-:vs/]+/i).map(s => parseFloat(s.trim())).filter(n => !Number.isNaN(n));
+      if (parts.length >= 2) {
+        return Math.max(0, parts[0] - parts[1]);
+      }
+      if (parts.length === 1) {
+        return Math.max(0, parts[0]);
+      }
+      return 1;
+    }
+
+    function getPlayerTierDiff(player, rangeMode = 'overall') {
+      const longDiff = typeof player.longRangeDiff === 'number' ? player.longRangeDiff : 0;
+      const shortDiff = typeof player.shortRangeDiff === 'number' ? player.shortRangeDiff : 0;
+      const overallDiff = typeof player.overallDiff === 'number'
+        ? player.overallDiff
+        : (longDiff + shortDiff);
+
+      if (rangeMode === 'long') return longDiff;
+      if (rangeMode === 'short') return shortDiff;
+      return overallDiff;
+    }
+
+    window.setRangeFilter = (range) => {
+      currentRange = (range === 'long' || range === 'short') ? range : 'overall';
+      ['overall', 'long', 'short'].forEach(r => {
+        const btn = document.getElementById(`rangeTab-${r}`);
+        if (!btn) return;
+        if (r === currentRange) {
+          btn.className = "py-1.5 px-2 rounded-lg text-[11px] font-bold bg-cyan-500/20 text-cyan-300 border border-cyan-500/40 transition cursor-pointer";
+        } else {
+          btn.className = "py-1.5 px-2 rounded-lg text-[11px] font-semibold text-slate-400 hover:text-white transition cursor-pointer";
+        }
+      });
+      renderLeaderboard();
+    };
 
     function playPingSound() {
       try {
@@ -1594,11 +1653,12 @@
       }
       box.innerHTML = list.map(p => {
         const matches = p.matchesWon || 0;
+        const diffVal = getPlayerTierDiff(p, 'overall');
         return `
           <div class="py-2 flex items-center justify-between gap-2 text-xs">
             <div class="truncate">
               <span class="font-bold text-white">${escapeHtml(p.ign || p.name || "Player")}</span>
-              <span class="text-[11px] text-slate-400 ml-1.5">(Matches:${matches} • 🔥${p.streak || 0})</span>
+              <span class="text-[11px] text-slate-400 ml-1.5">(Diff:${diffVal} • W:${matches} • 🔥${p.streak || 0})</span>
             </div>
             <button onclick="openAdminEditPlayer('${p.id}')" class="bg-cyan-500/20 hover:bg-cyan-500/40 text-cyan-300 border border-cyan-500/30 px-2.5 py-1 rounded-lg text-[11px] font-bold cursor-pointer flex-shrink-0">Edit</button>
           </div>
@@ -1669,6 +1729,9 @@
         countryName: visitorCountry.name,
         photo: currentUser.photoURL || "https://api.dicebear.com/7.x/avataaars/svg?seed=" + currentUser.uid,
         matchesWon: 0,
+        overallDiff: 0,
+        longRangeDiff: 0,
+        shortRangeDiff: 0,
         streak: 0,
         rankOrder: nowTs,
         joinedAt: nowTs,
@@ -1975,145 +2038,6 @@
         `;
 
         if (isMe) {
-          return `
-            <div class="flex flex-col items-end">
-              <div ${holdAttrs} class="msg-bubble bg-cyan-600 text-white px-3 py-2 rounded-2xl rounded-br-sm max-w-[80%] text-xs shadow-sm cursor-pointer">
-                ${escapeHtml(m.text)}${rewrittenTag}
-              </div>
-              <span class="text-[9px] text-slate-500 mt-0.5">${timeStr}</span>
-            </div>
-          `;
-        } else {
-          return `
-            <div class="flex flex-col items-start">
-              <div class="flex items-center gap-1.5 mb-0.5">
-                <button onclick="openDmWithUser('${m.uid}', '${escapeHtml(m.ign)}')" class="text-[10px] font-bold text-cyan-400 hover:underline cursor-pointer">${escapeHtml(m.ign)}</button>
-                <span class="text-[9px] text-slate-500">${timeStr}</span>
-              </div>
-              <div ${holdAttrs} class="msg-bubble bg-slate-800 text-slate-200 border border-slate-700/80 px-3 py-2 rounded-2xl rounded-bl-sm max-w-[80%] text-xs shadow-sm cursor-pointer">
-                ${escapeHtml(m.text)}${rewrittenTag}
-              </div>
-            </div>
-          `;
-        }
-      }).join('');
-
-      list.scrollTop = list.scrollHeight;
-    }
-
-    document.getElementById('globalChatForm').onsubmit = async (e) => {
-      e.preventDefault();
-      if (!currentUser) return;
-      const input = document.getElementById('globalMsgInput');
-      const text = input.value.trim();
-      if (!text) return;
-      if (Date.now() - lastMsgSentTime < 1500) return;
-      lastMsgSentTime = Date.now();
-      input.value = "";
-      await addDoc(collection(db, "global_chat"), {
-        uid: currentUser.uid,
-        ign: userIgn || currentUser.displayName || "Player",
-        text: text,
-        timestamp: Date.now()
-      });
-    };
-
-    window.renderDmPlayerList = () => {
-      const container = document.getElementById('dmPlayersList');
-      if (!container || !currentUser) return;
-      const searchTerm = (document.getElementById('dmSearchInput').value || "").toLowerCase();
-      const otherPlayers = allPlayers.filter(p => p.id !== currentUser.uid && (p.ign || p.name || "").toLowerCase().includes(searchTerm));
-
-      otherPlayers.sort((a, b) => {
-        const aUnread = allUserDms.filter(m => m.senderUid === a.id && m.receiverUid === currentUser.uid && !m.read).length;
-        const bUnread = allUserDms.filter(m => m.senderUid === b.id && m.receiverUid === currentUser.uid && !m.read).length;
-        if (bUnread !== aUnread) return bUnread - aUnread;
-        const aLast = allUserDms.filter(m => m.participants.includes(a.id)).pop();
-        const bLast = allUserDms.filter(m => m.participants.includes(b.id)).pop();
-        return (bLast?.timestamp || 0) - (aLast?.timestamp || 0);
-      });
-
-      if (otherPlayers.length === 0) {
-        container.innerHTML = `<div class="p-6 text-center text-xs text-slate-500">No players found.</div>`;
-        return;
-      }
-
-      container.innerHTML = otherPlayers.map(p => {
-        const convo = allUserDms.filter(m => m.participants.includes(p.id));
-        const lastMsg = convo[convo.length - 1];
-        const unread = convo.filter(m => m.senderUid === p.id && !m.read).length;
-        const flag = p.countryCode ? countryCodeToFlag(p.countryCode) : '🌍';
-
-        return `
-          <div onclick="openDmWithUser('${p.id}', '${escapeHtml(p.ign || p.name)}')" class="p-3.5 flex items-center justify-between hover:bg-slate-800/50 cursor-pointer transition">
-            <div class="flex items-center gap-3 truncate">
-              <img src="${p.photo}" class="w-9 h-9 rounded-full border border-slate-700 object-cover flex-shrink-0" />
-              <div class="truncate">
-                <div class="font-bold text-xs text-white truncate">${flag} ${escapeHtml(p.ign || p.name)}</div>
-                <div class="text-[11px] ${unread > 0 ? 'text-cyan-300 font-semibold' : 'text-slate-400'} truncate">
-                  ${lastMsg ? (lastMsg.senderUid === currentUser.uid ? 'You: ' : '') + escapeHtml(lastMsg.text) : 'Message'}
-                </div>
-              </div>
-            </div>
-            ${unread > 0 ? `<span class="bg-red-500 text-white text-[10px] font-black px-2 py-0.5 rounded-full">${unread}</span>` : `<span class="text-slate-500 text-xs">›</span>`}
-          </div>
-        `;
-      }).join('');
-    };
-
-    window.openDmWithUser = (targetUid, targetIgn) => {
-      if (!currentUser) { openChatDrawer(); return; }
-      activeDmPartner = { uid: targetUid, ign: targetIgn };
-      showChatDrawerWithAnimation();
-      document.getElementById('chatLoginWall').classList.add('hidden');
-      document.getElementById('chatModeTabs').classList.add('hidden');
-      document.getElementById('globalChatView').classList.add('hidden');
-      document.getElementById('dmListView').classList.add('hidden');
-      document.getElementById('activeDmView').classList.remove('hidden');
-      document.getElementById('chatBackBtn').classList.remove('hidden');
-      document.getElementById('chatDrawerTitle').innerText = `💬 ${targetIgn}`;
-      renderActiveDmConversation();
-    };
-
-    window.backToChatList = () => {
-      activeDmPartner = null;
-      switchChatTab('dms');
-    };
-
-    async function renderActiveDmConversation() {
-      if (!currentUser || !activeDmPartner) return;
-      const list = document.getElementById('dmMessagesList');
-      const convo = allUserDms.filter(m => m.participants.includes(activeDmPartner.uid));
-
-      convo.forEach(async (m) => {
-        if (m.receiverUid === currentUser.uid && !m.read) {
-          await updateDoc(doc(db, "direct_messages", m.id), { read: true });
-        }
-      });
-
-      if (convo.length === 0) {
-        list.innerHTML = `<div class="text-center text-xs text-slate-500 py-8">${escapeHtml(activeDmPartner.ign)}</div>`;
-        return;
-      }
-
-      list.innerHTML = convo.map(m => {
-        const isMe = m.senderUid === currentUser.uid;
-        const timeStr = m.timestamp ? new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
-        const rewrittenTag = m.rewritten ? `<span class="text-[9px] opacity-75 italic ml-1">(edited)</span>` : '';
-        const storeKey = `dm_${m.id}`;
-        messageStore[storeKey] = { collectionName: 'direct_messages', msgId: m.id, senderUid: m.senderUid, currentText: m.text || '' };
-
-        const holdAttrs = `
-          onmousedown="handleMsgPressStart(this, '${storeKey}')"
-          onmouseup="handleMsgPressEnd(this)"
-          onmouseleave="handleMsgPressEnd(this)"
-          ontouchstart="handleMsgPressStart(this, '${storeKey}')"
-          ontouchend="handleMsgPressEnd(this)"
-          ontouchcancel="handleMsgPressEnd(this)"
-          oncontextmenu="handleMsgContextMenu(event, '${storeKey}')"
-        `;
-
-        if (isMe) {
           const statusHtml = m.read ? `<span class="text-cyan-400 font-bold">Seen ✓✓</span>` : `<span class="text-slate-500">Sent ✓</span>`;
           const bubbleStyle = m.read ? "bg-emerald-600/95 border border-cyan-400/50 text-white" : "bg-emerald-600 text-white";
           return `
@@ -2138,6 +2062,23 @@
 
       list.scrollTop = list.scrollHeight;
     }
+
+    document.getElementById('globalChatForm')?.addEventListener('submit', async (e) => {
+      e.preventDefault();
+      if (!currentUser) return;
+      const input = document.getElementById('globalMsgInput');
+      const text = (input?.value || "").trim();
+      if (!text) return;
+      if (Date.now() - lastMsgSentTime < 1200) return;
+      lastMsgSentTime = Date.now();
+      input.value = "";
+      await addDoc(collection(db, "global_chat"), {
+        uid: currentUser.uid,
+        senderIgn: userIgn || currentUser.displayName || "Player",
+        text,
+        timestamp: Date.now()
+      });
+    });
 
     document.getElementById('dmChatForm').onsubmit = async (e) => {
       e.preventDefault();
@@ -2227,7 +2168,7 @@
       return `<span class="bg-orange-500/20 text-orange-400 border border-orange-500/40 px-1.5 py-0.5 rounded text-[9px] font-bold">🔥 ${streak}</span>`;
     }
 
-    function getOrderedRankedPlayers(regionMode = 'global') {
+    function getOrderedRankedPlayers(regionMode = 'global', rangeMode = 'overall') {
       return allPlayers
         .filter(p => {
           const matches = p.matchesWon || 0;
@@ -2239,6 +2180,9 @@
           return true;
         })
         .sort((a, b) => {
+          const diffA = getPlayerTierDiff(a, rangeMode);
+          const diffB = getPlayerTierDiff(b, rangeMode);
+          if (diffB !== diffA) return diffB - diffA;
           const ra = typeof a.rankOrder === 'number' ? a.rankOrder : (a.joinedAt || 0);
           const rb = typeof b.rankOrder === 'number' ? b.rankOrder : (b.joinedAt || 0);
           return ra - rb;
@@ -2251,7 +2195,7 @@
 
       let sorted = [];
       if (currentMainTab === 'ranked') {
-        sorted = getOrderedRankedPlayers(currentRegion);
+        sorted = getOrderedRankedPlayers(currentRegion, currentRange);
       } else {
         sorted = allPlayers
           .filter(p => {
@@ -2276,6 +2220,7 @@
 
       list.innerHTML = sorted.map((p, i) => {
         const matchesWon = p.matchesWon || 0;
+        const tierDiff = getPlayerTierDiff(p, currentRange);
         const rankBadge = currentMainTab === 'contenders' ? '⏳' : (i === 0 ? '🥇 #1' : i === 1 ? '🥈 #2' : i === 2 ? '🥉 #3' : `#${i + 1}`);
         const streakBadge = getStreakBadgeHtml(p.streak);
         const pFlag = p.countryCode ? countryCodeToFlag(p.countryCode) : '🇮🇳';
@@ -2302,7 +2247,7 @@
                 </div>
               </div>
             </div>
-            <div class="col-span-3 text-right font-bold text-xs text-emerald-400">${matchesWon}</div>
+            <div class="col-span-3 text-right font-bold text-xs text-emerald-400">${tierDiff} <span class="text-[10px] text-slate-400 font-semibold">(${matchesWon}W)</span></div>
             ${adminActionHtml}
           </div>
         `;
@@ -2383,16 +2328,19 @@
       if (!selectedPlayer) return;
       const matchesWon = selectedPlayer.matchesWon || 0;
       const streakVal = selectedPlayer.streak || 0;
-      document.getElementById('modalSub').innerText = `Matches: ${matchesWon} • Streak: ${streakVal}`;
+      const overallDiff = getPlayerTierDiff(selectedPlayer, 'overall');
+      const longDiff = getPlayerTierDiff(selectedPlayer, 'long');
+      const shortDiff = getPlayerTierDiff(selectedPlayer, 'short');
+      document.getElementById('modalSub').innerText = `Matches: ${matchesWon} • Diff: ${overallDiff} (L:${longDiff} / S:${shortDiff}) • Streak: ${streakVal}`;
 
       document.getElementById('modalStats').innerHTML = `
         <div class="bg-slate-900 border border-slate-800 p-3 rounded-xl shadow-sm">
-          <div class="text-[10px] text-slate-400">Matches Won</div>
-          <div class="text-base font-bold text-cyan-400 mt-0.5">${matchesWon}</div>
+          <div class="text-[10px] text-slate-400">Overall Score Diff</div>
+          <div class="text-base font-bold text-cyan-400 mt-0.5">${overallDiff} <span class="text-[11px] text-slate-400">(${matchesWon}W)</span></div>
         </div>
         <div class="bg-slate-900 border border-slate-800 p-3 rounded-xl shadow-sm">
-          <div class="text-[10px] text-slate-400">Current Streak</div>
-          <div class="text-base font-bold text-emerald-400 mt-0.5">${streakVal}</div>
+          <div class="text-[10px] text-slate-400">Long / Short Diff</div>
+          <div class="text-sm font-bold text-emerald-400 mt-0.5">L: ${longDiff} • S: ${shortDiff}</div>
         </div>
       `;
 
@@ -2449,8 +2397,17 @@
         const targetProof = proofs[proofIndex];
         if (!targetProof) return;
         proofs.splice(proofIndex, 1);
+        const removedDiff = typeof targetProof.diff === 'number' ? targetProof.diff : parseScoreDiff(targetProof.score);
+        const isShort = (targetProof.category || "").toLowerCase().includes("short");
+        const nextLong = Math.max(0, (data.longRangeDiff || 0) - (isShort ? 0 : removedDiff));
+        const nextShort = Math.max(0, (data.shortRangeDiff || 0) - (isShort ? removedDiff : 0));
+        const nextOverall = Math.max(0, (data.overallDiff ?? (nextLong + nextShort)) - removedDiff);
+
         await updateDoc(playerRef, {
           proofs,
+          overallDiff: nextOverall,
+          longRangeDiff: nextLong,
+          shortRangeDiff: nextShort,
           streak: Math.max(0, (data.streak || 0) - 1),
           matchesWon: Math.max(0, (data.matchesWon || 0) - 1)
         });
@@ -2460,7 +2417,10 @@
       }
     };
 
-    function compressImage(file, callback) {
+    function compressImageWithSubtleDateStamp(file, callback) {
+      const realDateStr = formatDateDDMMYYYY(file.lastModified);
+      latestDetectedPhotoDate = realDateStr;
+
       const reader = new FileReader();
       reader.onload = (e) => {
         const img = new Image();
@@ -2472,12 +2432,28 @@
           canvas.height = img.width > MAX_WIDTH ? img.height * scaleSize : img.height;
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
-          callback(canvas.toDataURL('image/jpeg', 0.7));
+
+          // Subtle tiny watermark so user rarely notices it on upload
+          const fontSize = Math.max(8, Math.round(canvas.width * 0.0075));
+          ctx.font = `${fontSize}px sans-serif`;
+          ctx.fillStyle = "rgba(255, 255, 255, 0.20)";
+          ctx.textAlign = "right";
+          ctx.textBaseline = "bottom";
+          ctx.fillText(`Real date of this photo: ${realDateStr}`, canvas.width - 6, canvas.height - 4);
+
+          callback(canvas.toDataURL('image/jpeg', 0.72), realDateStr);
         };
         img.src = e.target.result;
       };
       reader.readAsDataURL(file);
     }
+
+    document.getElementById('screenshotFileInput')?.addEventListener('change', (e) => {
+      const f = e.target.files?.[0];
+      if (f) {
+        latestDetectedPhotoDate = formatDateDDMMYYYY(f.lastModified);
+      }
+    });
 
     let oppCheckDebounce = null;
     let matchedOpponentProfile = null;
@@ -2581,6 +2557,7 @@
       document.getElementById('ignInput').value = userIgn || (currentUser?.displayName || "Player");
       document.getElementById('opponentInput').value = "";
       document.getElementById('categoryInput').value = "Long Range";
+      latestDetectedPhotoDate = "";
       resetOpponentCheckUI();
       document.getElementById('submitModal').classList.remove('hidden');
       document.getElementById('submitModal').classList.add('flex');
@@ -2635,7 +2612,7 @@
       btn.disabled = true;
       btn.innerText = "Submitting...";
 
-      compressImage(fileInput.files[0], async (compressedBase64) => {
+      compressImageWithSubtleDateStamp(fileInput.files[0], async (compressedBase64, detectedPhotoDate) => {
         try {
           const nowTs = Date.now();
           const updatedTimestamps = [...recentTimestamps, nowTs];
@@ -2657,6 +2634,7 @@
             opponent: canonicalOpponentIgn,
             opponentUid,
             screenshotUrl: compressedBase64,
+            detectedPhotoDate,
             status: "pending",
             createdAt: nowTs
           });
@@ -2665,6 +2643,7 @@
           btn.innerText = (uiText[currentLang] || uiText.en).submitProofBtn;
           closeModal('submitModal');
           e.target.reset();
+          latestDetectedPhotoDate = "";
           document.getElementById('ignInput').value = userIgn;
           resetOpponentCheckUI();
           loadLeaderboard();
@@ -2698,6 +2677,7 @@
         const sid = docSnap.id;
         pendingCache[sid] = s;
         const sFlag = s.countryCode ? countryCodeToFlag(s.countryCode) : '🌍';
+        const identifiedDate = s.detectedPhotoDate || formatDateDDMMYYYY(s.createdAt);
 
         const oppMatch = allPlayers.find(p =>
           (s.opponentUid && p.id === s.opponentUid) ||
@@ -2724,10 +2704,15 @@
               <span class="absolute bottom-0 inset-x-0 bg-black/75 text-[9px] text-cyan-300 font-bold text-center py-0.5">🔍 View</span>
             </button>
           </div>
+
+          <div class="bg-amber-500/10 border border-amber-500/35 rounded-lg px-2.5 py-2 text-[11px] text-amber-200 leading-snug">
+            <strong>Before you approve:</strong> We identified this photo's date is <span class="font-extrabold text-amber-300">${escapeHtml(identifiedDate)}</span>. Please verify if this matches the match day.
+          </div>
+
           <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2.5 border-t border-slate-800">
             <div class="flex items-center gap-2 flex-1">
-              <span class="text-[10px] text-amber-300 font-semibold whitespace-nowrap">Type score of this match:</span>
-              <input type="text" id="score-${sid}" placeholder="Score" required class="w-24 bg-slate-950 border border-slate-700 focus:border-cyan-500 rounded-lg px-2.5 py-1 text-xs text-white text-center font-bold" />
+              <span class="text-[10px] text-amber-300 font-semibold whitespace-nowrap">Score (e.g. 10-6):</span>
+              <input type="text" id="score-${sid}" placeholder="10-6" required class="w-24 bg-slate-950 border border-slate-700 focus:border-cyan-500 rounded-lg px-2.5 py-1 text-xs text-white text-center font-bold" />
             </div>
             <div class="flex gap-2 justify-end">
               <button id="approve-btn-${sid}" onclick="approveSub('${sid}')" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-3 py-1.5 rounded-xl text-xs transition shadow-sm cursor-pointer">Approve</button>
@@ -2795,11 +2780,16 @@
           )
         );
 
+        const diffPoints = parseScoreDiff(matchScore);
+        const isShort = (s.category || "").toLowerCase().includes("short");
+
         let proofs = winner.proofs || [];
         proofs.unshift({
           opponent: s.opponent,
           category: s.category || "Long Range",
           score: matchScore,
+          diff: diffPoints,
+          detectedPhotoDate: s.detectedPhotoDate || "",
           url: s.screenshotUrl || "",
           timestamp: Date.now()
         });
@@ -2834,9 +2824,20 @@
           }
         }
 
+        const prevLong = typeof winner.longRangeDiff === 'number' ? winner.longRangeDiff : 0;
+        const prevShort = typeof winner.shortRangeDiff === 'number' ? winner.shortRangeDiff : 0;
+        const prevOverall = typeof winner.overallDiff === 'number' ? winner.overallDiff : (prevLong + prevShort);
+
+        const nextLong = prevLong + (isShort ? 0 : diffPoints);
+        const nextShort = prevShort + (isShort ? diffPoints : 0);
+        const nextOverall = prevOverall + diffPoints;
+
         await updateDoc(doc(db, "players", winner.id), {
           proofs,
           matchesWon: (winner.matchesWon || 0) + 1,
+          overallDiff: nextOverall,
+          longRangeDiff: nextLong,
+          shortRangeDiff: nextShort,
           streak: (winner.streak || 0) + 1,
           rankOrder: nextWinnerOrder,
           countryCode: s.countryCode || winner.countryCode || 'IN',
