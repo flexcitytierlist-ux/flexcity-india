@@ -49,6 +49,20 @@
     .chat-scroll::-webkit-scrollbar-track { background: #0f131d; }
     .chat-scroll::-webkit-scrollbar-thumb { background: #334155; border-radius: 4px; }
 
+    .faq-collapse {
+      display: grid;
+      grid-template-rows: 0fr;
+      opacity: 0;
+      transition: grid-template-rows 0.28s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.22s ease;
+    }
+    .faq-collapse.open {
+      grid-template-rows: 1fr;
+      opacity: 1;
+    }
+    .faq-collapse-inner {
+      overflow: hidden;
+    }
+
     .msg-bubble {
       transition: transform 0.22s cubic-bezier(0.34, 1.56, 0.64, 1), box-shadow 0.22s ease, filter 0.22s ease;
       user-select: none;
@@ -254,47 +268,62 @@
 
       <div class="space-y-2">
         <div class="bg-slate-900/80 border border-slate-800 rounded-xl overflow-hidden transition">
-          <button onclick="toggleFaq(1)" class="w-full px-3.5 py-2.5 text-left flex items-center justify-between gap-2 text-xs font-bold text-white cursor-pointer">
+          <button type="button" onclick="toggleFaq(1)" class="w-full px-3.5 py-2.5 text-left flex items-center justify-between gap-2 text-xs font-bold text-white cursor-pointer">
             <span id="faq1Q">01. How do Global & Country rankings work?</span>
-            <span class="text-cyan-400 text-sm font-black flex-shrink-0">+</span>
+            <span id="faq1Icon" class="text-cyan-400 text-base leading-none font-black flex-shrink-0">+</span>
           </button>
-          <div id="faq1Ans" class="hidden px-3.5 pb-3 text-xs text-slate-300 leading-relaxed border-t border-slate-800/60 pt-2">
-            Your country is automatically detected when you join or submit a match proof. Your rank applies to both your national leaderboard and the Global leaderboard.
+          <div id="faq1Ans" class="faq-collapse">
+            <div class="faq-collapse-inner">
+              <div class="px-3.5 pb-3 text-xs text-slate-300 leading-relaxed border-t border-slate-800/60 pt-2">
+                Your country is automatically detected when you join or submit a match proof. Your rank applies to both your national leaderboard and the Global leaderboard.
+              </div>
+            </div>
           </div>
         </div>
 
         <div class="bg-slate-900/80 border border-slate-800 rounded-xl overflow-hidden transition">
-          <button onclick="toggleFaq(2)" class="w-full px-3.5 py-2.5 text-left flex items-center justify-between gap-2 text-xs font-bold text-white cursor-pointer">
+          <button type="button" onclick="toggleFaq(2)" class="w-full px-3.5 py-2.5 text-left flex items-center justify-between gap-2 text-xs font-bold text-white cursor-pointer">
             <span id="faq2Q">02. How does Score Differential & Rank Swap work?</span>
-            <span class="text-cyan-400 text-sm font-black flex-shrink-0">+</span>
+            <span id="faq2Icon" class="text-cyan-400 text-base leading-none font-black flex-shrink-0">+</span>
           </button>
-          <div id="faq2Ans" class="hidden px-3.5 pb-3 text-xs text-slate-300 leading-relaxed border-t border-slate-800/60 pt-2">
-            Matches are scored by score differential (Winner Score minus Loser Score) across Overall, Long Range, and Short Range. Lower-ranked winners can also swap ranks and reset the loser's streak upon approval.
+          <div id="faq2Ans" class="faq-collapse">
+            <div class="faq-collapse-inner">
+              <div class="px-3.5 pb-3 text-xs text-slate-300 leading-relaxed border-t border-slate-800/60 pt-2">
+                Matches are scored by score differential (Winner Score minus Loser Score) across Overall, Long Range, and Short Range. Lower-ranked winners can also swap ranks and reset the loser's streak upon approval.
+              </div>
+            </div>
           </div>
         </div>
 
         <div class="bg-slate-900/80 border border-slate-800 rounded-xl overflow-hidden transition">
-          <button onclick="toggleFaq(3)" class="w-full px-3.5 py-2.5 text-left flex items-center justify-between gap-2 text-xs font-bold text-white cursor-pointer">
+          <button type="button" onclick="toggleFaq(3)" class="w-full px-3.5 py-2.5 text-left flex items-center justify-between gap-2 text-xs font-bold text-white cursor-pointer">
             <span id="faq3Q">03. How does Submission Limit work?</span>
-            <span class="text-cyan-400 text-sm font-black flex-shrink-0">+</span>
+            <span id="faq3Icon" class="text-cyan-400 text-base leading-none font-black flex-shrink-0">+</span>
           </button>
-          <div id="faq3Ans" class="hidden px-3.5 pb-3 text-xs text-slate-300 leading-relaxed border-t border-slate-800/60 pt-2">
-            You can submit up to 5 match proofs every 8 hours.
+          <div id="faq3Ans" class="faq-collapse">
+            <div class="faq-collapse-inner">
+              <div class="px-3.5 pb-3 text-xs text-slate-300 leading-relaxed border-t border-slate-800/60 pt-2">
+                You can submit up to 5 match proofs every 8 hours.
+              </div>
+            </div>
           </div>
         </div>
 
         <div class="bg-slate-900/80 border border-slate-800 rounded-xl overflow-hidden transition">
-          <button onclick="toggleFaq(4)" class="w-full px-3.5 py-2.5 text-left flex items-center justify-between gap-2 text-xs font-bold text-white cursor-pointer">
+          <button type="button" onclick="toggleFaq(4)" class="w-full px-3.5 py-2.5 text-left flex items-center justify-between gap-2 text-xs font-bold text-white cursor-pointer">
             <span id="faq4Q">04. Where are match scores shown?</span>
-            <span class="text-cyan-400 text-sm font-black flex-shrink-0">+</span>
+            <span id="faq4Icon" class="text-cyan-400 text-base leading-none font-black flex-shrink-0">+</span>
           </button>
-          <div id="faq4Ans" class="hidden px-3.5 pb-3 text-xs text-slate-300 leading-relaxed border-t border-slate-800/60 pt-2">
-            Admins enter the match score when approving a proof, and it appears on the player's verified match screenshots as well as the top live ticker.
+          <div id="faq4Ans" class="faq-collapse">
+            <div class="faq-collapse-inner">
+              <div class="px-3.5 pb-3 text-xs text-slate-300 leading-relaxed border-t border-slate-800/60 pt-2">
+                Admins enter the player and opponent scores when approving a proof, and it appears on the player's verified match screenshots as well as the top live ticker.
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
-
   </main>
 
   <footer class="bg-[#090c12] border-t border-slate-800/80 mt-8 pb-20 sm:pb-10">
@@ -450,15 +479,16 @@
         <button onclick="triggerLoginFromChat()" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-4 py-2 rounded-xl text-xs cursor-pointer">Login with Google</button>
       </div>
 
-      <div id="globalChatView" class="flex-1 flex flex-col overflow-hidden">
+      <div id="globalChatView" class="flex-1 flex flex-col overflow-hidden relative">
         <div id="globalTipText" class="text-[10px] text-slate-500 text-center py-1 bg-slate-950/50 border-b border-slate-800/50">
-          Tip: Press & hold any message for options
+          Tip: Type @IGN to tag a player • Press & hold any message for options
         </div>
         <div id="globalMessagesList" class="flex-1 overflow-y-auto p-3.5 space-y-2.5 chat-scroll">
           <div class="text-center text-xs text-slate-500 py-8">Loading global chat...</div>
         </div>
+        <div id="mentionSuggestionsBox" class="hidden mx-2.5 mb-1.5 bg-[#121826] border border-cyan-500/40 rounded-xl shadow-2xl max-h-36 overflow-y-auto divide-y divide-slate-800/70 z-20"></div>
         <form id="globalChatForm" class="p-2.5 border-t border-slate-800 bg-[#0d111a] flex gap-2">
-          <input type="text" id="globalMsgInput" maxlength="120" placeholder="Message everyone..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500" />
+          <input type="text" id="globalMsgInput" oninput="onGlobalChatInput()" maxlength="120" placeholder="Message everyone (@IGN to tag)..." class="flex-1 bg-slate-900 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500" />
           <button type="submit" id="sendGlobalBtn" class="bg-cyan-500 hover:bg-cyan-400 text-slate-950 font-bold px-3.5 py-2 rounded-xl text-xs transition cursor-pointer">Send</button>
         </form>
       </div>
@@ -506,14 +536,7 @@
           <input type="text" id="rewriteMsgInput" maxlength="150" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500" />
           <div class="grid grid-cols-2 gap-2">
             <button type="button" onclick="closeRewriteOverlay()" class="bg-slate-800 text-slate-300 py-2 rounded-xl text-xs font-semibold cursor-pointer">Cancel</button>
-            <button type="submit" class="bg-cyan-500 text-slate-950 py-2 rounded-xl text-xs font-bold cursor-pointer">Save</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-  <!-- Owner Modal -->
+            <button type="submit" class="bg-cyan-500<!-- Owner Modal -->
   <div id="ownerModal" class="fixed inset-0 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
     <div class="card-bg neon-border rounded-2xl max-w-2xl w-full p-5 relative max-h-[88vh] overflow-y-auto shadow-2xl space-y-4">
       <button onclick="closeModal('ownerModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg cursor-pointer">&times;</button>
@@ -769,6 +792,26 @@
     const EIGHT_HOURS_MS = 8 * 60 * 60 * 1000;
     const MAX_SUBS_PER_WINDOW = 5;
 
+    // Custom Flex City Default Avatar (Instagram-style clean silhouette with subtle cyan-slate ring)
+    const DEFAULT_FC_AVATAR = "data:image/svg+xml;utf8," + encodeURIComponent(`
+      <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120">
+        <defs>
+          <linearGradient id="fcBg" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#1e293b"/>
+            <stop offset="100%" stop-color="#0f172a"/>
+          </linearGradient>
+          <linearGradient id="fcSil" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#94a3b8"/>
+            <stop offset="100%" stop-color="#64748b"/>
+          </linearGradient>
+        </defs>
+        <rect width="120" height="120" fill="url(#fcBg)"/>
+        <circle cx="60" cy="60" r="56" fill="none" stroke="#38bdf8" stroke-opacity="0.28" stroke-width="2"/>
+        <circle cx="60" cy="44" r="20" fill="url(#fcSil)"/>
+        <path d="M24 106 C24 81, 40 70, 60 70 C80 70, 96 81, 96 106 Z" fill="url(#fcSil)"/>
+      </svg>
+    `);
+
     const firebaseConfig = {
       apiKey: "AIzaSyDZylrN12JJn11p4yQ9lCqd2MGOrr9jk7U",
       authDomain: "flex-city-tier-lists.firebaseapp.com",
@@ -1008,18 +1051,18 @@
         logoutModalTitle: "Logout karna hai?",
         logoutModalSub: "Logout ke baad aap proof submit ya chat nahi kar payenge jab tak wapas login na karein.",
         adminModalTitle: "🛡️ Admin Panel",
-        adminModalSub: "Match ka score type kijiye aur proof approve kijiye.",
+        adminModalSub: "Player aur Opponent ka score type kijiye aur proof approve kijiye.",
         adminRulesHeading: "📜 Admin Rules:",
         adminRulesHtml: `
           <li>Sirf clear chat screenshot aur opponent agreement wale proof approve karein.</li>
-          <li>Score differential (Winner - Loser) Overall, Long Range aur Short Range mein jurega.</li>
+          <li>Score differential (Player - Opponent) Overall, Long Range aur Short Range mein jurega.</li>
         `,
         ownerSubText: "Admins aur players manage kijiye.",
         manageAdminsTitle: "🛡️ Admins",
         allPlayersTitle: "🎮 Players",
         editPlayerModalTitle: "⚡ Edit Player",
         savePlayerEditBtn: "Save Changes",
-        globalTipText: "Tip: Kisi message par press & hold karein options ke liye",
+        globalTipText: "Tip: @IGN se tag karein • Message par press & hold karein options ke liye",
         dmTipText: "Tip: Kisi message par press & hold karein options ke liye",
         iosHomeTitle: "📲 Add to Home Screen (Safari)",
         iosHomeSub: "Baar-baar link nikalne se bachne ke liye Safari se Home Screen par add kijiye:",
@@ -1071,18 +1114,18 @@
         logoutModalTitle: "Log out?",
         logoutModalSub: "You won't be able to submit proofs or send messages until you log back in.",
         adminModalTitle: "🛡️ Admin Panel",
-        adminModalSub: "Type the match score, verify proof, and approve.",
+        adminModalSub: "Type Player and Opponent scores, verify proof, and approve.",
         adminRulesHeading: "📜 Admin Rules:",
         adminRulesHtml: `
           <li>Approve only clear chat screenshots with opponent agreement.</li>
-          <li>Score differential (Winner - Loser) updates Overall, Long Range, and Short Range stats.</li>
+          <li>Score differential (Player - Opponent) updates Overall, Long Range, and Short Range stats.</li>
         `,
         ownerSubText: "Manage Admins and player stats.",
         manageAdminsTitle: "🛡️ Admins",
         allPlayersTitle: "🎮 Players",
         editPlayerModalTitle: "⚡ Edit Player",
         savePlayerEditBtn: "Save Changes",
-        globalTipText: "Tip: Press & hold any message for options",
+        globalTipText: "Tip: Type @IGN to tag a player • Press & hold any message for options",
         dmTipText: "Tip: Press & hold any message for options",
         iosHomeTitle: "📲 Add to Home Screen (Safari)",
         iosHomeSub: "Add Flex City Leaderboard to your iPhone or iPad Home Screen for quick access:",
@@ -1096,14 +1139,14 @@
 
     const whatsNewData = {
       hinglish: [
+        { date: "28 Nov 2026", title: "Personal DMs, Global @Mentions & Split Score Inputs", text: "• Personal DMs list aur direct message thread fix kar diya gaya hai\n• Global Chat mein sender ka IGN dikhta hai aur @IGN se player ko tag karne par notification jaata hai\n• Admin panel mein ab Player aur Opponent ke liye 2 alag Score boxes hain aur leaderboard par custom default avatar set kiya gaya hai" },
         { date: "27 Nov 2026", title: "Overall / Long / Short Range + Score Diff", text: "• 3 range tabs jode gaye hain aur Winner - Loser score differential se stats calculate hote hain\n• Upload hone wale screenshot par chhota sa real photo date watermark aur Admin/Owner review note joda gaya" },
-        { date: "26 Nov 2026", title: "In-App Free Pinch/Pan Proof Viewer", text: "• Screenshot ab website ke andar hi pinch/pan zoom ke saath khulta hai\n• Pure page ka automatic zoom aur center lock band" },
-        { date: "26 Nov 2026", title: "Owner Role Panel & Direct Messaging", text: "• Owner panel se Admins add/remove aur players manage kiye ja sakte hain\n• Global chat aur personal DMs live alerts ke saath" }
+        { date: "26 Nov 2026", title: "In-App Free Pinch/Pan Proof Viewer", text: "• Screenshot ab website ke andar hi pinch/pan zoom ke saath khulta hai\n• Pure page ka automatic zoom aur center lock band" }
       ],
       en: [
+        { date: "Nov 28, 2026", title: "Personal DMs, Global @Mentions & Split Score Boxes", text: "• Fixed Personal DMs player list and live 1-on-1 chat threads\n• Global Chat now displays sender IGNs and supports @IGN mentions with instant notifications\n• Added separate Player & Opponent score boxes in Admin panel, custom default silhouette avatars, and smooth FAQ animations" },
         { date: "Nov 27, 2026", title: "3 Range Tiers, Score Diff & Date Verification", text: "• Added Overall, Long Range, and Short Range tabs using Winner - Loser score differentials\n• Added subtle real-date stamp on uploaded screenshots and Admin/Owner review note" },
-        { date: "Nov 26, 2026", title: "In-App Pinch & Pan Proof Viewer", text: "• Screenshots open inside the app with free pinch/pan zoom instead of opening a separate tab\n• Prevents unwanted full-page zoom and fixed center scaling" },
-        { date: "Nov 26, 2026", title: "Owner Role Controls & Live Messaging", text: "• Owner panel to appoint/remove Admins and edit player records\n• Real-time Global Chat and Personal DMs" }
+        { date: "Nov 26, 2026", title: "In-App Pinch & Pan Proof Viewer", text: "• Screenshots open inside the app with free pinch/pan zoom instead of opening a separate tab\n• Prevents unwanted full-page zoom and fixed center scaling" }
       ]
     };
 
@@ -1308,6 +1351,7 @@
     let unsubscribeDmListener = null;
     let unsubscribeSubmissionsListener = null;
     let isFirstSubmissionSnapshot = true;
+    let isFirstGlobalSnapshot = true;
     let allUserDms = [];
     let latestGlobalMsgs = [];
     let isFirstDmSnapshot = true;
@@ -1699,6 +1743,7 @@
 
         await loadRolesConfig();
         startRealtimeDmListener(user.uid);
+        listenToGlobalChat();
         checkNotificationPermissionBtn();
       } else {
         isOwner = false;
@@ -1727,7 +1772,7 @@
         ign: userIgn,
         countryCode: visitorCountry.code,
         countryName: visitorCountry.name,
-        photo: currentUser.photoURL || "https://api.dicebear.com/7.x/avataaars/svg?seed=" + currentUser.uid,
+        photo: DEFAULT_FC_AVATAR,
         matchesWon: 0,
         overallDiff: 0,
         longRangeDiff: 0,
@@ -1751,6 +1796,9 @@
         renderLeaderboard();
         if (!document.getElementById('ownerModal').classList.contains('hidden')) {
           renderOwnerPlayersList();
+        }
+        if (!document.getElementById('chatDrawerModal').classList.contains('hidden') && activeChatTab === 'dms' && !activeDmPartner) {
+          renderDmPlayerList();
         }
         if (selectedPlayer) {
           const updated = allPlayers.find(p => p.id === selectedPlayer.id);
@@ -1999,13 +2047,266 @@
       }
     };
 
+    window.backToChatList = () => {
+      activeDmPartner = null;
+      switchChatTab('dms');
+    };
+
+    window.renderDmPlayerList = () => {
+      const container = document.getElementById('dmPlayersList');
+      if (!container || !currentUser) return;
+
+      const searchQ = (document.getElementById('dmSearchInput')?.value || "").toLowerCase().trim();
+      const others = allPlayers.filter(p => p.id !== currentUser.uid);
+
+      const enriched = others.map(p => {
+        const thread = allUserDms.filter(m => m.senderUid === p.id || m.receiverUid === p.id);
+        const lastMsg = thread.length > 0 ? thread[thread.length - 1] : null;
+        const unread = thread.filter(m => m.senderUid === p.id && m.receiverUid === currentUser.uid && !m.read).length;
+        return { player: p, lastMsg, unread };
+      }).filter(item => {
+        const ignStr = (item.player.ign || item.player.name || "Player").toLowerCase();
+        return !searchQ || ignStr.includes(searchQ);
+      });
+
+      enriched.sort((a, b) => {
+        if (b.unread !== a.unread) return b.unread - a.unread;
+        const ta = a.lastMsg ? a.lastMsg.timestamp : 0;
+        const tb = b.lastMsg ? b.lastMsg.timestamp : 0;
+        if (tb !== ta) return tb - ta;
+        return (a.player.ign || a.player.name || "").localeCompare(b.player.ign || b.player.name || "");
+      });
+
+      if (enriched.length === 0) {
+        container.innerHTML = `<div class="text-center text-xs text-slate-500 py-8">No players found.</div>`;
+        return;
+      }
+
+      container.innerHTML = enriched.map(({ player, lastMsg, unread }) => {
+        const pIgn = player.ign || player.name || "Player";
+        const pFlag = player.countryCode ? countryCodeToFlag(player.countryCode) : '🇮🇳';
+        const previewText = lastMsg
+          ? `${lastMsg.senderUid === currentUser.uid ? 'You: ' : ''}${lastMsg.text}`
+          : 'Tap to start 1v1 chat';
+        const unreadPill = unread > 0
+          ? `<span class="min-w-[18px] h-[18px] px-1.5 rounded-full bg-cyan-500 text-slate-950 text-[10px] font-black flex items-center justify-center">${unread}</span>`
+          : '';
+
+        return `
+          <div onclick="openDmWithUser('${player.id}', '${escapeHtml(pIgn)}')" class="px-3.5 py-3 hover:bg-slate-800/50 cursor-pointer transition flex items-center justify-between gap-2.5">
+            <div class="flex items-center gap-2.5 min-w-0">
+              <img src="${DEFAULT_FC_AVATAR}" class="w-9 h-9 rounded-full border border-slate-700 object-cover flex-shrink-0" />
+              <div class="min-w-0">
+                <div class="flex items-center gap-1.5">
+                  <span class="text-xs">${pFlag}</span>
+                  <span class="text-xs font-bold text-white truncate">${escapeHtml(pIgn)}</span>
+                </div>
+                <p class="text-[11px] ${unread > 0 ? 'text-cyan-300 font-semibold' : 'text-slate-400'} truncate">${escapeHtml(previewText)}</p>
+              </div>
+            </div>
+            ${unreadPill}
+          </div>
+        `;
+      }).join('');
+    };
+
+    window.openDmWithUser = (targetUid, targetIgn) => {
+      if (!currentUser) {
+        signInWithPopup(auth, provider);
+        return;
+      }
+      activeChatTab = 'dms';
+      activeDmPartner = { uid: targetUid, ign: targetIgn || "Player" };
+
+      showChatDrawerWithAnimation();
+      document.getElementById('chatLoginWall').classList.add('hidden');
+      document.getElementById('chatModeTabs').classList.add('hidden');
+      document.getElementById('globalChatView').classList.add('hidden');
+      document.getElementById('dmListView').classList.add('hidden');
+      document.getElementById('activeDmView').classList.remove('hidden');
+
+      document.getElementById('chatBackBtn').classList.remove('hidden');
+      document.getElementById('chatDrawerTitle').innerText = `💬 ${activeDmPartner.ign}`;
+      renderActiveDmConversation();
+    };
+
+    function renderActiveDmConversation() {
+      const list = document.getElementById('dmMessagesList');
+      if (!list || !currentUser || !activeDmPartner) return;
+
+      const msgs = allUserDms.filter(m =>
+        (m.senderUid === currentUser.uid && m.receiverUid === activeDmPartner.uid) ||
+        (m.senderUid === activeDmPartner.uid && m.receiverUid === currentUser.uid)
+      );
+
+      // Mark unread incoming DMs as read
+      msgs.forEach(m => {
+        if (m.receiverUid === currentUser.uid && !m.read) {
+          updateDoc(doc(db, "direct_messages", m.id), { read: true }).catch(() => {});
+        }
+      });
+
+      if (msgs.length === 0) {
+        list.innerHTML = `<div class="text-center text-xs text-slate-500 py-8">Say hi to ${escapeHtml(activeDmPartner.ign)} to set up a 1v1!</div>`;
+        return;
+      }
+
+      list.innerHTML = msgs.map(m => {
+        const isMe = m.senderUid === currentUser.uid;
+        const timeStr = m.timestamp ? new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
+        const rewrittenTag = m.rewritten ? `<span class="text-[9px] opacity-75 italic ml-1">(edited)</span>` : '';
+        const storeKey = `dm_${m.id}`;
+        messageStore[storeKey] = { collectionName: 'direct_messages', msgId: m.id, senderUid: m.senderUid, currentText: m.text || '' };
+
+        const holdAttrs = `
+          onmousedown="handleMsgPressStart(this, '${storeKey}')"
+          onmouseup="handleMsgPressEnd(this)"
+          onmouseleave="handleMsgPressEnd(this)"
+          ontouchstart="handleMsgPressStart(this, '${storeKey}')"
+          ontouchend="handleMsgPressEnd(this)"
+          ontouchcancel="handleMsgPressEnd(this)"
+          oncontextmenu="handleMsgContextMenu(event, '${storeKey}')"
+        `;
+
+        if (isMe) {
+          const statusHtml = m.read ? `<span class="text-cyan-400 font-bold">Seen ✓✓</span>` : `<span class="text-slate-500">Sent ✓</span>`;
+          return `
+            <div class="flex flex-col items-end">
+              <div ${holdAttrs} class="msg-bubble bg-emerald-600 text-white px-3 py-2 rounded-2xl rounded-br-sm max-w-[80%] text-xs shadow-sm cursor-pointer">
+                ${escapeHtml(m.text)}${rewrittenTag}
+              </div>
+              <span class="text-[9px] text-slate-400 mt-0.5 flex items-center gap-1">${timeStr} • ${statusHtml}</span>
+            </div>
+          `;
+        } else {
+          return `
+            <div class="flex flex-col items-start">
+              <span class="text-[10px] font-bold text-cyan-400 mb-0.5 px-1">${escapeHtml(m.senderIgn || activeDmPartner.ign)}</span>
+              <div ${holdAttrs} class="msg-bubble bg-slate-800 text-slate-200 border border-slate-700 px-3 py-2 rounded-2xl rounded-bl-sm max-w-[80%] text-xs shadow-sm cursor-pointer">
+                ${escapeHtml(m.text)}${rewrittenTag}
+              </div>
+              <span class="text-[9px] text-slate-500 mt-0.5">${timeStr}</span>
+            </div>
+          `;
+        }
+      }).join('');
+
+      list.scrollTop = list.scrollHeight;
+    }
+
+    function getMentionedUidsFromText(text) {
+      if (!text) return [];
+      const lower = text.toLowerCase();
+      const matched = [];
+      allPlayers.forEach(p => {
+        const ign = (p.ign || p.name || "").trim();
+        if (!ign) return;
+        if (lower.includes(`@${ign.toLowerCase()}`)) {
+          matched.push(p.id);
+        }
+      });
+      return [...new Set(matched)];
+    }
+
+    function formatMessageWithMentions(rawText) {
+      let safe = escapeHtml(rawText || "");
+      const sortedPlayers = [...allPlayers]
+        .filter(p => (p.ign || p.name || "").trim().length > 0)
+        .sort((a, b) => (b.ign || b.name || "").length - (a.ign || a.name || "").length);
+
+      sortedPlayers.forEach(p => {
+        const ign = (p.ign || p.name || "").trim();
+        const escapedIgn = escapeHtml(ign).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+        const regex = new RegExp(`@${escapedIgn}(?![\\w])`, 'gi');
+        safe = safe.replace(regex, (match) => `<span class="bg-cyan-400/20 text-cyan-200 font-bold px-1 rounded">${match}</span>`);
+      });
+      return safe;
+    }
+
+    window.onGlobalChatInput = () => {
+      const input = document.getElementById('globalMsgInput');
+      const box = document.getElementById('mentionSuggestionsBox');
+      if (!input || !box) return;
+
+      const val = input.value;
+      const atIdx = val.lastIndexOf('@');
+      if (atIdx === -1 || (atIdx > 0 && val[atIdx - 1] !== ' ')) {
+        box.classList.add('hidden');
+        return;
+      }
+
+      const queryTerm = val.slice(atIdx + 1).toLowerCase();
+      if (queryTerm.includes(' ')) {
+        box.classList.add('hidden');
+        return;
+      }
+
+      const candidates = allPlayers
+        .filter(p => p.id !== currentUser?.uid)
+        .filter(p => (p.ign || p.name || "").toLowerCase().includes(queryTerm))
+        .slice(0, 6);
+
+      if (candidates.length === 0) {
+        box.classList.add('hidden');
+        return;
+      }
+
+      box.innerHTML = candidates.map(p => {
+        const pIgn = p.ign || p.name || "Player";
+        const pFlag = p.countryCode ? countryCodeToFlag(p.countryCode) : '🇮🇳';
+        return `
+          <button type="button" onclick="selectMentionPlayer('${escapeHtml(pIgn)}')" class="w-full px-3 py-2 text-left hover:bg-cyan-500/20 flex items-center justify-between text-xs text-white cursor-pointer">
+            <span class="font-semibold flex items-center gap-1.5"><span>${pFlag}</span> <span>@${escapeHtml(pIgn)}</span></span>
+            <span class="text-[10px] text-cyan-400">Tag</span>
+          </button>
+        `;
+      }).join('');
+      box.classList.remove('hidden');
+    };
+
+    window.selectMentionPlayer = (ign) => {
+      const input = document.getElementById('globalMsgInput');
+      const box = document.getElementById('mentionSuggestionsBox');
+      if (!input) return;
+      const val = input.value;
+      const atIdx = val.lastIndexOf('@');
+      if (atIdx !== -1) {
+        input.value = val.slice(0, atIdx) + `@${ign} `;
+      } else {
+        input.value = `${val} @${ign} `;
+      }
+      if (box) box.classList.add('hidden');
+      input.focus();
+    };
+
     function listenToGlobalChat() {
       if (unsubscribeGlobalChat) return;
+      isFirstGlobalSnapshot = true;
       const q = query(collection(db, "global_chat"), orderBy("timestamp", "desc"), limit(40));
       unsubscribeGlobalChat = onSnapshot(q, (snapshot) => {
         latestGlobalMsgs = [];
         snapshot.forEach(d => latestGlobalMsgs.push({ id: d.id, ...d.data() }));
         latestGlobalMsgs.reverse();
+
+        if (!isFirstGlobalSnapshot && currentUser) {
+          snapshot.docChanges().forEach(change => {
+            if (change.type === "added") {
+              const msg = change.doc.data();
+              if (msg.uid !== currentUser.uid) {
+                const mentioned = Array.isArray(msg.mentionedUids) && msg.mentionedUids.includes(currentUser.uid);
+                const textTagged = userIgn && (msg.text || "").toLowerCase().includes(`@${userIgn.toLowerCase()}`);
+                if (mentioned || textTagged) {
+                  playPingSound();
+                  triggerSystemNotification(
+                    `📣 ${msg.senderIgn || 'Player'} tagged you in Global Chat`,
+                    msg.text || ""
+                  );
+                }
+              }
+            }
+          });
+        }
+        isFirstGlobalSnapshot = false;
         renderGlobalChatMessages();
       });
     }
@@ -2022,6 +2323,7 @@
 
       list.innerHTML = visibleMsgs.map(m => {
         const isMe = currentUser && m.uid === currentUser.uid;
+        const senderLabel = m.senderIgn || "Player";
         const timeStr = m.timestamp ? new Date(m.timestamp).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : '';
         const rewrittenTag = m.rewritten ? `<span class="text-[9px] opacity-75 italic ml-1">(edited)</span>` : '';
         const storeKey = `global_${m.id}`;
@@ -2037,13 +2339,16 @@
           oncontextmenu="handleMsgContextMenu(event, '${storeKey}')"
         `;
 
+        const formattedBody = formatMessageWithMentions(m.text);
+
         if (isMe) {
           const statusHtml = m.read ? `<span class="text-cyan-400 font-bold">Seen ✓✓</span>` : `<span class="text-slate-500">Sent ✓</span>`;
           const bubbleStyle = m.read ? "bg-emerald-600/95 border border-cyan-400/50 text-white" : "bg-emerald-600 text-white";
           return `
             <div class="flex flex-col items-end">
+              <span class="text-[10px] font-bold text-emerald-300 mb-0.5 px-1">${escapeHtml(senderLabel)}</span>
               <div ${holdAttrs} class="msg-bubble ${bubbleStyle} px-3 py-2 rounded-2xl rounded-br-sm max-w-[80%] text-xs shadow-sm cursor-pointer">
-                ${escapeHtml(m.text)}${rewrittenTag}
+                ${formattedBody}${rewrittenTag}
               </div>
               <span class="text-[9px] text-slate-400 mt-0.5 flex items-center gap-1">${timeStr} • ${statusHtml}</span>
             </div>
@@ -2051,8 +2356,9 @@
         } else {
           return `
             <div class="flex flex-col items-start">
+              <button type="button" onclick="selectMentionPlayer('${escapeHtml(senderLabel)}')" class="text-[10px] font-bold text-cyan-400 hover:underline mb-0.5 px-1 cursor-pointer">${escapeHtml(senderLabel)}</button>
               <div ${holdAttrs} class="msg-bubble bg-slate-800 text-slate-200 border border-slate-700 px-3 py-2 rounded-2xl rounded-bl-sm max-w-[80%] text-xs shadow-sm cursor-pointer">
-                ${escapeHtml(m.text)}${rewrittenTag}
+                ${formattedBody}${rewrittenTag}
               </div>
               <span class="text-[9px] text-slate-500 mt-0.5">${timeStr}</span>
             </div>
@@ -2067,15 +2373,19 @@
       e.preventDefault();
       if (!currentUser) return;
       const input = document.getElementById('globalMsgInput');
+      const box = document.getElementById('mentionSuggestionsBox');
       const text = (input?.value || "").trim();
       if (!text) return;
       if (Date.now() - lastMsgSentTime < 1200) return;
       lastMsgSentTime = Date.now();
+      const mentionedUids = getMentionedUidsFromText(text);
       input.value = "";
+      if (box) box.classList.add('hidden');
       await addDoc(collection(db, "global_chat"), {
         uid: currentUser.uid,
         senderIgn: userIgn || currentUser.displayName || "Player",
         text,
+        mentionedUids,
         timestamp: Date.now()
       });
     });
@@ -2148,7 +2458,10 @@
 
     window.toggleFaq = (id) => {
       const ans = document.getElementById(`faq${id}Ans`);
-      ans.classList.toggle('hidden');
+      const icon = document.getElementById(`faq${id}Icon`);
+      if (!ans) return;
+      const isOpen = ans.classList.toggle('open');
+      if (icon) icon.innerText = isOpen ? '−' : '+';
     };
 
     window.switchMainTab = (tab) => {
@@ -2238,7 +2551,7 @@
           <div onclick="openPlayer('${p.id}')" class="grid grid-cols-12 items-center px-3.5 py-3 hover:bg-slate-800/40 cursor-pointer transition">
             <div class="col-span-2 font-bold text-xs ${i < 3 && currentMainTab === 'ranked' ? 'text-cyan-400' : 'text-slate-400'}">${rankBadge}</div>
             <div class="${isAdmin ? 'col-span-6' : 'col-span-7'} flex items-center gap-2 min-w-0">
-              <img src="${p.photo}" class="w-8 h-8 rounded-full border border-slate-700 object-cover flex-shrink-0 shadow-sm" />
+              <img src="${DEFAULT_FC_AVATAR}" class="w-8 h-8 rounded-full border border-slate-700 object-cover flex-shrink-0 shadow-sm" />
               <div class="truncate">
                 <div class="flex items-center gap-1.5 flex-wrap">
                   <span class="text-xs">${pFlag}</span>
@@ -2310,7 +2623,7 @@
     window.openPlayer = (id) => {
       selectedPlayer = allPlayers.find(p => p.id === id);
       if (!selectedPlayer) return;
-      document.getElementById('modalAvatar').src = selectedPlayer.photo;
+      document.getElementById('modalAvatar').src = DEFAULT_FC_AVATAR;
       document.getElementById('modalName').innerText = selectedPlayer.ign || selectedPlayer.name;
       const pFlag = selectedPlayer.countryCode ? countryCodeToFlag(selectedPlayer.countryCode) : '🇮🇳';
       const pCountry = selectedPlayer.countryName || 'India';
@@ -2433,7 +2746,6 @@
           const ctx = canvas.getContext('2d');
           ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
 
-          // Subtle tiny watermark so user rarely notices it on upload
           const fontSize = Math.max(8, Math.round(canvas.width * 0.0075));
           ctx.font = `${fontSize}px sans-serif`;
           ctx.fillStyle = "rgba(255, 255, 255, 0.20)";
@@ -2709,10 +3021,12 @@
             <strong>Before you approve:</strong> We identified this photo's date is <span class="font-extrabold text-amber-300">${escapeHtml(identifiedDate)}</span>. Please verify if this matches the match day.
           </div>
 
-          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-2.5 border-t border-slate-800">
-            <div class="flex items-center gap-2 flex-1">
-              <span class="text-[10px] text-amber-300 font-semibold whitespace-nowrap">Score (e.g. 10-6):</span>
-              <input type="text" id="score-${sid}" placeholder="10-6" required class="w-24 bg-slate-950 border border-slate-700 focus:border-cyan-500 rounded-lg px-2.5 py-1 text-xs text-white text-center font-bold" />
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pt-2.5 border-t border-slate-800">
+            <div class="flex items-center gap-2 flex-wrap flex-1">
+              <span class="text-[11px] text-amber-300 font-bold whitespace-nowrap">Score:</span>
+              <input type="number" min="0" id="score-player-${sid}" placeholder="Player" aria-label="Player Score" required class="w-20 bg-slate-950 border border-slate-700 focus:border-cyan-500 rounded-lg px-2 py-1 text-xs text-white text-center font-bold" />
+              <span class="text-slate-500 font-bold text-xs">−</span>
+              <input type="number" min="0" id="score-opp-${sid}" placeholder="Opponent" aria-label="Opponent Score" required class="w-20 bg-slate-950 border border-slate-700 focus:border-cyan-500 rounded-lg px-2 py-1 text-xs text-white text-center font-bold" />
             </div>
             <div class="flex gap-2 justify-end">
               <button id="approve-btn-${sid}" onclick="approveSub('${sid}')" class="bg-emerald-500 hover:bg-emerald-400 text-slate-950 font-bold px-3 py-1.5 rounded-xl text-xs transition shadow-sm cursor-pointer">Approve</button>
@@ -2738,16 +3052,32 @@
       if (!isAdmin) return;
       const s = pendingCache[sid];
       if (!s) return;
-      const scoreInput = document.getElementById('score-' + sid);
-      const matchScore = (scoreInput?.value || "").trim();
-      if (!matchScore) {
-        if (scoreInput) {
-          scoreInput.classList.add('border-rose-500');
-          scoreInput.focus();
+      const playerScoreInput = document.getElementById('score-player-' + sid);
+      const oppScoreInput = document.getElementById('score-opp-' + sid);
+      const rawPlayerScore = (playerScoreInput?.value || "").trim();
+      const rawOppScore = (oppScoreInput?.value || "").trim();
+
+      if (rawPlayerScore === "" || rawOppScore === "") {
+        if (rawPlayerScore === "" && playerScoreInput) {
+          playerScoreInput.classList.add('border-rose-500');
+          playerScoreInput.focus();
+        } else if (oppScoreInput) {
+          oppScoreInput.classList.add('border-rose-500');
+          oppScoreInput.focus();
         }
-        alert("Please type the score of this match before approving.");
+        alert("Please enter both Player Score and Opponent Score before approving.");
         return;
       }
+
+      const pScoreNum = parseFloat(rawPlayerScore);
+      const oScoreNum = parseFloat(rawOppScore);
+      if (Number.isNaN(pScoreNum) || Number.isNaN(oScoreNum)) {
+        alert("Please enter valid numeric scores.");
+        return;
+      }
+
+      const matchScore = `${pScoreNum}-${oScoreNum}`;
+      const diffPoints = Math.max(0, pScoreNum - oScoreNum);
 
       const approveBtn = document.getElementById('approve-btn-' + sid);
       if (approveBtn) {
@@ -2780,7 +3110,6 @@
           )
         );
 
-        const diffPoints = parseScoreDiff(matchScore);
         const isShort = (s.category || "").toLowerCase().includes("short");
 
         let proofs = winner.proofs || [];
@@ -2865,4 +3194,11 @@
     };
   </script>
 </body>
-</html>
+</html> text-slate-950 py-2 rounded-xl text-xs font-bold cursor-pointer">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+    
