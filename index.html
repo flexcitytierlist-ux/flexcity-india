@@ -536,7 +536,13 @@
           <input type="text" id="rewriteMsgInput" maxlength="150" required class="w-full bg-slate-950 border border-slate-700 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-cyan-500" />
           <div class="grid grid-cols-2 gap-2">
             <button type="button" onclick="closeRewriteOverlay()" class="bg-slate-800 text-slate-300 py-2 rounded-xl text-xs font-semibold cursor-pointer">Cancel</button>
-            <button type="submit" class="bg-cyan-500<!-- Owner Modal -->
+            <button type="submit" class="bg-cyan-500 text-slate-950 py-2 rounded-xl text-xs font-bold cursor-pointer">Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+  <!-- Owner Modal -->
   <div id="ownerModal" class="fixed inset-0 bg-black/85 backdrop-blur-sm hidden items-center justify-center p-4 z-50">
     <div class="card-bg neon-border rounded-2xl max-w-2xl w-full p-5 relative max-h-[88vh] overflow-y-auto shadow-2xl space-y-4">
       <button onclick="closeModal('ownerModal')" class="absolute top-3 right-3 text-slate-400 hover:text-white text-lg cursor-pointer">&times;</button>
@@ -3194,11 +3200,4 @@
     };
   </script>
 </body>
-</html> text-slate-950 py-2 rounded-xl text-xs font-bold cursor-pointer">Save</button>
-          </div>
-        </form>
-      </div>
-    </div>
-  </div>
-
-    
+</html>
